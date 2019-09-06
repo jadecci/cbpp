@@ -48,7 +48,7 @@ function CBPP_parcelwise(fc, y, conf, cv_ind, out_dir, options)
 %
 % Output:
 %        One .mat file will be saved to out_dir, containing performance in training set (vairable 
-%        'r_train') and validation set (variable 'r_val')..
+%        'r_train') and validation set (variable 'r_test')..
 %
 % Example:
 % CBPP_parcelwise(fc, y, conf, cv_ind, '~/results')
@@ -87,7 +87,7 @@ x = fc'; % feature matrix x
 
 % run cross-validation 
 r_train = zeros(n_repeat, n_fold, yd);
-r_val = zeros(n_repeat, n_fold, yd);
+r_test = zeros(n_repeat, n_fold, yd);
 t = zeros(n_repeat, n_fold);
 % loop through M repeats
 for repeat = 1:n_repeat
@@ -136,11 +136,11 @@ for repeat = 1:n_repeat
             
             % run regression
             reg_func = str2func([method '_one_fold']);
-            [r_val_curr, r_train_curr] = reg_func(x, y_curr_score, cv_ind_curr, fold);
+            [r_test_curr, r_train_curr] = reg_func(x, y_curr_score, cv_ind_curr, fold);
 
             % collect results
             r_train(repeat, fold, target_ind) = r_train_curr;
-            r_val(repeat, fold, target_ind) = r_val_curr;
+            r_test(repeat, fold, target_ind) = r_test_curr;
         end
         t(repeat, fold) = toc;
     end
@@ -150,7 +150,7 @@ disp(['Average time taken for one fold: ' num2str(mean(t(:)))]);
 % save performance results
 output_name = ['pwCBPP_' method '_' options.conf_opt '_' prefix ];
 if options.isnull ~= 0; output_name = ['null_' output_name]; end
-save([out_dir '/' output_name '.mat'], 'r_train', 'r_val');
+save([out_dir '/' output_name '.mat'], 'r_train', 'r_test');
 
 
 

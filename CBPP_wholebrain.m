@@ -5,20 +5,20 @@ function CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options)
 % connectivity matrix (fc) to predict psychometric variables (y)
 %
 % Inputs:
-%       - fc      :
-%                  DxDxN matrix containing the DxD functional connectivity matrix (i.e. between 
-%                  D parcels/voxels) from N subjects
-%       - y       :
-%                  NxP matrix containing P psychometric variables from N subjects
-%       - conf    :
-%                  NxC matrix containing C confounding variables from N subjects
-%       - cv_ind  :
-%                  NxM matrix containing cross-validation fold indices for M repeats on N subjects. 
-%                  The indices should range from 1 to K, for a K-fold cross-validation scheme
-%       - out_dir :
-%                  Absolute path to output directory
-%       - options :
-%                  (Optional) see below for available settings
+%       - fc     :
+%                 DxDxN matrix containing the DxD functional connectivity matrix (i.e. between 
+%                 D parcels/voxels) from N subjects
+%       - y      :
+%                 NxP matrix containing P psychometric variables from N subjects
+%       - conf   :
+%                 NxC matrix containing C confounding variables from N subjects
+%       - cv_ind : 
+%                 NxM matrix containing cross-validation fold indices for M repeats on N subjects. 
+%                 The indices should range from 1 to K, for a K-fold cross-validation scheme
+%       - out_dir:
+%                 Absolute path to output directory
+%       - options:
+%                 (Optional) see below for available settings
 %
 % Options:
 %       - method  :
@@ -43,7 +43,7 @@ function CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options)
 %
 % Output:
 %        One .mat file will be saved to out_dir, containing performance in training set (vairable 
-%        'r_train') and validation set (variable 'r_val').
+%        'r_train') and validation set (variable 'r_test').
 %
 % Example:
 % CBPP_wholebrain(fc, y, conf, cv_ind, '~/results')
@@ -87,7 +87,7 @@ end
 
 % run cross-validation
 r_train = zeros(n_repeat, n_fold, yd);
-r_val = zeros(n_repeat, n_fold, yd);
+r_test = zeros(n_repeat, n_fold, yd);
 t = zeros(n_repeat, n_fold);
 % loop through M repeats
 for repeat = 1:n_repeat 
@@ -140,11 +140,11 @@ for repeat = 1:n_repeat
             
             % run regression
             reg_func = str2func([method '_one_fold']);
-            [r_val_curr, r_train_curr] = reg_func(x_sel, y_curr(:, target_ind), cv_ind_curr, fold);
+            [r_test_curr, r_train_curr] = reg_func(x_sel, y_curr(:, target_ind), cv_ind_curr, fold);
             
             % collect results
             r_train(repeat, fold, target_ind) = r_train_curr;
-            r_val(repeat, fold, target_ind) = r_val_curr;
+            r_test(repeat, fold, target_ind) = r_test_curr;
         end
         t(repeat, fold) = toc;
     end
@@ -153,4 +153,4 @@ disp(['Average time taken for one fold: ' num2str(mean(t(:)))]);
 
 % save performance results
 output_name = ['wbCBPP_' method '_' options.conf_opt '_' prefix ];
-save([out_dir '/' output_name '.mat'], 'r_train', 'r_val');
+save([out_dir '/' output_name '.mat'], 'r_train', 'r_test');
