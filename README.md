@@ -18,21 +18,9 @@ The applications of the parcel-wise CBPP approach is two-fold: 1) a psychometric
 
 ## Code Release
 
-- The functions `CBPP_wholebbrain.m` and `CBIG_parcelwise.m` can be used to run any combination of approaches with existing data. See their respective help messages for the usage, or see the next section for examples of their usage.
+- The functions `CBPP_wholebbrain.m` and `CBIG_parcelwise.m` can be used to run any combination of approaches with existing data. See their respective help messages for the usage.
 
-- The `HCP_surface_CBPP` folder contains the wrapper codes for running psychometric prediction, usingg HCP surface data (on 32k fsLR surface). Specifically, `HCP_surface_CBPP/wholebrain_CBPP` contains codes for **whole-brain CBPP**, while `HCP_surface_CBPP/parcelwise_CBPP` contains codes for **parcel-wise CBPP**. Refer to README in the respective folders for instructions on implementation.
-
-## Examples
-
-Shown below are the Matlab commands to run CBPP using SVR-FIX-Pearson combination at 300-parcel granularity. For more detailed usage information, check out the help message of the respectrive function.
-
-**whole-brain CBPP**
-
-to be added
-
-**parcel-wise CBPP**
-
-to be added
+- The `HCP_surface_CBPP` folder contains the wrapper codes for running psychometric prediction, usingg HCP surface data (only for minimally processed or FIX data currently). Refer to README in the folder for instructions on implementation.
 
 ## Bugs and Questions
 
