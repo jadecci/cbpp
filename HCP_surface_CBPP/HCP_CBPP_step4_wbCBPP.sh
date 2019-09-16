@@ -16,19 +16,24 @@ main(){
 # set up variables
 prefix=HCP_${preproc}_parc${n_parc}_${corr}
 if [ $fix_seed -eq 1 ]; then prefix=${prefix}_fixSeed; fi
+output=$out_dir/wbCBPP_${method}_${conf_opt}_${prefix}.mat
 
 # run regression
-matlab -nodesktop -nosplash -r "load('$input_dir/$prefix.mat', 'fc'); \
-                                load('$psych_file', 'y'); \
-                                load('$conf_file', 'conf'); \
-                                if $fix_seed == 1; seed = 1; else seed = 'shuffle'; end; \
-                                addpath('$ROOT_DIR/HCP_surface_CBPP/utilities'); \
-                                cv_ind = CVPart_HCP('$preproc', 10, 10, '$ROOT_DIR/bin/sublist', seed); \
-                                options = []; options.conf_opt = '$conf_opt'; \
-                                options.method = '$method'; options.prefix = '$prefix'; \
-                                addpath('$ROOT_DIR'); \
-                                CBPP_wholebrain(fc, y, conf, cv_ind, '$out_dir', options); \
-                                exit"
+if [ ! -e $output ]; then
+  matlab -nodesktop -nosplash -r "load('$input_dir/$prefix.mat', 'fc'); \
+                                  load('$psych_file', 'y'); \
+                                  load('$conf_file', 'conf'); \
+                                  if $fix_seed == 1; seed = 1; else seed = 'shuffle'; end; \
+                                  addpath('$ROOT_DIR/HCP_surface_CBPP/utilities'); \
+                                  cv_ind = CVPart_HCP('$preproc', 10, 10, '$ROOT_DIR/bin/sublist', seed); \
+                                  options = []; options.conf_opt = '$conf_opt'; \
+                                  options.method = '$method'; options.prefix = '$prefix'; \
+                                  addpath('$ROOT_DIR'); \
+                                  CBPP_wholebrain(fc, y, conf, cv_ind, '$out_dir', options); \
+                                  exit"
+else
+  echo "Output $output already exists!"
+fi
 
 }
 
@@ -81,7 +86,7 @@ OPTIONAL ARGUMENTS:
 
 OUTPUTS:
   $0 will create 1 output file in the output directory, containing the prediction performance
-  For example: wbCBPP_SVR_standard_fix_parc300_Pearson.mat
+  For example: wbCBPP_SVR_standard_HCP_fix_parc300_Pearson.mat
 
 EXAMPLE:
   $0 -d \$(pwd)/results/FC_combined
@@ -105,7 +110,7 @@ preproc=fix
 corr=Pearson
 conf_opt=standard
 fix_seed=0
-output_dir=$(pwd)/results/CBPP_perf
+out_dir=$(pwd)/results/CBPP_perf
 
 # Assign arguments
 while getopts "n:p:c:d:y:v:r:f:s:o:h" opt; do
@@ -119,7 +124,7 @@ while getopts "n:p:c:d:y:v:r:f:s:o:h" opt; do
     r) method=${OPTARG} ;;
     f) conf_opt=${OPTARG} ;;
     s) fix_seed=${OPTARG} ;;
-    o) output_dir=${OPTARG} ;;
+    o) out_dir=${OPTARG} ;;
     h) usage; exit ;;
     *) usage; 1>&2; exit 1 ;;
   esac

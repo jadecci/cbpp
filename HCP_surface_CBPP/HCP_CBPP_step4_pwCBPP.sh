@@ -15,10 +15,15 @@ main(){
 
 # set up variables
 prefix=HCP_${preproc}_parc${n_parc}_${corr}
-n_repeat=10
 if [ $fix_seed -eq 1 ]; then prefix=${prefix}_fixSeed; fi
-if [ $null_test -eq 1 ]; then prefix=${prefix}_null; n_repeat=1000; fi
-if [ -z $parc_ind ]; then n_parcel=$n_parc; else; n_parcel=1; fi
+if [ $null_test -eq 1 ]; then 
+  n_repeat=1000; 
+  output=$out_dir/null_pwCBPP_${method}_${conf_opt}_${prefix}.mat
+else
+  n_repeat=10; 
+  output=$out_dir/pwCBPP_${method}_${conf_opt}_${prefix}.mat
+fi
+if [ -z $parc_ind ]; then n_parcel=$n_parc; else n_parcel=1; fi
 
 # loop through each parcel
 for parcel in {1..$n_parcel}; do
@@ -28,19 +33,23 @@ for parcel in {1..$n_parcel}; do
   prefix=${prefix}_parcel${parc_ind}
 
   # run regression
-  matlab -nodesktop -nosplash -r "load('$input_dir/$prefix.mat', 'fc'); \
-                                  fc = squeeze(fc($parc_ind, :, :)); fc($parc_ind, :) = []; \
-                                  load('$psych_file', 'y'); \
-                                  load('$conf_file', 'conf'); \
-                                  addpath('$ROOT_DIR/HCP_surface_CBPP/utilities'); \
-                                  if $fix_seed == 1; seed = 1; else seed = 'shuffle'; end; \
-                                  cv_ind = CVPart_HCP('$preproc', 10, 10, '$ROOT_DIR/bin/sublist', seed); \
-                                  options = []; options.conf_opt = '$conf_opt'; \
-                                  options.method = '$method'; options.prefix = '$prefix'; \
-                                  options.isnull = $null_test; \
-                                  addpath('$ROOT_DIR'); \
-                                  CBPP_parcelwise(fc, y, conf, cv_ind, '$out_dir', options); \
-                                  exit"
+  if [ ! -e $output ]; then
+    matlab -nodesktop -nosplash -r "load('$input_dir/$prefix.mat', 'fc'); \
+                                    fc = squeeze(fc($parc_ind, :, :)); fc($parc_ind, :) = []; \
+                                    load('$psych_file', 'y'); \
+                                    load('$conf_file', 'conf'); \
+                                    addpath('$ROOT_DIR/HCP_surface_CBPP/utilities'); \
+                                    if $fix_seed == 1; seed = 1; else seed = 'shuffle'; end; \
+                                    cv_ind = CVPart_HCP('$preproc', 10, 10, '$ROOT_DIR/bin/sublist', seed); \
+                                    options = []; options.conf_opt = '$conf_opt'; \
+                                    options.method = '$method'; options.prefix = '$prefix'; \
+                                    options.isnull = $null_test; \
+                                    addpath('$ROOT_DIR'); \
+                                    CBPP_parcelwise(fc, y, conf, cv_ind, '$out_dir', options); \
+                                    exit"
+  else
+    echo "Output $output already exists!"
+  fi
 done
 
 }
@@ -128,7 +137,7 @@ corr=Pearson
 conf_opt=standard
 null_test=0
 fix_seed=0
-output_dir=$(pwd)/results/CBPP_perf
+out_dir=$(pwd)/results/CBPP_perf
 
 # Assign arguments
 while getopts "n:p:c:d:y:v:i:r:f:t:s:o:h" opt; do
@@ -144,7 +153,7 @@ while getopts "n:p:c:d:y:v:i:r:f:t:s:o:h" opt; do
     f) conf_opt=${OPTARG} ;;
     t) null_test=${OPTARG} ;;
     s) fix_seed=${OPTARG} ;;
-    o) output_dir=${OPTARG} ;;
+    o) out_dir=${OPTARG} ;;
     h) usage; exit ;;
     *) usage; 1>&2; exit 1 ;;
   esac

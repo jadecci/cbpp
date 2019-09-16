@@ -6,8 +6,8 @@
 # Define paths
 ###########################################
 
-UTILITIES_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/utilities
-BIN_DIR=$(dirname "$(dirname "$(dirname "$(readlink -f "$0")")")")/bin
+UTILITIES_DIR=$(dirname "$(readlink -f "$0")")/utilities
+BIN_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/bin
 
 ###########################################
 # Main commands
@@ -15,31 +15,34 @@ BIN_DIR=$(dirname "$(dirname "$(dirname "$(readlink -f "$0")")")")/bin
 main(){
 
 # get total number of subjects to run
-if [ -z $sub_id ]; then n_sub=`cat $sub_list | wc -l`; else; n_sub=1; fi
+if [ -z $sub_id ]; then sub_names=`cat $sub_list`; else sub_names=$sub_id; fi
 
 # loop through each subject
-for i in {1..$n_sub}; do
-  
-  # get subject ID from subject-list file if not provided
-  if [ -z $sub_id ]; then sub_id=`head -$i $sublist | tail -1`; fi
+for sub_id_curr in $sub_names; do
 
   # loop through each run
   for run in REST1_LR REST1_RL REST2_LR REST2_RL; do
-    echo "Running sub$sub_id $run"
-    out_prefix=HCP_${preproc}_parc${n_parc}_sub${sub_id}_${run}
+    out_prefix=HCP_${preproc}_parc${n_parc}_sub${sub_id_curr}_${run}
     input=$input_dir/$out_prefix.mat
+    output=$out_dir/${out_prefix}_${corr}.mat
 
-    if [ "$corr" == "Pearson" ]; then
-      matlab -nodesktop -nosplash -r "load('$input', 'vol_parc'); \
-                                      addpath('$UTILITIES_DIR'); \
-                                      FC_Pearson(vol_parc, '$out_dir', '$out_prefix'); \
-                                      exit"
-    elif [ "$corr" == 'partial_l2' ]; then
-      matlab -nodesktop -nosplash -r "load('$input', 'vol_parc'); \
-                                      addpath('$BIN_DIR/external_packages/FSLNets'); \
-                                      fc = nets_netmats(vol_parc', 1, 'ridgep'); \
-                                      save(['$out_dir' '/' '$out_prefix' '_partial_l2.mat'], 'fc'); \
-                                      exit"
+    # run connectivity computation if necessary
+    if [ ! -e $output ]; then 
+      echo "Running sub$sub_id_curr $run"
+      if [ "$corr" == "Pearson" ]; then
+        matlab -nodesktop -nosplash -r "load('$input', 'vol_parc'); \
+                                        addpath('$UTILITIES_DIR'); \
+                                        FC_Pearson(vol_parc, '$out_dir', '$out_prefix'); \
+                                        exit"
+      elif [ "$corr" == 'partial_l2' ]; then
+        matlab -nodesktop -nosplash -r "load('$input', 'vol_parc'); \
+                                        addpath('$BIN_DIR/external_packages/FSLNets'); \
+                                        fc = nets_netmats(vol_parc', 1, 'ridgep'); \
+                                        save(['$out_dir' '/' '$out_prefix' '_partial_l2.mat'], 'fc'); \
+                                        exit"
+      fi
+    else
+      echo "sub$sub_id_curr $run output already exists"
     fi
   done
 done
@@ -106,7 +109,7 @@ fi
 n_parc=300
 preproc=fix
 corr=Pearson
-output_dir=$(pwd)/results/FC
+out_dir=$(pwd)/results/FC
 
 # Assign arguments
 while getopts "n:p:c:d:s:i:o:h" opt; do
@@ -117,7 +120,7 @@ while getopts "n:p:c:d:s:i:o:h" opt; do
     d) input_dir=${OPTARG} ;;
     s) sub_list=${OPTARG} ;;
     i) sub_id=${OPTARG} ;;
-    o) output_dir=${OPTARG} ;;
+    o) out_dir=${OPTARG} ;;
     h) usage; exit ;;
     *) usage; 1>&2; exit 1 ;;
   esac

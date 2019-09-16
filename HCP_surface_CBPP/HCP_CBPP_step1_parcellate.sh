@@ -6,46 +6,47 @@
 # Define paths
 ###########################################
 
-UTILITIES_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/utilities
-BIN_DIR=$(dirname "$(dirname "$(dirname "$(readlink -f "$0")")")")/bin
+UTILITIES_DIR=$(dirname "$(readlink -f "$0")")/utilities
+BIN_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/bin
 
 ###########################################
 # Main commands
 ###########################################
 main(){
 
-# get total number of subjects to run
-if [ -z $sub_id ]; then n_sub=`cat $sub_list | wc -l`; else n_sub=1; fi
+# get all subject names
+if [ -z $sub_id ]; then sub_names=`cat $sub_list`; else sub_names=$sub_id; fi
 # get parcellation file
 parc_file=$BIN_DIR/parcellations/Schaefer2018_${n_parc}Parcels_17Networks_order.dlabel.nii
 
+
 # loop through each subject
-for i in {1..$n_sub}; do
-  
-  # get subject ID from subject-list file if not provided
-  if [ -z $sub_id ]; then sub_id=`head -$i $sublist | tail -1`; fi
+for sub_id_curr in $sub_names; do
 
   # loop througgh each run
   for run in REST1_LR REST1_RL REST2_LR REST2_RL
   do
-    echo "Running sub$sub_id $run"
 
     # get input
     case "$preproc" in
       fix)
-        input=$input_dir/$sub_id/rfMRI_$run/rfMRI_${run}_Atlas_hp2000_clean.dtseries.nii ;;
+        input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_Atlas_hp2000_clean.dtseries.nii ;;
       minimal)
-        input=$input_dir/$sub_id/rfMRI_$run/rfMRI_${run}_Atlas.dtseries.nii ;;
+        input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_Atlas.dtseries.nii ;;
     esac
-    output=$output_dir/HCP_${preproc}_parc${n_parc}_sub${sub_id}_${run}.mat
+    output=$out_dir/HCP_${preproc}_parc${n_parc}_sub${sub_id_curr}_${run}.mat
 
-    # get parcellation
-    matlab -nodesktop -nosplash -r "addpath('$BIN_DIR/external_packages/cifti-matlab', '$UTILITIES_DIR'); \
-                                    input = ft_read_cifti('$input'); \
-                                    vol_parc = parcellate_Schaefer_fslr(input.dtseries, $n_parc, '$parc_file'); \
-                                    save('$output', 'vol_parc'); \
-                                    rmpath('$BIN_DIR/external_packages/cifti-matlab', '$UTILITIES_DIR'); \
-                                    exit"
+    # run parcellation if necessary
+    if [ ! -e $output ]; then
+      echo "Running sub$sub_id_curr $run"
+      matlab -nodesktop -nosplash -r "addpath('$BIN_DIR/external_packages/cifti-matlab', '$UTILITIES_DIR'); \
+                                      input = ft_read_cifti('$input'); \
+                                      vol_parc = parcellate_Schaefer_fslr(input.dtseries, $n_parc, '$parc_file'); \
+                                      save('$output', 'vol_parc'); \
+                                      exit"
+    else
+      echo "sub$sub_id_curr $run output already exists"
+    fi
   done
 done
 }
@@ -106,7 +107,7 @@ fi
 # Default parameters
 n_parc=300
 preproc=fix
-output_dir=$(pwd)/results/parcellation
+out_dir=$(pwd)/results/parcellation
 
 # Assign arguments
 while getopts "n:p:d:s:i:o:h" opt; do
@@ -116,7 +117,7 @@ while getopts "n:p:d:s:i:o:h" opt; do
     d) input_dir=${OPTARG} ;;
     s) sub_list=${OPTARG} ;;
     i) sub_id=${OPTARG} ;;
-    o) output_dir=${OPTARG} ;;
+    o) out_dir=${OPTARG} ;;
     h) usage; exit ;;
     *) usage; 1>&2; exit 1 ;;
   esac

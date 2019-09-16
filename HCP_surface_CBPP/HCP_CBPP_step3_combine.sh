@@ -6,8 +6,8 @@
 # Define paths
 ###########################################
 
-UTILITIES_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/utilities
-BIN_DIR=$(dirname "$(dirname "$(dirname "$(readlink -f "$0")")")")/bin
+UTILITIES_DIR=$(dirname "$(readlink -f "$0")")/utilities
+BIN_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/bin
 
 ###########################################
 # Main commands
@@ -27,9 +27,13 @@ done
 
 # continue if all subjects are present
 if [ $all_present -eq 1 ]; then
-  matlab -nodesktop -nosplash -r "addpath('$UTILITIES_DIR'); \
-                                  combine_HCP_data_surf('$sub_list', '$input_dir', $n_parc, '$preproc', '$corr', '$output_dir'); \
-                                  exit"
+  if [ ! -e $out_dir/HCP_${preproc}_parc${n_parc}_${corr}.mat ]; then
+    matlab -nodesktop -nosplash -r "addpath('$UTILITIES_DIR'); \
+                                    combine_HCP_data_surf('$sub_list', '$input_dir', $n_parc, '$preproc', '$corr', '$out_dir'); \
+                                    exit"
+  else
+    echo "Combined FC matrix output already exists"
+  fi
 fi
 
 # clean up if required
@@ -101,7 +105,7 @@ n_parc=300
 preproc=fix
 corr=Pearson
 clean_up=0
-output_dir=$(pwd)/results/FC_combined
+out_dir=$(pwd)/results/FC_combined
 
 # Assign arguments
 while getopts "n:p:c:d:s:r:o:h" opt; do
@@ -112,7 +116,7 @@ while getopts "n:p:c:d:s:r:o:h" opt; do
     d) input_dir=${OPTARG} ;;
     s) sub_list=${OPTARG} ;;
     r) clean_up=${OPTARG} ;;
-    o) output_dir=${OPTARG} ;;
+    o) out_dir=${OPTARG} ;;
     h) usage; exit ;;
     *) usage; 1>&2; exit 1 ;;
   esac
