@@ -15,7 +15,7 @@ BIN_DIR=$(dirname "$(dirname "$(dirname "$(readlink -f "$0")")")")/bin
 main(){
 
 # get total number of subjects to run
-if [ -z $sub_id ]; then n_sub=`cat $sub_list | wc -l`; else; n_sub=1; fi
+if [ -z $sub_id ]; then n_sub=`cat $sub_list | wc -l`; else n_sub=1; fi
 # get parcellation file
 parc_file=$BIN_DIR/parcellations/Schaefer2018_${n_parc}Parcels_17Networks_order.dlabel.nii
 

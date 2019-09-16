@@ -32,6 +32,12 @@ if [ $all_present -eq 1 ]; then
                                   exit"
 fi
 
+# clean up if required
+if [ $clean_up -eq 1 ]; then
+  rm -rf $(pwd)/results/parcellation
+  rm -rf $(pwd)/results/FC
+fi
+
 }
 
 ###########################################

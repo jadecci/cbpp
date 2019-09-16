@@ -16,6 +16,7 @@ main(){
 # set up variables
 prefix=HCP_${preproc}_parc${n_parc}_${corr}
 n_repeat=10
+if [ $fix_seed -eq 1 ]; then prefix=${prefix}_fixSeed; fi
 if [ $null_test -eq 1 ]; then prefix=${prefix}_null; n_repeat=1000; fi
 if [ -z $parc_ind ]; then n_parcel=$n_parc; else; n_parcel=1; fi
 
@@ -32,7 +33,8 @@ for parcel in {1..$n_parcel}; do
                                   load('$psych_file', 'y'); \
                                   load('$conf_file', 'conf'); \
                                   addpath('$ROOT_DIR/HCP_surface_CBPP/utilities'); \
-                                  cv_ind = CVPart_HCP('$preproc', 10, 10, '$ROOT_DIR/bin/sublist', 'shuffle'); \
+                                  if $fix_seed == 1; seed = 1; else seed = 'shuffle'; end; \
+                                  cv_ind = CVPart_HCP('$preproc', 10, 10, '$ROOT_DIR/bin/sublist', seed); \
                                   options = []; options.conf_opt = '$conf_opt'; \
                                   options.method = '$method'; options.prefix = '$prefix'; \
                                   options.isnull = $null_test; \
@@ -48,7 +50,7 @@ done
 ###########################################
 
 usage() { echo "
-Usage: $0 -d <input_dir> -y <psych_file> -v <conf_file> -i <parc_ind> -r <method> -n <n_parc> -p <preproc> -c <corr> -s <null_test> -o <output_dir>
+Usage: $0 -d <input_dir> -y <psych_file> -v <conf_file> -i <parc_ind> -r <method> -n <n_parc> -p <preproc> -c <corr> -t <null_test> -s <fix_seed> -o <output_dir>
 
 This script is a wrapper to run parcel-wise CBPP using combined connectivity data from HCP.
 
@@ -89,8 +91,11 @@ OPTIONAL ARGUMENTS:
                   'add_conf': confounds are added as features
                   'no_conf': no confound controlling will be used
                   [ default: 'standard' ]
-  -s <null_test>  set this to 1 to generate the null distribution by permutation testing, where 
+  -t <null_test>  set this to 1 to generate the null distribution by permutation testing, where 
                   psychometric variables are shuffled and repeated 1000 times.
+                  [ default: 0 ]
+  -s <fix_seed>   set this to 1 to fix the seed for generating cross-validation partitions. This is 
+                  mainly used by the unit test. By default, the seed is randomly set.
                   [ default: 0 ]
   -o <output_dir> absolute path to output directory
                   [ default: $(pwd)/results/CBPP_perf ]
@@ -122,10 +127,11 @@ preproc=fix
 corr=Pearson
 conf_opt=standard
 null_test=0
+fix_seed=0
 output_dir=$(pwd)/results/CBPP_perf
 
 # Assign arguments
-while getopts "n:p:c:d:y:v:i:r:f:s:o:h" opt; do
+while getopts "n:p:c:d:y:v:i:r:f:t:s:o:h" opt; do
   case $opt in
     n) n_parc=${OPTARG} ;;
     p) preproc=${OPTARG} ;;
@@ -136,7 +142,8 @@ while getopts "n:p:c:d:y:v:i:r:f:s:o:h" opt; do
     i) parc_ind=${OPTARG} ;;
     r) method=${OPTARG} ;;
     f) conf_opt=${OPTARG} ;;
-    s) null_test=${OPTARG} ;;
+    t) null_test=${OPTARG} ;;
+    s) fix_seed=${OPTARG} ;;
     o) output_dir=${OPTARG} ;;
     h) usage; exit ;;
     *) usage; 1>&2; exit 1 ;;
