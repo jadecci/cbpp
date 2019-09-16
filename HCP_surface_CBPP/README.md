@@ -15,7 +15,7 @@ Step 4: perform whole-brain or parcel-wise CBPP using a chosen regression method
 
 Use the following commands (while in this folder) in sequence for running the SVR-FIX-Pearson combination of strategies at 300-parcel granularity. 
 
-The input directory (/path/to/input/dir) should contain a sub-folder for each subject, which then contains a sub-folder for each run. The psychometric file (/path/to/psychometric/file) is assumed to be a .mat file containing a variable 'y' of dimension NxP (N = number of subjects, P = number of psychometric variables). Similarly, the confounds file (/path/to/confounds/file) is assumed to be a .mat file containing a variable 'conf' of dimension NxC (C = number of confounding variables).
+The input directory (`/path/to/input/dir`) should contain a sub-folder for each subject, which then contains a sub-folder for each run. The psychometric file (/path/to/psychometric/file) is assumed to be a .mat file containing a variable `y` of dimension NxP (N = number of subjects, P = number of psychometric variables). Similarly, the confounds file (`/path/to/confounds/file`) is assumed to be a .mat file containing a variable `conf` of dimension NxC (C = number of confounding variables).
 
 Step 1: `./HCP_CBPP_step1_parcellate.sh -d /path/to/input/dir`
 
