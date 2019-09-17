@@ -1,18 +1,19 @@
-function cv_ind = CVPart_HCP(preproc, n_fold, n_repeat, data_dir, seed)
-% cv_ind = CVPart_HCP(preproc, n_fold, n_repeat, data_dir, seed)
+function cv_ind = CVPart_HCP(n_fold, n_repeat, sub_file, fam_file, seed)
+% cv_ind = CVPart_HCP(n_fold, n_repeat, sub_file, fam_file, seed)
 %
-% This function generates cross-validation indices for HCP subjects, keeping family members inside
-% the same fold. 
+% This function generates cross-validation indices for HCP subjects in the subject list, keeping 
+% family members inside the same fold. 
 %
 % Inputs:
-%       - preproc :
-%                  Pre-processing used in the data. Choose from 'minimal' and 'fix'.
 %       - n_fold  :
 %                  Number of folds
 %       - n_repeat:
 %                  Number of repeats
-%       - data_dir:
-%                  Directory where lists of subject IDs and family IDs are stored.
+%       - sub_file:
+%                  Absolute path to the .csv file containing all the subject IDs needed
+%       - fam_file:
+%                  (Optional) Absolute path to the .mat file containing all the family IDs
+%                  Default is: cbpp/bin/sublist/HCP_famID.mat
 %       - seed    :
 %                  (Optional) Seed used to set up the random number generator. Default is 'shuffle'
 %
@@ -22,30 +23,30 @@ function cv_ind = CVPart_HCP(preproc, n_fold, n_repeat, data_dir, seed)
 %                N subjects across M repeats
 %
 % Example:
-% cv_ind = CVPart_HCP('fix', 10, 10, '~/cbpp/bin/sublist')
+% cv_ind = CVPart_HCP(10, 10, '~/cbpp/bin/sublist/HCP_surf_fix_allRun_sub.csv')
 % This command generates cross-validation indices for a 10-fold cross-validation scheme repeating 10 
 % times, using the ICA-FIX data
 %
-% Jianxiao Wu, last edited on 1-Jul-2018
+% Jianxiao Wu, last edited on 16-Sept-2019
 
 % usage
 if nargin < 3
-    disp('Usage: cv_ind = CVPart_HCP(preproc, n_fold, n_repeat, data_dir, seed)');
+    disp('Usage: cv_ind = CVPart_HCP(n_fold, n_repeat, sub_file, fam_file, seed)');
     return
 end
 
 % set up default parameters
-if nargin < 5
-    seed = 'shuffle';
-end
+root_path = fileparts(fileparts(fileparts(mfilename('fullpath'))));
+if nargin < 4; fam_file = fullfile(root_path, 'bin', 'sublist', 'HCP_famID.mat'); end
+if nargin < 5; seed = 'shuffle'; end
 
 % add utility functions to path
 my_path = fileparts(mfilename('fullpath'));
 addpath(my_path);
 
 % get ID data
-load(fullfile(data_dir, 'HCP_famID.mat'), 'all_famID', 'all_subID');
-sublist = string(csvread(fullfile(data_dir, ['HCP_surf_' preproc '_allRun_sub.csv'])));
+load(fullfile(fam_file), 'all_famID', 'all_subID');
+sublist = string(csvread(sub_file));
 
 % extract family IDs from subjects with all 4 sessions
 famID = string(1:length(sublist))';

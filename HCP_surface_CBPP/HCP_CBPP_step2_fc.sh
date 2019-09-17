@@ -110,6 +110,7 @@ n_parc=300
 preproc=fix
 corr=Pearson
 out_dir=$(pwd)/results/FC
+sub_list=$BIN_DIR/sublist/HCP_surf_${preproc}_allRun_sub.csv
 
 # Assign arguments
 while getopts "n:p:c:d:s:i:o:h" opt; do
@@ -125,11 +126,6 @@ while getopts "n:p:c:d:s:i:o:h" opt; do
     *) usage; 1>&2; exit 1 ;;
   esac
 done
-
-# Default subject-list
-if [ -z $sub_list ]; then
-  sub_list=$BIN_DIR/sublist/HCP_surf_${preproc}_allRun_sub.csv
-fi
 
 ###########################################
 # Check parameters

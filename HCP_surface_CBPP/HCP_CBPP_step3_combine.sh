@@ -18,11 +18,13 @@ main(){
 sub_ids=`cat $sub_list`
 all_present=1
 for sub_id in $sub_ids; do
-  input=$input_dir/HCP_${preproc}_parc${n_parc}_sub${sub_id}_${run}_${corr}.mat
-  if [ ! -e $input ]; then
-    echo "Subject $sub_id $run is missing!"
-    all_present=0
-  fi
+  for run in REST1_LR REST1_RL REST2_LR REST2_RL; do
+    input=$input_dir/HCP_${preproc}_parc${n_parc}_sub${sub_id}_${run}_${corr}.mat
+    if [ ! -e $input ]; then
+     echo "Subject $sub_id $run is missing! Expecting input $input"
+      all_present=0
+    fi
+  done
 done
 
 # continue if all subjects are present
@@ -106,6 +108,7 @@ preproc=fix
 corr=Pearson
 clean_up=0
 out_dir=$(pwd)/results/FC_combined
+sub_list=$BIN_DIR/sublist/HCP_surf_${preproc}_allRun_sub.csv
 
 # Assign arguments
 while getopts "n:p:c:d:s:r:o:h" opt; do
@@ -121,11 +124,6 @@ while getopts "n:p:c:d:s:r:o:h" opt; do
     *) usage; 1>&2; exit 1 ;;
   esac
 done
-
-# Default subject-list
-if [ -z $sub_list ]; then
-  sub_list=$BIN_DIR/sublist/HCP_surf_${preproc}_allRun_sub.csv
-fi
 
 ###########################################
 # Check parameters

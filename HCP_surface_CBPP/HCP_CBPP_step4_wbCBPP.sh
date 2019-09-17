@@ -7,6 +7,7 @@
 ###########################################
 
 ROOT_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")
+famID_file=$ROOT_DIR/bin/sublist/HCP_famID.mat
 
 ###########################################
 # Main commands
@@ -15,17 +16,18 @@ main(){
 
 # set up variables
 prefix=HCP_${preproc}_parc${n_parc}_${corr}
+input=$input_dir/$prefix.mat
 if [ $fix_seed -eq 1 ]; then prefix=${prefix}_fixSeed; fi
 output=$out_dir/wbCBPP_${method}_${conf_opt}_${prefix}.mat
 
 # run regression
 if [ ! -e $output ]; then
-  matlab -nodesktop -nosplash -r "load('$input_dir/$prefix.mat', 'fc'); \
+  matlab -nodesktop -nosplash -r "load('$input', 'fc'); \
                                   load('$psych_file', 'y'); \
                                   load('$conf_file', 'conf'); \
                                   if $fix_seed == 1; seed = 1; else seed = 'shuffle'; end; \
                                   addpath('$ROOT_DIR/HCP_surface_CBPP/utilities'); \
-                                  cv_ind = CVPart_HCP('$preproc', 10, 10, '$ROOT_DIR/bin/sublist', seed); \
+                                  cv_ind = CVPart_HCP(10, 10, '$sub_list', '$famID_file', seed); \
                                   options = []; options.conf_opt = '$conf_opt'; \
                                   options.method = '$method'; options.prefix = '$prefix'; \
                                   addpath('$ROOT_DIR'); \
@@ -42,7 +44,7 @@ fi
 ###########################################
 
 usage() { echo "
-Usage: $0 -d <input_dir> -y <psych_file> -v <conf_file> -r <method> -n <n_parc> -p <preproc> -c <corr> -s <fix_seed> -o <output_dir>
+Usage: $0 -d <input_dir> -y <psych_file> -v <conf_file> -r <method> -n <n_parc> -p <preproc> -c <corr> -s <fix_seed> -l <sub_list> -o <output_dir>
 
 This script is a wrapper to run whole-brain CBPP using combined connectivity data from HCP.
 
@@ -80,6 +82,9 @@ OPTIONAL ARGUMENTS:
   -s <fix_seed>   set this to 1 to fix the seed for generating cross-validation partitions, so that 
                   statistical tests can be performed. By default, the seed is randomly set.
                   [ default: 0 ]
+  -l <sub_list>   absolute path to the subject-list file, where each line of the file contains the subject
+                  ID of one HCP subject (e.g. '100206')
+                  [ default: $ROOT_DIR/bin/sublist/HCP_surf_\$preproc_allRun_sub.csv ]
   -o <output_dir> absolute path to output directory
                   [ default: $(pwd)/results/CBPP_perf ]
   -h              display help message
@@ -111,9 +116,10 @@ corr=Pearson
 conf_opt=standard
 fix_seed=0
 out_dir=$(pwd)/results/CBPP_perf
+sub_list=$BIN_DIR/sublist/HCP_surf_${preproc}_allRun_sub.csv
 
 # Assign arguments
-while getopts "n:p:c:d:y:v:r:f:s:o:h" opt; do
+while getopts "n:p:c:d:y:v:r:f:s:l:o:h" opt; do
   case $opt in
     n) n_parc=${OPTARG} ;;
     p) preproc=${OPTARG} ;;
@@ -124,6 +130,7 @@ while getopts "n:p:c:d:y:v:r:f:s:o:h" opt; do
     r) method=${OPTARG} ;;
     f) conf_opt=${OPTARG} ;;
     s) fix_seed=${OPTARG} ;;
+    l) sub_list=${OPTARG} ;;
     o) out_dir=${OPTARG} ;;
     h) usage; exit ;;
     *) usage; 1>&2; exit 1 ;;

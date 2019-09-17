@@ -100,11 +100,11 @@ for repeat = 1:n_repeat
         
         % get indices for training and test sets
         % SVR/MLR: split into training and test set
-        if strcmp(method, 'SVR') || strcmp(method, 'MLR')
+        if strcmp(options.method, 'SVR') || strcmp(options.method, 'MLR')
             train_ind = double(cv_ind_curr ~= fold);
             test_ind = double(cv_ind_curr == fold);
         % EN: split into training, validation and test set
-        elseif strcmp(method, 'EN')
+        elseif strcmp(options.method, 'EN')
             if fold == n_fold; fold_inner = 1; else; fold_inner = fold + 1; end
             train_ind = (cv_ind_curr ~= fold) .* (cv_ind_curr ~= fold_inner);
             val_ind = double(cv_ind_curr == fold_inner);
@@ -112,11 +112,11 @@ for repeat = 1:n_repeat
         end
         
         % feature selection
-        if strcmp(method, 'SVR') % no feature selection for SVR
+        if strcmp(options.method, 'SVR') % no feature selection for SVR
             feature_sel = ones(xd, yd);
-        elseif strcmp(method, 'MLR') % select top 500 FC edges
+        elseif strcmp(options.method, 'MLR') % select top 500 FC edges
             feature_sel = select_feature_corr(x(train_ind==1, :), y(train_ind==1, :), 0, 500, 0);
-        elseif strcmp(method, 'EN') % select top 50% FC edges
+        elseif strcmp(options.method, 'EN') % select top 50% FC edges
             feature_sel = select_feature_corr(x(train_ind==1, :), y(train_ind==1, :), 0, 0, 50);
         end
         
@@ -125,7 +125,7 @@ for repeat = 1:n_repeat
         if strcmp(options.conf_opt, 'standard') || strcmp(options.conf_opt, 'str_conf')
             [y_curr(train_ind==1, :), reg_y] = regress_confounds_y(y_curr(train_ind==1, :), conf(train_ind==1, :));
             y_curr(test_ind==1, :) = regress_confounds_y(y_curr(test_ind==1, :), conf(test_ind==1, :), reg_y);
-            if strcmp(method, 'EN') % also apply confounds removal to validation fold for EN
+            if strcmp(options.method, 'EN') % also apply confounds removal to validation fold for EN
                 y_curr(val_ind==1, :) = regress_confounds_y(y_curr(val_ind==1, :), conf(val_ind==1, :), reg_y);
             end
         end
@@ -139,7 +139,7 @@ for repeat = 1:n_repeat
             if strcmp(options.conf_opt, 'add_conf'); x_sel = [x_sel, zscore(confounds)]; end
             
             % run regression
-            reg_func = str2func([method '_one_fold']);
+            reg_func = str2func([options.method '_one_fold']);
             [r_test_curr, r_train_curr] = reg_func(x_sel, y_curr(:, target_ind), cv_ind_curr, fold);
             
             % collect results
@@ -152,5 +152,5 @@ end
 disp(['Average time taken for one fold: ' num2str(mean(t(:)))]);
 
 % save performance results
-output_name = ['wbCBPP_' method '_' options.conf_opt '_' prefix ];
+output_name = ['wbCBPP_' options.method '_' options.conf_opt '_' options.prefix ];
 save([out_dir '/' output_name '.mat'], 'r_train', 'r_test');

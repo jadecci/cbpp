@@ -19,48 +19,55 @@ main(){
 n_sub=50
 parc_ind=5 # left V1 parcel
 
+# create temporary subject list
+sublist_orig=$ROOT_DIR/bin/sublist/HCP_surf_fix_allRun_sub.csv
+sublist=$output_dir/HCP_surf_fix_allRun_sub.csv
+head -$n_sub $sublist_orig > $sublist
+
 # step 1
-cmd="for sub_ind in {1..$n_sub}; do $ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step1_parcellate.sh -d $input_dir \
--o $output_dir/parcellation -i $sub_ind; done"
+cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step1_parcellate.sh -d $input_dir -o $output_dir/parcellation \
+-s $sublist"
 echo $cmd
 eval $cmd
 
 # step 2
-cmd="for sub_ind in {1..$n_sub}; do $ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step2_fc.sh -d $output_dir/parcellation \
--o $output_dir/FC -i $sub_ind; done"
+cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step2_fc.sh -d $output_dir/parcellation -o $output_dir/FC -s $sublist"
 echo $cmd
 eval $cmd
 
 # step 3
-cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step3_combine.sh -d $output_dir/FC -o $output_dir/FC_combined -r 1"
+cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step3_combine.sh -d $output_dir/FC -o $output_dir/FC_combined -s $sublist"
 echo $cmd
 eval $cmd
 
 # step 4 whole-brain
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_wbCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -s 1"
+-y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -s 1 -l $sublist"
 echo $cmd
 eval $cmd
 
 # step 4 parcel-wise
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_pwCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -i $parc_ind -s 1"
+-y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -i $parc_ind -s 1 -l $sublist"
 echo $cmd
 eval $cmd
 
 # compare results and done
 echo "Comparing whole-brain CBPP results ..."
-wb_output=$output_dir/wbCBPP_SVR_standard_fix_parc300_Pearson_fixSeed.mat
-wb_compare=$deriv_dir/wbCBPP_SVR_standard_fix_parc300_Pearson_fixSeed.mat
+wb_output=$output_dir/CBPP_perf/wbCBPP_SVR_standard_HCP_fix_parc300_Pearson_fixSeed.mat
+wb_compare=$deriv_dir/wbCBPP_SVR_standard_HCP_fix_parc300_Pearson_fixSeed.mat
 matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
                                 unit_test_compare('$wb_output', '$wb_compare'); \
                                 exit"
 echo "Comparing parcel-wise CBPP results ..."
-pw_output=$output_dir/pwCBPP_SVR_standard_fix_parc300_Pearson_fixSeed_parcel5.mat
-pw_compare=$deriv_dir/pwCBPP_SVR_standard_fix_parc300_Pearson_fixSeed_parcel5.mat
+pw_output=$output_dir/CBPP_perf/pwCBPP_SVR_standard_HCP_fix_parc300_Pearson_fixSeed_parcel5.mat
+pw_compare=$deriv_dir/pwCBPP_SVR_standard_HCP_fix_parc300_Pearson_fixSeed_parcel5.mat
 matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
                                 unit_test_compare('$pw_output', '$pw_compare'); \
                                 exit"
+
+# clean up
+#rm $sublist
 
 }
 
