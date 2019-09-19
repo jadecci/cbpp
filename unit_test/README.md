@@ -23,7 +23,7 @@ To run the unit test, call `unit_test.sh`, using the `-o` option to specify wher
 
 The whole-brain CBPP performance on test set will be compared to the default results in `/data/BnB2/Projects/jwu_HCP_Derivatives/unit_test_data/wbCBPP_SVR_standard_fix_parc300_Pearson_fixSeed.mat`. The parcel-wise CBPP performance on test set will be compared to the default resutls in `/data/BnB2/Projects/jwu_HCP_Derivatives/unit_test_data/pwCBPP_SVR_standard_fix_parc300_Pearson_fixSeed_parcel5.mat`. 
 
-The unit test is successful is the screen prints `The two volumes are identical`.
+The unit test is successful if the screen prints `The two volumes are identical` twice (for whole-brain and parcel-wise results respectively).
 
 This should take about `2h40m` to run.
 
