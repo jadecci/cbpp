@@ -15,6 +15,8 @@ input_dir=/data/BnB3/BnB1/Raw_Data_nonBIDS/HCP
 ###########################################
 main(){
 
+date
+
 # set up parameters
 n_sub=50
 parc_ind=5 # left V1 parcel
@@ -29,28 +31,33 @@ cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step1_parcellate.sh -d $input_dir -o $o
 -s $sublist"
 echo $cmd
 eval $cmd
+date
 
 # step 2
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step2_fc.sh -d $output_dir/parcellation -o $output_dir/FC -s $sublist"
 echo $cmd
 eval $cmd
+date
 
 # step 3
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step3_combine.sh -d $output_dir/FC -o $output_dir/FC_combined -s $sublist"
 echo $cmd
 eval $cmd
+date
 
 # step 4 whole-brain
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_wbCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
 -y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -s 1 -l $sublist"
 echo $cmd
 eval $cmd
+date
 
 # step 4 parcel-wise
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_pwCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
 -y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -i $parc_ind -s 1 -l $sublist"
 echo $cmd
 eval $cmd
+date
 
 # compare results and done
 echo "Comparing whole-brain CBPP results ..."
@@ -67,7 +74,9 @@ matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
                                 exit"
 
 # clean up
-#rm $sublist
+rm $sublist
+
+date
 
 }
 

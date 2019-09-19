@@ -25,4 +25,7 @@ The whole-brain CBPP performance on test set will be compared to the default res
 
 The unit test is successful is the screen prints `The two volumes are identical`.
 
-This should take about `to-be-clocked` to run.
+This should take about `2h40m` to run.
+
+If only prediction steps need to be tested, an existing combined FC file can be used while commenting out step 1-3. This light version of unit test
+should take about `13m` to run.
