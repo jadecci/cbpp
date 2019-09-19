@@ -44,8 +44,8 @@ if nargin ~= 4
 end
 
 % add glmnet library to path
-lib_path = fileparts(fileparts(fileparts(mfilename('fullpath'))));
-addpath(fullfile(lib_path, 'lib', 'glmnet_matlab'));
+root_path = fileparts(fileparts(mfilename('fullpath')));
+addpath(fullfile(root_path, 'bin', 'external_packages', 'glmnet_matlab'));
 
 % set-up lambda tuning parameters
 n_fold_lambda = 10; % 10-fold inner CV loop to tune lambda
