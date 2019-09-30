@@ -42,6 +42,7 @@ fi
 if [ $clean_up -eq 1 ]; then
   rm -rf $(pwd)/results/parcellation
   rm -rf $(pwd)/results/FC
+  if [ -d $(pwd)/results/HCP_GSR ]; then rm -rf $(pwd)/results/HCP_GSR; fi
 fi
 
 }
@@ -69,6 +70,7 @@ OPTIONAL ARGUMENTS:
   -p <preproc>    preprocessing used for input data. Possible options are:
                   'minimal': for data only processed with the HCP minimal preprocessing pipeline
                   'fix': for data processed with 'minimal' and ICA-FIX
+                  'gsr': for data processed with 'minimal', 'ICA-FIX' and global signal regression (GSR)
                   [ default: 'fix' ]
   -c <corr>       correlation method used for computing FC. Possible options are:
                   'Pearson': Pearson (or full) correlation

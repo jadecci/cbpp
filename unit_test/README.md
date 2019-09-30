@@ -13,7 +13,7 @@ The unit test script uses the Human Connectome Project (HCP) data. The downloade
 
 where each subject folder is named by the subject ID. Within each subject folder, the resting-state fMRI data are in the sub-folders `MNINonLinear/Results/rfMRI_$run`, where `run` could be REST1_LR, REST1_RL, REST2_LR or REST2_RL. 
 
-In total, 50 subjects's ICA-FIX processed data were used in the unit test, corresponding to the first 50 subjects in the subject list (`bin/sublist/HCP_surf_fix_allRun_sub.csv`).
+In total, 50 subjects's FIX+GSR processed data were used in the unit test, corresponding to the first 50 subjects in the subject list (`bin/sublist/HCP_surf_fix_allRun_sub.csv`).
 
 In addition, the psychometric and confounding variables for these 50 subjects are taken from `/data/BnB2/Projects/jwu_HCP_Derivatives/unit_test_data`.
 

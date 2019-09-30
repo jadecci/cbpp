@@ -33,6 +33,8 @@ for sub_id_curr in $sub_names; do
         input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_Atlas_hp2000_clean.dtseries.nii ;;
       minimal)
         input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_Atlas.dtseries.nii ;;
+      gsr)
+        input=$input_dir/HCP_GSRcortex_sub${sub_id_curr}_${run}.dtseries.nii ;;
     esac
     output=$out_dir/HCP_${preproc}_parc${n_parc}_sub${sub_id_curr}_${run}.mat
 
@@ -75,6 +77,7 @@ OPTIONAL ARGUMENTS:
   -p <preproc>    preprocessing used for input data. Possible options are:
                   'minimal': for data only processed with the HCP minimal preprocessing pipeline
                   'fix': for data processed with 'minimal' and ICA-FIX
+                  'gsr': for data processed with 'minimal', 'ICA-FIX' and global signal regression (GSR)
                   [ default: 'fix' ]
   -s <sub_list>   absolute path to the subject-list file, where each line of the file contains the 
                   subject ID of one HCP subject (e.g. '100206').
