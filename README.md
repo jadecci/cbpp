@@ -8,7 +8,7 @@ Wu J, Eickhoff SB, Hoffstaedter F, Patil KR, Schwender H, Genon S. **A connectiv
 
 Fundamental to human brain mapping is the relationship between brain regions and functions (or behaviours). The recent availability population-based studies with extensive psychometric characterization opens promising perspective to investigate such relationships. The CBPP framework is an effort to summarize the general workflow of and systematically assess the common parameters in psychometric prediction studies.
 
-Shown below is the workflow (left) and approaches investigated at each step in this project. We utilised the resting state fMRI data and 98 psychometric measures from over 900 Human Connectome Project (HCP) subjects, to evaluate a total of 72 combinations of approches. These are referred to as **whole-brain CBPP** approaches, as all region-to-region connectivity values are used as initial features.
+Shown below is the workflow (left) and approaches investigated at each step in this project (right). We utilised the resting state fMRI data and 98 psychometric measures from over 900 Human Connectome Project (HCP) subjects, to evaluate a total of 72 combinations of approches. These are referred to as **whole-brain CBPP** approaches, as all region-to-region connectivity values are used as initial features.
 
 <img src="bin/images/root_readme_img1.png" height="700" />
 
