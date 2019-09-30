@@ -28,15 +28,15 @@ for sub_id_curr in $sub_names; do
       echo "Running sub$sub_id_curr $run"
       
       # Generate global signal regressors
-      input=$in_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_Atlas_hp2000_clean.dtseries.nii
+      input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_Atlas_hp2000_clean.dtseries.nii
       reg_output=$out_dir/HCP_fix_sub${subject}_${run}_gs_regressors.mat
-      matlab -nodesktop -nosplash -r "addpath('$BIN_DIR/external_packages/cifti-matlab', '$UTILITIES_DIR'); \
+      matlab -nodesktop -nosplash -r "addpath(genpath('$BIN_DIR/external_packages')); \
                                       input = ft_read_cifti('$input'); \
                                       regressors = global_signal_withDiff(input.dtseries, 1:64984); \
-                                      input_matrix = single(input_cifti.dtseries); \
+                                      input_matrix = single(input.dtseries); \
                                       [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input_matrix', regressors', 1, []); \
                                       input.dtseries = resid'; \
-                                      ft_write_cifti('$output_name', input_cifti, 'parameter', 'dtseries'); \
+                                      ft_write_cifti('$output_name', input, 'parameter', 'dtseries'); \
                                       exit"
     else
       echo "sub$sub_id_curr $run output already exists"

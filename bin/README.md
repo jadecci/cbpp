@@ -1,6 +1,8 @@
 ## Folder Contents
 
-- `external_packages`: contains the FSLNets and cifti packages for Matlab 
+- `evaluation_scripts`: contains scripts used to perform statistical tests as described in the paper
+
+- `external_packages`: contains packages and scripts downloaded from others 
 
 - `images`: imageg files used in some READMEs
 
