@@ -1,4 +1,4 @@
-# CBPP Utility funcntions
+# CBPP General Utility Functions
 
 - `EN_one_fold.m`, `MLR_one_fold.m` and `SVR_one_fold.m`: runs Elastic nets (EN), multiple linear regression (MLR) or Support Vector Regression (SVR) using one cross-validation fold. 
 
