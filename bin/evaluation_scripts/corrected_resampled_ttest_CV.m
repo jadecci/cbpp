@@ -8,7 +8,7 @@ function [p, p_thr] = corrected_resampled_ttest_CV(perf, mcc_type)
 %
 % Inputs:
 %       - perf     :
-%                   MxKxN array containing test performance 1 in M repeats of K-fold cross-validation
+%                   MxKxN array containing test performance 1 to N in M repeats of K-fold cross-validation
 %                   for N different scenarios
 %       - mcc_type :
 %                   Type of multiple comparison correction to use. Choose from 'fdr' and 'bonferroni'                 
@@ -50,7 +50,7 @@ for i = 1:n
     for j = (i+1):n
         diff = perf(:, :, i) - perf(:, :, j); 
         t = mean(diff(:)) / (sqrt(1/(k * m) + 1/(k - 1)) * std(diff(:))); % variance is corrected for CV
-        p(i, j) = 2 * tcdf(abs(t), m*k-1, 'upper'); % plut in t distribution
+        p(i, j) = 2 * tcdf(abs(t), m*k-1, 'upper'); % plug in t distribution
     end
 end
 
