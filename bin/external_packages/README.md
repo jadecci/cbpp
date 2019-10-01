@@ -1,4 +1,4 @@
-# External packages/scripts
+# External Packages/Scripts
 
 - `cifti-matlab`: Matlab codes for reading and writing Cifti files. See README in the folder for more information.
 

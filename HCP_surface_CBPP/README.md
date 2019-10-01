@@ -2,7 +2,7 @@
 
 The procedure of the CBPP implementation using HCP data is as shown below:
 
-<img src="../bin/images/HCPsurf_readme_img1.png" height="900" />
+<img src="../bin/images/HCPsurf_readme_img1.png" />
 
 
 # Example 1: SVR-minimal-Pearson-300-parcel

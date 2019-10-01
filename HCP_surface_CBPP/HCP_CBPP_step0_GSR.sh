@@ -30,7 +30,7 @@ for sub_id_curr in $sub_names; do
       # Generate global signal regressors
       input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_Atlas_hp2000_clean.dtseries.nii
       reg_output=$out_dir/HCP_fix_sub${subject}_${run}_gs_regressors.mat
-      matlab -nodesktop -nosplash -r "addpath(genpath('$BIN_DIR/external_packages')); \
+      matlab -nodesktop -nosplash -r "addpath(genpath('$BIN_DIR/external_packages'), '$UTILITIES_DIR'); \
                                       input = ft_read_cifti('$input'); \
                                       regressors = global_signal_withDiff(input.dtseries, 1:64984); \
                                       input_matrix = single(input.dtseries); \
