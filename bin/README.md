@@ -1,5 +1,7 @@
 ## Folder Contents
 
+- `cv_procedure`: see README.md in the folder for description on cross-validation procedure used in whole-brain and parcel-wise CBPP
+
 - `evaluation_scripts`: contains scripts used to perform statistical tests as described in the paper
 
 - `external_packages`: contains packages and scripts downloaded from others 
