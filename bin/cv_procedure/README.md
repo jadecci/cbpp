@@ -6,4 +6,4 @@ The cross-validation procedure without hyperparameter tuning, i.e. for linear Su
 
 The cross-validation procedure with hyperparameter tuning, i.e. for elastic net (EN), is as shown below:
 
-<img src="../imagegs/CV_readme_img2.png" />
+<img src="../images/CV_readme_img2.png" />
