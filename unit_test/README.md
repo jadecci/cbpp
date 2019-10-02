@@ -25,7 +25,6 @@ The whole-brain CBPP performance on test set will be compared to the default res
 
 The unit test is successful if the screen prints `The two volumes are identical` twice (for whole-brain and parcel-wise results respectively).
 
-This should take about `2h40m` to run.
+This should take about `4h28m` to run.
 
-If only prediction steps need to be tested, an existing combined FC file can be used while commenting out step 1-3. This light version of unit test
-should take about `13m` to run.
+If only prediction steps need to be tested, an existing combined FC file can be used while commenting out step 0-3. This light version of unit test should take about `17m` to run.

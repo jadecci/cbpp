@@ -23,7 +23,7 @@ for sub_id_curr in $sub_names; do
   # loop through each run
   for run in REST1_LR REST1_RL REST2_LR REST2_RL
   do
-    output_name=$out_dir/HCP_GSRcortex_sub${subject}_${run}
+    output_name=$out_dir/HCP_GSRcortex_sub${sub_id_curr}_${run}
     if [ ! -e $output_name.dtseries.nii ]; then
       echo "Running sub$sub_id_curr $run"
       
