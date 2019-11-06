@@ -7,7 +7,7 @@
 ###########################################
 
 ROOT_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")
-famID_file=$ROOT_DIR/bin/sublist/HCP_famID.mat
+famID_file=/data/BnB_USER/jwu/data/HCP_famID.mat
 
 ###########################################
 # Main commands

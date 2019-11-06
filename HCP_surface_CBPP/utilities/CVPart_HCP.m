@@ -13,7 +13,8 @@ function cv_ind = CVPart_HCP(n_fold, n_repeat, sub_file, fam_file, seed)
 %                  Absolute path to the .csv file containing all the subject IDs needed
 %       - fam_file:
 %                  (Optional) Absolute path to the .mat file containing all the family IDs
-%                  Default is: cbpp/bin/sublist/HCP_famID.mat
+%                  Note that the default path only works on INM7 server
+%                  Default is: /data/BnB_USER/jwu/data/HCP_famID.mat
 %       - seed    :
 %                  (Optional) Seed used to set up the random number generator. Default is 'shuffle'
 %
@@ -36,8 +37,7 @@ if nargin < 3
 end
 
 % set up default parameters
-root_path = fileparts(fileparts(fileparts(mfilename('fullpath'))));
-if nargin < 4; fam_file = fullfile(root_path, 'bin', 'sublist', 'HCP_famID.mat'); end
+if nargin < 4; fam_file = '/data/BnB_USER/jwu/data/HCP_famID.mat'; end
 if nargin < 5; seed = 'shuffle'; end
 
 % add utility functions to path
@@ -61,7 +61,7 @@ for i = 1:length(sublist)
             done = 1;
         end
         index = index + 1;
-    end   
+    end
 end
 
 % get cross-validation indices
