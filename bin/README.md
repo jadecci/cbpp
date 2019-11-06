@@ -10,4 +10,4 @@
 
 - `parcellations`: the Schaefer atlas dense label files at 100-parcel, 200-parcel, 300-parcel and 400-parcel granularity, obtained from https://github.com/ThomasYeoLab/CBIG.
 
-- `sublist`: contains subject-list files for minimally processed and FIX data, as well as the HCP family ID data.
+- `sublist`: contains subject-list files for minimally processed and FIX data.
