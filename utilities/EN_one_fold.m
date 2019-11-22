@@ -66,7 +66,7 @@ y_train = y(train_ind_inner==1, :);
 
 % test set
 x_test = x(cv_ind == fold, :);
-y_test = y(cv_ind == fold);
+y_test = y(cv_ind == fold, :);
 
 % select best alpha value
 % see sklearn.linear_model.ElasticNetCV for list of alpha values
