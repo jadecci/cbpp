@@ -19,7 +19,11 @@ In addition, the psychometric and confounding variables for these 50 subjects ar
 
 ## Code
 
-To run the unit test, call `unit_test.sh`, using the `-o` option to specify where the results should be put.
+To run the unit test, call `unit_test.sh` with the following command:
+
+```
+./unit_test.sh -i /data/BnB3/BnB1/Raw_Data_nonBIDS/HCP -d /data/BnB2/Projects/jwu_HCP_Derivatives/unit_test_data -o $output_dir
+```
 
 The whole-brain CBPP performance on test set will be compared to the default results in `/data/BnB2/Projects/jwu_HCP_Derivatives/unit_test_data/wbCBPP_SVR_standard_fix_parc300_Pearson_fixSeed.mat`. The parcel-wise CBPP performance on test set will be compared to the default resutls in `/data/BnB2/Projects/jwu_HCP_Derivatives/unit_test_data/pwCBPP_SVR_standard_fix_parc300_Pearson_fixSeed_parcel5.mat`. 
 
@@ -27,4 +31,4 @@ The unit test is successful if the screen prints `The two volumes are identical`
 
 This should take about `4h28m` to run.
 
-If only prediction steps need to be tested, an existing combined FC file can be used while commenting out step 0-3. This light version of unit test should take about `17m` to run.
+If only prediction steps need to be tested, put an existing combined FC file in `$out_dir/FC_combined/HCP_gsr_parc300_Pearson.mat` and add `-t 'light'` to the command. This light version of unit test should take about `17m` to run.

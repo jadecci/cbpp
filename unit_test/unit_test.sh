@@ -1,14 +1,12 @@
 #! /usr/bin/env bash
 # This script runs the unit test for this repository
-# Jianxiao Wu, last edited on 12-Sept-2019
+# Jianxiao Wu, last edited on 18-Mar-2020
 
 ###########################################
 # Define paths
 ###########################################
 
 ROOT_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")
-deriv_dir=/data/BnB2/Projects/jwu_HCP_Derivatives/unit_test_data
-input_dir=/data/BnB3/BnB1/Raw_Data_nonBIDS/HCP
 
 ###########################################
 # Main commands
@@ -26,33 +24,35 @@ sublist_orig=$ROOT_DIR/bin/sublist/HCP_surf_fix_allRun_sub.csv
 sublist=$output_dir/HCP_surf_fix_allRun_sub.csv
 head -$n_sub $sublist_orig > $sublist
 
-# step 0
-cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step0_GSR.sh -d $input_dir -o $output_dir/HCP_GSR \
--s $sublist"
-echo $cmd
-eval $cmd
-date
+if [ $type == "full" ]; then 
+  # step 0
+  cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step0_GSR.sh -d $input_dir -o $output_dir/HCP_GSR \
+  -s $sublist"
+  echo $cmd
+  eval $cmd
+  date
 
-# step 1
-cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step1_parcellate.sh -d $output_dir/HCP_GSR -p gsr \
--o $output_dir/parcellation -s $sublist"
-echo $cmd
-eval $cmd
-date
+  # step 1
+  cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step1_parcellate.sh -d $output_dir/HCP_GSR -p gsr \
+  -o $output_dir/parcellation -s $sublist"
+  echo $cmd
+  eval $cmd
+  date
 
-# step 2
-cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step2_fc.sh -d $output_dir/parcellation -o $output_dir/FC \
--p gsr -s $sublist"
-echo $cmd
-eval $cmd
-date
+  # step 2
+  cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step2_fc.sh -d $output_dir/parcellation -o $output_dir/FC \
+  -p gsr -s $sublist"
+  echo $cmd
+  eval $cmd
+  date
 
-# step 3
-cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step3_combine.sh -d $output_dir/FC -o $output_dir/FC_combined \
--p gsr -s $sublist -r 1"
-echo $cmd
-eval $cmd
-date
+  # step 3
+  cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step3_combine.sh -d $output_dir/FC -o $output_dir/FC_combined \
+  -p gsr -s $sublist -r 1"
+  echo $cmd
+  eval $cmd
+  date
+fi
 
 # step 4 whole-brain
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_wbCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
@@ -98,15 +98,19 @@ usage() { echo "
 Usage: $0 -o output_dir
 
 This script parcellates and computes the connectivity of 50 HCP subjects and use the combined FC matrix for whole-brain and parcel-wise CBPP.
-The prediction results should be compared to $deriv_dir/wbCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed.mat and $deriv_dir/pwCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed_parcel5.mat. 
+The prediction results should be compared to \$deriv_dir/wbCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed.mat and \$deriv_dir/pwCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed_parcel5.mat. 
 
 Note that this unit test can only be run on the INM7 cluster.
 
 REQUIRED ARGUMENTS:
+  -i <input_dir>    absolute path to input directory
+  -d <deriv_dir>    absolute path to unit test psychometric, confounds and comparison data
 	-o <output_dir> 	absolute path to output directory
 
 OPTIONAL ARGUMENTS:
-	-h			display help message
+  -t <type> choose to run 'light' or 'full' unit test
+            [ default: 'full' ]
+	-h			  display help message
 
 OUTPUTS:
 	$0 will create 2 folders.
@@ -134,9 +138,13 @@ fi
 ##################################################################
 
 # Assign parameter
-while getopts "o:h" opt; do
+type='full'
+while getopts "i:d:o:t:h" opt; do
   case $opt in
+    i) input_dir=${OPTARG} ;;
+    d) deriv_dir=${OPTARG} ;;
     o) output_dir=${OPTARG} ;;
+    t) type=${OPTARG} ;;
     h) usage; exit ;;
     *) usage; 1>&2; exit 1 ;;
   esac
@@ -146,6 +154,12 @@ done
 # Check parameter
 ##################################################################
 
+if [ -z $input_dir ]; then
+  echo "Input directory not defined."; 1>&2; exit 1
+fi
+if [ -z $deriv_dir ]; then
+  echo "Unit test directory not defined."; 1>&2; exit 1
+fi
 if [ -z $output_dir ]; then
   echo "Output directory not defined."; 1>&2; exit 1
 fi
