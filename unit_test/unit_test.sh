@@ -71,13 +71,13 @@ date
 # compare results and done
 echo "Comparing whole-brain CBPP results ..."
 wb_output=$output_dir/CBPP_perf/wbCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed.mat
-wb_compare=$deriv_dir/wbCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed.mat
+wb_compare=$ROOT_DIR/unit_test/wbCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed.mat
 matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
                                 unit_test_compare('$wb_output', '$wb_compare'); \
                                 exit"
 echo "Comparing parcel-wise CBPP results ..."
 pw_output=$output_dir/CBPP_perf/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel5.mat
-pw_compare=$deriv_dir/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel5.mat
+pw_compare=$ROOT_DIR/unit_test/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel5.mat
 matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
                                 unit_test_compare('$pw_output', '$pw_compare'); \
                                 exit"
@@ -98,9 +98,7 @@ usage() { echo "
 Usage: $0 -o output_dir
 
 This script parcellates and computes the connectivity of 50 HCP subjects and use the combined FC matrix for whole-brain and parcel-wise CBPP.
-The prediction results should be compared to \$deriv_dir/wbCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed.mat and \$deriv_dir/pwCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed_parcel5.mat. 
-
-Note that this unit test can only be run on the INM7 cluster.
+The prediction results should be compared to wbCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed.mat and pwCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed_parcel5.mat respectively. 
 
 REQUIRED ARGUMENTS:
   -i <input_dir>    absolute path to input directory
