@@ -16,7 +16,7 @@ The CBPP framework is an effort to summarize the general workflow of and systema
 
 ## Replication
 
-Please see the README in the `HCP_surface_CBPP` folder for how to replicate the findings in our paper.
+Please see the README in the `HCP_surface_CBPP` folder for how to replicate the results in our paper.
 
 ## Code Release
 
