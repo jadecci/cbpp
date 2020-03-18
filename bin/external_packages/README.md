@@ -1,5 +1,7 @@
 # External Packages/Scripts
 
+This folder contains packages and scripts from external sources. These do not need to be called by the user.
+
 - `cifti-matlab`: Matlab codes for reading and writing Cifti files. See README in the folder for more information.
 
 - `FSLNets`: FSLNets Matlab package from the FMRIB Analysis Group (http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLNets), which was used to compute partial correlation with L2 regularisation in this project.

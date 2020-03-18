@@ -6,21 +6,50 @@ Wu J, Eickhoff SB, Hoffstaedter F, Patil KR, Schwender H, Genon S. **A connectiv
 
 ## Background
 
-Fundamental to human brain mapping is the relationship between brain regions and functions (or behaviours). The recent availability population-based studies with extensive psychometric characterization opens promising perspective to investigate such relationships. The CBPP framework is an effort to summarize the general workflow of and systematically assess the common parameters in psychometric prediction studies.
+The CBPP framework is an effort to summarize the general workflow of and systematically assess the common parameters in connectivity-based psychometric prediction studies. Shown below is the workflow (**left**) and the approaches investigated (and implemented) at each step of the workflow (**right**). Our work consists of 2 aspects:
 
-Shown below is the workflow (left) and approaches investigated at each step in this project (right). We utilised the resting state fMRI data and 98 psychometric measures from over 900 Human Connectome Project (HCP) subjects, to evaluate a total of 72 combinations of approches. These are referred to as **whole-brain CBPP** approaches, as all region-to-region connectivity values are used as initial features.
+1. **Whole-brain CBPP**: In the preliminary analysis, we utilised all region-to-region connectivity values for prediction to find the overall best combination of approaches.
+
+2. **Parcel-wise CBPP**: In order to improve the neurobiological validity (or interpretability) of psychometric prediction models, We propose a parcel-wise prediction approach, where models are trained on each parcel's connectivity profiles separately.
 
 <img src="bin/images/root_readme_img1.png" height="700" />
 
-In a cognitive and clinical neuroscience framework, not only the the prediction performance, but also the neurobiological validity (or interpretability) of the model matters. However, post-hoc analysis on feature weights assigned to connectivity edegs during whole-brain CBPP is inherently problematic. Instead, we propose a parcel-wise prediction approach, referred to as **parcel-wise CBPP**, where models are trained on each parcel's connectivity profiles separately.
+## Replication
 
-The applications of the parcel-wise CBPP approach is two-fold: 1) a psychometric profile can be established for a given parcel, showing its predictive power for different psychometric variables; 2) a predictive power map across parcels can be generated for a given psychometric variable. In this manner, we can directly examine the brain-behaviour associations from the parcel's perspective and the psychometric variable's perspective.
+Please see the README in the `HCP_surface_CBPP` folder for how to replicate the findings in our paper.
 
 ## Code Release
 
-- The functions `CBPP_wholebbrain.m` and `CBIG_parcelwise.m` can be used to run any combination of approaches with existing data. See their respective help messages for the usage.
+We release two Matlab functions, `CBPP_wholebbrain.m` and `CBIG_parcelwise.m`, for implementing any combination of approaches investigated in our paper. 
 
-- The `HCP_surface_CBPP` folder contains the wrapper codes for running psychometric prediction, usingg HCP surface data (only for minimally processed or FIX data currently). Refer to README in the folder for instructions on implementation.
+**Note** that the connectivity and psychometric data should be prepared before using these functions. For computing preprocessing, connectivity, etc. as done in our paper, see the README in `HCP_surface_CBPP` folder.
+
+To run whole-brain or parcel-wise CBPP, use the following commands in Matlab:
+
+```
+CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options)
+```
+
+```
+CBPP_parcelwise(fc, y, conf, cv_ind, out_dir, options)
+```
+
+For more detailed usage for each function, use the following commands in Matlab:
+
+```
+help CBPP_wholebrain
+```
+```
+help CBPP_parcelwise
+```
+
+## Additional Information
+
+1. A flowchart explaining the general workflow in more details is in the `Additional Information` section of the README file in the `HCP_surface_CBPP` folder.
+
+2. Flowcharts explaining the cross-validation procedures for each regression algorithm used is in the README file in the `bin/cv_procedure` folder.
+
+3. Scripts used to compare different whole-brain CBPP approach and compute statistical significance for parcel-wise CBPP results can be found in the `bin/evaluation_scripts` folder. See the README in the folder for their usage.
 
 ## Bugs and Questions
 

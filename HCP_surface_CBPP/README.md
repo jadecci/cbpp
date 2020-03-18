@@ -1,8 +1,6 @@
-# CBPP Implementatin using HCP Data
+This folder contains codes to replicate all 72 combination of approaches used in our paper.
 
-The procedure of the CBPP implementation using HCP data is as shown below:
-
-<img src="../bin/images/HCPsurf_readme_img1.png" />
+For `minimally processed` or `FIX`data, follow Example 1; for `FIX+GSR` data, follow Example 2. At each step, if any parameter needs to be switched, you can check the respective script's usage by running it with no argument (e.g. run `./HCP_CBPP_step1_parcellate.sh` on command line).
 
 
 # Example 1: SVR-minimal-Pearson-300-parcel
@@ -42,3 +40,9 @@ Step 4:
 - whole-brain CBPP: `./HCP_CBPP_step4_wbCBPP.sh -d $(pwd)/results/FC_combined -y /path/to/psychometric/file -v /path/to/confounds/file -p gsr`
 
 - parcel-wise CBPP: `./HCP_CBPP_step4_pwCBPP.sh -d $(pwd)/results/FC_combined -y /path/to/psychometric/file -v /path/to/confounds/file -p gsr`
+
+# Additional Information
+
+The detailed procedure of the CBPP implementation using HCP data is as shown below:
+
+<img src="../bin/images/HCPsurf_readme_img1.png" />
