@@ -12,11 +12,15 @@ The CBPP framework is an effort to summarize the general workflow of and systema
 
 2. **Parcel-wise CBPP**: In order to improve the neurobiological validity (or interpretability) of psychometric prediction models, We propose a parcel-wise prediction approach, where models are trained on each parcel's connectivity profiles separately. We further illustrate 2 applications for this aproach:
 
-    - **single parcel's psychometric profile** (i.e. a parcel's predictive power variation across different psychometric variables)
+    - **single parcel's psychometric profile** (below shows the psychometric profile of a pair of parcels in the Broca region)
+    
+    </br>
     <img src="bin/images/root_readme_img1.png" height="300" />
     
-    - **single psychometric variable's predictive power variation across parcels**
-    <img src="bin/images/root_readme_img2.png" height="200" />
+    - **single psychometric variable's predictive power variation across parcels** (below shows the predictive power variation for 2-back task accuracy)
+    
+    </br>
+    <img src="bin/images/root_readme_img2.png" height="170">
 
 ## Replication
 
