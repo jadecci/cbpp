@@ -62,21 +62,21 @@ if sig_sel == 0; n_limit = floor(p * top_perc / 100); end
 selected(isnan(selected)==1) = 0; % set NaN to 0 (indicating zero variance in a feature)
 
 % remove insignificant features if specified
-if sig_sel == 1; selected(p_val > p_thr) = 0; end
+if sig_sel == 1; selected(p_val > p_thr) = 999; end
 
 % only keep top features if specified
-selected_count = sum(selected ~= 0);
-[~, selected_rank] = sort(abs(selected), 'descend');
 if n_limit ~= 0
     for col = 1:t
-        for rank = (n_limit+1):selected_count(col)
-            selected(selected_rank(rank, col), col) = 0;
+        [selected_sorted, selected_rank] = sort(abs(selected(:, col)), 'descend');
+        selected_rank(selected_sorted==999) = [];
+        for rank = (n_limit+1):length(selected_rank)
+            selected(selected_rank(rank), col) = 999;
         end
     end
 end
 
 % set selected features to 1
-selected(selected~=0) = 1;
+selected(selected~=999) = 1;
     
 
             
