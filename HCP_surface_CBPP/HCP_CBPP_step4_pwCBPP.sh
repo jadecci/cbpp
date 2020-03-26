@@ -1,13 +1,12 @@
 #! /usr/bin/env bash
 # This script is a wrapper to run CBPP on HCP data in fsLR space
-# Jianxiao Wu, last edited on 12-Sept-2019
+# Jianxiao Wu, last edited on 26-Mar-2020
 
 ###########################################
 # Define paths
 ###########################################
 
 ROOT_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")
-famID_file=/data/BnB_USER/jwu/data/HCP_famID.mat
 
 ###########################################
 # Main commands
@@ -61,7 +60,7 @@ done
 ###########################################
 
 usage() { echo "
-Usage: $0 -d <input_dir> -y <psych_file> -v <conf_file> -i <parc_ind> -r <method> -n <n_parc> -p <preproc> -c <corr> -t <null_test> -s <fix_seed> -l <sub_list> -o <output_dir>
+Usage: $0 -d input_dir -y psych_file -v conf_file -m famID_file -i <parc_ind> -r <method> -n <n_parc> -p <preproc> -c <corr> -t <null_test> -s <fix_seed> -l <sub_list> -o <output_dir>
 
 This script is a wrapper to run parcel-wise CBPP using combined connectivity data from HCP.
 
@@ -70,10 +69,12 @@ Note that all parcels at the chosen granularity will be looped through by defaul
 REQUIRED ARGUMENT:
   -d <input_dir>  absolute path to input directory. The directory is assumed to be the output directory 
                   in step 3
-  -y <psych_file> absolute path to psychometric file, which should be a .mat file containing a variable 
+  -y <psych_file> absolute path to the psychometric file, which should be a .mat file containing a variable 
                   'y' of dimension NxP (N = number of subjects, P = number of psychometric variables)
-  -v <conf_file>  absolute path to confounds file, which should be a .mat file containing a variable
+  -v <conf_file>  absolute path to the confounds file, which should be a .mat file containing a variable
                   'conf' of dimension NxC (C = number of confounding variables)
+  -m <famID_file> absolute path to the family ID file, which should be a .mat file containing two string 
+                  array variables 'all_famID' and 'all_subID' of dimension Nx1
 
 OPTIONAL ARGUMENTS:
   -i <parc_ind>   index of a specific parcel to use. The index should follow the Schaefer atlas at 
@@ -147,7 +148,7 @@ out_dir=$(pwd)/results/CBPP_perf
 sub_list=$BIN_DIR/sublist/HCP_surf_${preproc}_allRun_sub.csv
 
 # Assign arguments
-while getopts "n:p:c:d:y:v:i:r:f:t:s:l:o:h" opt; do
+while getopts "n:p:c:d:y:v:m:i:r:f:t:s:l:o:h" opt; do
   case $opt in
     n) n_parc=${OPTARG} ;;
     p) preproc=${OPTARG} ;;
@@ -155,6 +156,7 @@ while getopts "n:p:c:d:y:v:i:r:f:t:s:l:o:h" opt; do
     d) input_dir=${OPTARG} ;;
     y) psych_file=${OPTARG} ;;
     v) conf_file=${OPTARG} ;;
+    m) famID_file=${OPTARG} ;;
     i) parc_ind=${OPTARG} ;;
     r) method=${OPTARG} ;;
     f) conf_opt=${OPTARG} ;;
@@ -181,6 +183,10 @@ fi
 
 if [ -z $conf_file ]; then
   echo "Confounds file not defined."; 1>&2; exit 1;
+fi
+
+if [ -z $famID_file ]; then
+  echo "Family ID file not defined."; 1>&2; exit 1;
 fi
 
 ###########################################

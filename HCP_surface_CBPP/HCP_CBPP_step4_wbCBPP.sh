@@ -7,7 +7,6 @@
 ###########################################
 
 ROOT_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")
-famID_file=/data/BnB_USER/jwu/data/HCP_famID.mat
 
 ###########################################
 # Main commands
@@ -44,7 +43,7 @@ fi
 ###########################################
 
 usage() { echo "
-Usage: $0 -d <input_dir> -y <psych_file> -v <conf_file> -r <method> -n <n_parc> -p <preproc> -c <corr> -s <fix_seed> -l <sub_list> -o <output_dir>
+Usage: $0 -d input_dir -y psych_file -v conf_file -m famID_file -r <method> -n <n_parc> -p <preproc> -c <corr> -s <fix_seed> -l <sub_list> -o <output_dir>
 
 This script is a wrapper to run whole-brain CBPP using combined connectivity data from HCP.
 
@@ -55,6 +54,8 @@ REQUIRED ARGUMENT:
                   'y' of dimension NxP (N = number of subjects, P = number of psychometric variables)
   -v <conf_file>  absolute path to confounds file, which should be a .mat file containing a variable
                   'conf' of dimension NxC (C = number of confounding variables)
+  -m <famID_file> absolute path to the family ID file, which should be a .mat file containing two string 
+                  array variables 'all_famID' and 'all_subID' of dimension Nx1
 
 OPTIONAL ARGUMENTS:
   -r <method>     regression method to use for prediction. Possible options are:
@@ -120,7 +121,7 @@ out_dir=$(pwd)/results/CBPP_perf
 sub_list=$BIN_DIR/sublist/HCP_surf_${preproc}_allRun_sub.csv
 
 # Assign arguments
-while getopts "n:p:c:d:y:v:r:f:s:l:o:h" opt; do
+while getopts "n:p:c:d:y:v:m:r:f:s:l:o:h" opt; do
   case $opt in
     n) n_parc=${OPTARG} ;;
     p) preproc=${OPTARG} ;;
@@ -128,6 +129,7 @@ while getopts "n:p:c:d:y:v:r:f:s:l:o:h" opt; do
     d) input_dir=${OPTARG} ;;
     y) psych_file=${OPTARG} ;;
     v) conf_file=${OPTARG} ;;
+    m) famID_file=${OPTARG} ;;
     r) method=${OPTARG} ;;
     f) conf_opt=${OPTARG} ;;
     s) fix_seed=${OPTARG} ;;
@@ -152,6 +154,10 @@ fi
 
 if [ -z $conf_file ]; then
   echo "Confounds file not defined."; 1>&2; exit 1;
+fi
+
+if [ -z $famID_file ]; then
+  echo "Family ID file not defined."; 1>&2; exit 1;
 fi
 
 ###########################################
