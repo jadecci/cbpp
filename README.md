@@ -14,6 +14,7 @@ The CBPP framework is an effort to summarize the general workflow of and systema
 
     - **single parcel's psychometric profile** (i.e. a parcel's predictive power variation across different psychometric variables)
     <img src="bin/images/root_readme_img1.png" height="300" />
+    
     - **single psychometric variable's predictive power variation across parcels**
     <img src="bin/images/root_readme_img2.png" height="200" />
 
