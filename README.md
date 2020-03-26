@@ -6,13 +6,16 @@ Wu J, Eickhoff SB, Hoffstaedter F, Patil KR, Schwender H, Genon S. **A connectiv
 
 ## Background
 
-The CBPP framework is an effort to summarize the general workflow of and systematically assess the common parameters in connectivity-based psychometric prediction studies. Shown below is the workflow (**left**) and the approaches investigated (and implemented) at each step of the workflow (**right**). Our work consists of 2 aspects:
+The CBPP framework is an effort to summarize the general workflow of and systematically assess the common parameters in connectivity-based psychometric prediction studies. Our work consists of 2 aspects:
 
 1. **Whole-brain CBPP**: In the preliminary analysis, we utilised all region-to-region connectivity values for prediction to find the overall best combination of approaches.
 
-2. **Parcel-wise CBPP**: In order to improve the neurobiological validity (or interpretability) of psychometric prediction models, We propose a parcel-wise prediction approach, where models are trained on each parcel's connectivity profiles separately.
+2. **Parcel-wise CBPP**: In order to improve the neurobiological validity (or interpretability) of psychometric prediction models, We propose a parcel-wise prediction approach, where models are trained on each parcel's connectivity profiles separately. We further illustrate 2 applications for this aproach:
 
-<img src="bin/images/root_readme_img1.png" height="700" />
+    - **single parcel's psychometric profile** (i.e. a parcel's predictive power variation across different psychometric variables)
+    - **single psychometric variable's predictive power variation across parcels**
+
+<img src="bin/images/root_readme_img1.png" height="500" />
 
 ## Replication
 
