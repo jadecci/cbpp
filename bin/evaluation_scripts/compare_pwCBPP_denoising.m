@@ -85,7 +85,7 @@ for parc_curr = 1:n_parc
 end
 
 %%% 1. Levene's test
-fprintf('1. Levene's test between prediction accuracy distributions: \n');
+fprintf("1. Levene's test between prediction accuracy distributions: \n");
 % perform Levene's test for selected psychometric variables
 levene_p = zeros(length(levene_sel), 1);
 for y_ind = 1:length(levene_sel)
@@ -95,7 +95,7 @@ for y_ind = 1:length(levene_sel)
 
     % print results if significant (alpha = 0.05)
     if levene_p(y_ind) < 0.05
-        fprintf('Levene's test significant for psychometric variable No.%i with p = %.4f.', ...
+        fprintf("Levene's test significant for psychometric variable No.%i with p = %.4f.", ...
                 y_curr, levene_p(y_ind));
         if var(perf1(y_curr, :)) > var(perf2(y_curr, :))
             fprintf('Variance of the 1st combination of approaches is larger. \n');
