@@ -56,14 +56,15 @@ fi
 
 # step 4 whole-brain
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_wbCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -s 1 -p gsr -l $sublist"
+-y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -s 1 -p gsr -l $sublist"
 echo $cmd
 eval $cmd
 date
 
 # step 4 parcel-wise
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_pwCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -i $parc_ind -s 1 -p gsr -l $sublist"
+-y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -i $parc_ind -s 1 \
+-p gsr -l $sublist"
 echo $cmd
 eval $cmd
 date

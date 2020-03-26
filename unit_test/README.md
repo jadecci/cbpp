@@ -12,6 +12,8 @@ The resting-state data should be stored with HCP's original folder structure, un
 
 For the psychometric and confounding variables, they should be extracted and saved in a `.mat` file each, under `$deriv_dir`. Save the psychometric data (50 subject x 100 features matrix) as variable `y` in `$deriv_dir/unit_test_y.mat`. Save the confounding variables (50 subject x 9 variables matrix) as variable `conf` in `$deriv_dir/unit_test_conf.mat`.
 
+Lastly, all subjects' IDs and corresponding family IDs should be saved in a `.mat` file as variables `all_subID` and `all_famID` (both as string arrays). Save the file as `$deriv_dir/HCP_famID.mat`.
+
 ## Code
 
 To run the unit test, call `unit_test.sh` with the following command:
