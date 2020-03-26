@@ -1,5 +1,5 @@
-function [r_test, r_train, weights, b, alpha] = EN_one_fold(x, y, cv_ind, fold)
-% [r_test, r_train, weights, b] = EN_one_fold(x, y, cv_ind, fold)
+function [perf, weights, b, alpha] = EN_one_fold(x, y, cv_ind, fold)
+% [perf, weights, b] = EN_one_fold(x, y, cv_ind, fold)
 %
 % This function runs Elastic nets for one cross-validation fold. The relationship between features 
 % and targets is assumed to be y = x * weights + b.
@@ -16,12 +16,11 @@ function [r_test, r_train, weights, b, alpha] = EN_one_fold(x, y, cv_ind, fold)
 %                  Fold to be used as validation set 
 %
 % Output:
-%       - r_test  :
-%                 Pearson correlation between predicted target values and actual target values in 
-%                 validation set
-%       - r_train:
-%                 Pearson correlation between predicted target values and actual target values in 
-%                 training set
+%       - perf   :
+%                 A structure containing the performance metrics: Pearson correlation between 
+%                 predicted and observed values ('r_train' and 'r_test'); normalised root mean
+%                 sqaured deviation between predicted and observed values ('nrmsd_train' and 
+%                 'nrmsd_test')
 %       - weights:
 %                 Px1 matrix containing weights of the P features
 %       - b      :
@@ -30,16 +29,11 @@ function [r_test, r_train, weights, b, alpha] = EN_one_fold(x, y, cv_ind, fold)
 %                 L1-to-L2-ratios chosen by performance on the validation set. A larger alpha means 
 %                 higher weightage on the L1 penalty term; at alpha=1 the model is purely LASSO
 %
-% Example:
-% [r_test, r_train, weights, b] = EN_one_fold(x, y, cv_ind, 1)
-% This command runs EN using fold 1 as test set, fold 2 as inner-loop validation set, and the rest 
-% as training set
-%
-% Jianxiao Wu, last edited on 1-Jul-2019
+% Jianxiao Wu, last edited on 26-Mar-2020
 
 % usage
 if nargin ~= 4
-    disp('Usage: [r_test, r_train, weights, b] = EN_one_fold(x, y, cv_ind, fold)');
+    disp('Usage: [perf, weights, b] = EN_one_fold(x, y, cv_ind, fold)');
     return
 end
 
@@ -100,9 +94,15 @@ for alpha = [0.01 0.1 0.5 0.7 0.9 0.95 0.99 1]
 end
 alpha = alpha_best;
 
+% get training performance
+ypred_train = x_train * weights + b;
+perf.r_train = corr(y_train, ypred_train, 'type', 'Pearson', 'Rows', 'complete');
+perf.nrmsd_train = sqrt(sum((y_train - ypred_train).^2) / (length(y_train) - 1)) / std(y_train);
+
 % get test performance
 ypred_test = x_test * weights + b;
-r_test = corr(y_test, ypred_test, 'type', 'Pearson', 'Rows', 'complete');
+perf.r_test = corr(y_test, ypred_test, 'type', 'Pearson', 'Rows', 'complete');
+perf.nrmsd_test = sqrt(sum((y_test- ypred_test).^2) / (length(y_test) - 1)) / std(y_test);
 
 
 

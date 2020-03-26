@@ -36,19 +36,14 @@ function CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options)
 %                  'str_conf' ('sex + brain size confounds' approach): similar to 'standard', but 
 %                             noting that the confounding variables passed in are only those 
 %                             correlated with strength (i.e. gender, brain size and ICV).
-%                  'add_conf' ('confounds added as features' approach) normalise the confounding 
-%                             variables and add them to features
 %                  'no_conf' ('no confound' approach) don't use confounds
 %                  Default: 'standard'
 %
 % Output:
 %        One .mat file will be saved to out_dir, containing performance in training set (vairable 
-%        'r_train') and validation set (variable 'r_test').
+%        'r_train' and 'nrmsd_train') and validation set (variable 'r_test' and 'nrmsd_test').
 %
-% Example:
-% CBPP_wholebrain(fc, y, conf, cv_ind, '~/results')
-%
-% Jianxiao Wu, last edited on 06-Sept-2019
+% Jianxiao Wu, last edited on 26-Mar-2020
 
 % usage
 if nargin < 5
@@ -61,12 +56,7 @@ my_path = fileparts(mfilename('fullpath'));
 addpath([my_path '/utilities']);
 
 % set default settings
-if nargin < 6
-    options = [];
-    options.method = 'SVR';
-    options.prefix = 'test';
-    options.conf_opt = 'standard';
-end
+if nargin < 6; options = []; end
 if ~isfield(options, 'method'); options.method = 'SVR'; end
 if ~isfield(options, 'prefix'); options.prefix = 'test'; end
 if ~isfield(options, 'conf_opt'); options.conf_opt = 'standard'; end
@@ -88,15 +78,16 @@ end
 % run cross-validation
 r_train = zeros(n_repeat, n_fold, yd);
 r_test = zeros(n_repeat, n_fold, yd);
-t = zeros(n_repeat, n_fold);
+nrmsd_train = zeros(n_repeat, n_fold, yd);
+nrmsd_test = zeros(n_repeat, n_fold, yd);
 % loop through M repeats
 for repeat = 1:n_repeat 
     cv_ind_curr = cv_ind(:, repeat); % CV fold indices for the current repeat
+    fprintf('\n Running repeat %i fold ', repeat);
 
     % loop through K folds
     for fold = 1:n_fold 
-        disp(['Running repeat ' num2str(repeat) 'fold ' num2str(fold)]);
-        tic
+        fprintf('%i ', fold);
         
         % get indices for training and test sets
         % SVR/MLR: split into training and test set
@@ -120,7 +111,7 @@ for repeat = 1:n_repeat
             feature_sel = select_feature_corr(x(train_ind==1, :), y(train_ind==1, :), 0, 0, 50);
         end
         
-        % regress out confounds if specified
+        % regress out confounds for 'standard' and 'str_conf' approaches
         y_curr = y;
         if strcmp(options.conf_opt, 'standard') || strcmp(options.conf_opt, 'str_conf')
             [y_curr(train_ind==1, :), reg_y] = regress_confounds_y(y_curr(train_ind==1, :), conf(train_ind==1, :));
@@ -134,23 +125,20 @@ for repeat = 1:n_repeat
         for target_ind = 1:yd
             % get selected features
             x_sel = x(:, feature_sel(:, target_ind) == 1);
-
-            % add confounds if specified
-            if strcmp(options.conf_opt, 'add_conf'); x_sel = [x_sel, zscore(confounds)]; end
             
             % run regression
             reg_func = str2func([options.method '_one_fold']);
-            [r_test_curr, r_train_curr] = reg_func(x_sel, y_curr(:, target_ind), cv_ind_curr, fold);
+            perf = reg_func(x_sel, y_curr(:, target_ind), cv_ind_curr, fold);
             
             % collect results
-            r_train(repeat, fold, target_ind) = r_train_curr;
-            r_test(repeat, fold, target_ind) = r_test_curr;
+            r_train(repeat, fold, target_ind) = perf.r_train;
+            r_test(repeat, fold, target_ind) = perf.r_test;
+            nrmsd_train(repeat, fold, target_ind) = perf.nrmsd_train;
+            nrmsd_test(repeat, fold, target_ind) = perf.nrmsd_test;
         end
-        t(repeat, fold) = toc;
     end
 end
-disp(['Average time taken for one fold: ' num2str(mean(t(:)))]);
 
 % save performance results
 output_name = ['wbCBPP_' options.method '_' options.conf_opt '_' options.prefix ];
-save([out_dir '/' output_name '.mat'], 'r_train', 'r_test');
+save([out_dir '/' output_name '.mat'], 'r_train', 'r_test', 'nrmsd_train', 'nrmsd_test');

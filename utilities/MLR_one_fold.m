@@ -1,5 +1,5 @@
-function [r_test, r_train, weights] = MLR_one_fold(x, y, cv_ind, fold)
-% [r_test, r_train, weights] = MLR_one_fold(x, y, cv_ind, fold)
+function [perf, weights] = MLR_one_fold(x, y, cv_ind, fold)
+% [perf, weights] = MLR_one_fold(x, y, cv_ind, fold)
 %
 % This function runs multiple linear regression (MLR) for one cross-validation fold. The 
 % relationship between features and targets is assumed to be y = [x 1] * weights.
@@ -16,21 +16,16 @@ function [r_test, r_train, weights] = MLR_one_fold(x, y, cv_ind, fold)
 %                  Fold to be used as validation set 
 %
 % Output:
-%       - r_test  :
-%                 Pearson correlation between predicted target values and actual target values in 
-%                 validation set
-%       - r_train:
-%                 Pearson correlation between predicted target values and actual target values in 
-%                 training set
+%       - perf   :
+%                 A structure containing the performance metrics: Pearson correlation between 
+%                 predicted and observed values ('r_train' and 'r_test'); normalised root mean
+%                 sqaured deviation between predicted and observed values ('nrmsd_train' and 
+%                 'nrmsd_test')
 %       - weights:
 %                 (P+1)x1 matrix containing weights of the P features and
 %                 the intercepts
 %
-% Example:
-% [r_test, r_train, weights] = MLR_one_fold(x, y, cv_ind, 1)
-% This command runs MLR using fold 1 as validation set, and the rest as training set
-%
-% Jianxiao Wu, last edited on 26-Aug-2019
+% Jianxiao Wu, last edited on 26-Mar-2020
 
 % usage
 if nargin ~= 4
@@ -48,13 +43,15 @@ weights = regress(y_train, [x_train, ones(size(x_train, 1), 1)]); % x needs to b
 
 % get training performance
 ypred_train = [x_train, ones(size(x_train, 1), 1)] * weights;
-r_train = corr(y_train, ypred_train, 'type', 'Pearson', 'Rows', 'complete');
+perf.r_train = corr(y_train, ypred_train, 'type', 'Pearson', 'Rows', 'complete');
+perf.nrmsd_train = sqrt(sum((y_train - ypred_train).^2) / (length(y_train) - 1)) / std(y_train);
 
 % get test performance
 x_test = x(cv_ind == fold, :);
 y_test = y(cv_ind == fold);
 ypred_test = [x_test, ones(size(x_test, 1), 1)] * weights;
-r_test = corr(y_test, ypred_test, 'type', 'Pearson', 'Rows', 'complete');
+perf.r_test = corr(y_test, ypred_test, 'type', 'Pearson', 'Rows', 'complete');
+perf.nrmsd_test = sqrt(sum((y_test- ypred_test).^2) / (length(y_test) - 1)) / std(y_test);
 
 
 
