@@ -76,7 +76,7 @@ OPTIONAL ARGUMENTS:
   -i <sub_id>     subject ID of the specific subject to run (e.g. '100206')
                   [ default: unset ]
   -o <output_dir> absolute path to output directory
-                  [ default: $(pwd)/results/HCP_GSR ]
+                  [ default: $(pwd)/results/HCP_regress ]
   -h              display help message
 
 OUTPUTS:
