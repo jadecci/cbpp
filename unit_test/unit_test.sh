@@ -17,38 +17,59 @@ date
 
 # set up parameters
 n_sub=50
-parc_ind=5 # left V1 parcel
+parc_ind_surf=5 # left V1 parcel
+parc_ind_mni=317 # left anterior hippocampus parcel
 
 # create temporary subject list
-sublist_orig=$ROOT_DIR/bin/sublist/HCP_surf_fix_allRun_sub.csv
-sublist=$output_dir/HCP_surf_fix_allRun_sub.csv
-head -$n_sub $sublist_orig > $sublist
+sublist_surf_orig=$ROOT_DIR/bin/sublist/HCP_surf_gsr_allRun_sub.csv
+sublist_surf=$output_dir/HCP_surf_gsr_allRun_sub.csv
+sublist_mni_orig=$ROOT_DIR/bin/sublist/HCP_MNI_fix_wmcsf_allRun_sub.csv
+sublist_mni=$output_dir/HCP_MNI_fix_wmcsf_allRun_sub.csv
+head -$n_sub $sublist_surf_orig > $sublist_surf
+head -$n_sub $sublist_mni_orig > $sublist_mni
 
 if [ $type == "full" ]; then 
   # step 0
-  cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step0_GSR.sh -d $input_dir -o $output_dir/HCP_GSR \
-  -s $sublist"
+  cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step0_GSR.sh -d $input_dir -o $output_dir/HCP_GSR -s $sublist_surf"
+  echo $cmd
+  eval $cmd
+  date
+  cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step0_regress.sh -d $input_dir -o $output_dir/HCP_regress -s $sublist_mni"
   echo $cmd
   eval $cmd
   date
 
   # step 1
   cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step1_parcellate.sh -d $output_dir/HCP_GSR -p gsr \
-  -o $output_dir/parcellation -s $sublist"
+  -o $output_dir/parcellation -s $sublist_surf"
+  echo $cmd
+  eval $cmd
+  date
+  cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step1_parcellate.sh -d $output_dir/HCP_regress \
+  -o $output_dir/parcellation -s $sublist_mni"
   echo $cmd
   eval $cmd
   date
 
   # step 2
   cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step2_fc.sh -d $output_dir/parcellation -o $output_dir/FC \
-  -p gsr -s $sublist"
+  -p gsr -s $sublist_surf"
+  echo $cmd
+  eval $cmd
+  date
+  cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step2_fc.sh -d $output_dir/parcellation -o $output_dir/FC -s $sublist_mni"
   echo $cmd
   eval $cmd
   date
 
   # step 3
   cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step3_combine.sh -d $output_dir/FC -o $output_dir/FC_combined \
-  -p gsr -s $sublist -r 1"
+  -p gsr -s $sublist_surf -r 1"
+  echo $cmd
+  eval $cmd
+  date
+  cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step3_combine.sh -d $output_dir/FC -o $output_dir/FC_combined \
+  -s $sublist_mni -r 1"
   echo $cmd
   eval $cmd
   date
@@ -56,30 +77,47 @@ fi
 
 # step 4 whole-brain
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_wbCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -s 1 -p gsr -l $sublist"
+-y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -s 1 -p gsr -l $sublist_surf"
+echo $cmd
+eval $cmd
+date
+cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step4_wbCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
+-y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -s 1 -l $sublist_mni"
 echo $cmd
 eval $cmd
 date
 
 # step 4 parcel-wise
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_pwCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -i $parc_ind -s 1 \
--p gsr -l $sublist"
+-y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -i $parc_ind_surf -s 1 \
+-p gsr -l $sublist_surf"
+echo $cmd
+eval $cmd
+date
+cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step4_pwCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
+-y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -i $parc_ind_mni -s 1 \
+-l $sublist_mni"
 echo $cmd
 eval $cmd
 date
 
 # compare results and done
-echo "Comparing whole-brain CBPP results ..."
+echo "Comparing surface-based results ..."
 wb_output=$output_dir/CBPP_perf/wbCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed.mat
 wb_compare=$ROOT_DIR/unit_test/wbCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed.mat
+pw_output=$output_dir/CBPP_perf/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel$parc_ind_surf.mat
+pw_compare=$ROOT_DIR/unit_test/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel$parc_ind_surf.mat
 matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
                                 unit_test_compare('$wb_output', '$wb_compare'); \
+                                unit_test_compare('$pw_output', '$pw_compare'); \
                                 exit"
-echo "Comparing parcel-wise CBPP results ..."
-pw_output=$output_dir/CBPP_perf/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel5.mat
-pw_compare=$ROOT_DIR/unit_test/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel5.mat
+echo "Comparing volume-based results ..."
+wb_output=$output_dir/CBPP_perf/wbCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed.mat
+wb_compare=$ROOT_DIR/unit_test/wbCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed.mat
+pw_output=$output_dir/CBPP_perf/pwCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed_parcel$parc_ind_mni.mat
+pw_compare=$ROOT_DIR/unit_test/pwCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed_parcel$parc_ind_mni.mat
 matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
+                                unit_test_compare('$wb_output', '$wb_compare'); \
                                 unit_test_compare('$pw_output', '$pw_compare'); \
                                 exit"
 
@@ -96,10 +134,10 @@ date
 
 # Usage
 usage() { echo "
-Usage: $0 -o output_dir
+Usage: $0 -i input_dir -d deriv_dir -o output_dir
 
-This script parcellates and computes the connectivity of 50 HCP subjects and use the combined FC matrix for whole-brain and parcel-wise CBPP.
-The prediction results should be compared to wbCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed.mat and pwCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed_parcel5.mat respectively. 
+This script parcellates and computes the connectivity of 50 HCP subjects using their surface (fsLR) and MNI data, and use the corresponding combined FC matrix for whole-brain and parcel-wise CBPP.
+The prediction results for surface data are compared to wbCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed.mat and pwCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed_parcel5.mat. For volumetric data, the results are compared to wbCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed.mat and pwCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed_parcel317.mat
 
 REQUIRED ARGUMENTS:
   -i <input_dir>    absolute path to input directory
@@ -114,14 +152,17 @@ OPTIONAL ARGUMENTS:
 OUTPUTS:
 	$0 will create 2 folders.
 
-	1) FC_combined folder: 1 file will be generated containing the combined FC matrix of all subjects
-	The file name will be: 
+	1) FC_combined folder: 2 files will be generated containing the combined FC matrix of all subjects
+	The file names will be: 
 		HCP_gsr_parc300_Pearson.mat
+    HCP_fix_wmcsf_AICHA_Pearson.mat
 
-	2) CBPP_perf folder: 2 files will be generated, corresponding to the prediction performance of whole-brain CBPP and parcel-wise CBPP respectively
+	2) CBPP_perf folder: 4 files will be generated, corresponding to the prediction performance of whole-brain CBPP and parcel-wise CBPP for surface and volumetric data respectively
 	The file names will be: 
 		wbCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed.mat
 		pwCBPP_SVR_standard_gsr_parc300_Pearson_fixSeed_parcel5.mat
+    wbCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed.mat
+    pwCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed_parcel317.mat
 
 EXAMPLE:
 	$0 -o ~/unit_test_results
