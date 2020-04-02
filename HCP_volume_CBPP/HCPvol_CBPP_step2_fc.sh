@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
-# This script is a wrapper to run FC computation for HCP fMRI data in fsLR space.
-# Jianxiao Wu, last edited on 12-Sept-2019
+# This script is a wrapper to run FC computation for HCP fMRI data in MNI space.
+# Jianxiao Wu, last edited on 02-Apr-2020
 
 ###########################################
 # Define paths
