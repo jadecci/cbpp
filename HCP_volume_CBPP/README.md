@@ -1,7 +1,16 @@
-This folder contains codes to implement similar combinations of approaches used in `HCP_surface_CBPP` to volumetric HCP data. See the `Additional Information` section for the approaches available for volumetric data.
+This folder contains codes to implement similar combinations of approaches used in `HCP_surface_CBPP` to volumetric HCP data. These approaches are available for volumetric data at each step of CBPP:
+
+- **preprocessing**: `FIX` (minimal processing pipeline + FIX denoising), `FIX+WM/CSF` ('FIX' + nuisance regression of 24 motion parameters, WM, CSF and derivatives), `FIX+GSR` ('FIX' + nuisance rgression of 24 motion parameters, global signal and derivative)
+
+- **parcellation**: `AICHA` (384 cortical & subcortical parcels)
+
+- **functional connectivity**: `Pearson` (Pearson correlation), `partial_l2` (partial correlation with L2 regularisation)
+
+- **regression/prediction**: `SVR` (Support Vector Regression), `EN` (Elastic nets), `KRRcorr` (Kernel Ridge Regression with correlation kernel)
 
 For `FIX` data, follow Example 1; for `FIX+WM/CSF` or `FIX+GSR` data, follow Example 2. At each step, if any parameter needs to be switched, you can check the respective script's usage by running it with no argument (e.g. run `./HCPvol_CBPP_step1_parcellate.sh` on command line).
 
+For more detailed description of the CBPP implementation using HCP surface data, see `bin/procedure_descriptions/README.md`. The implementation procedure for volumetric data is similar.
 
 # Example 1: SVR-FIX-Pearson-AICHA
 
@@ -40,16 +49,3 @@ Step 4:
 - whole-brain CBPP: `./HCPvol_CBPP_step4_wbCBPP.sh -d $(pwd)/results/FC_combined -y /path/to/psychometric/file -v /path/to/confounds/file`
 
 - parcel-wise CBPP: `./HCPvol_CBPP_step4_pwCBPP.sh -d $(pwd)/results/FC_combined -y /path/to/psychometric/file -v /path/to/confounds/file`
-
-# Additional Information
-
-These approaches are availabble for volumetric data at each step of CBPP:
-
-- **preprocessing**: `FIX` (only FIX denoising), `FIX+WM/CSF` (FIX denoising + nuisance regression of 24 motion parameters, WM, CSF and derivatives), `FIX+GSR` (FIX denoising + nuisance rgression of 24 motion parameters, global signal and derivative)
-
-- **parcellation**: `AICHA` (384 cortical & subcortical parcels)
-
-- **functional connectivity**: `Pearson` (Pearson correlation), `partial_l2` (partial correlation with L2 regularisation)
-
-- **regression/prediction**: `SVR` (Support Vector Regression), `EN` (Elastic nets), `KRRcorr` (Kernel Ridge Regression with correlation kernel)
-

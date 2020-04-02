@@ -1,6 +1,16 @@
-This folder contains codes to replicate all 72 combination of approaches used in our paper.
+This folder contains codes to replicate all 72 combination of approaches used in our paper. These approaches are available for surface data at each step of CBPP:
+
+- **preprocessing**: `minimal` (only minimal processing pipeline), `FIX` ('minimal' + FIX denoising), `FIX+GSR` ('FIX' + global signal regression)
+
+- **parcellation granularity (Schaefer atlas)**: `100`, `200`, `300`, `400`
+
+- **functional connectivity**: `Pearson` (Pearson correlation), `partial_l2` (partial correlation with L2 regularisation)
+
+- **regression/prediction**: `SVR` (Support Vector Regression), `EN` (Elastic nets), `KRRcorr` (Kernel Ridge Regression with correlation kernel)
 
 For `minimally processed` or `FIX`data, follow Example 1; for `FIX+GSR` data, follow Example 2. At each step, if any parameter needs to be switched, you can check the respective script's usage by running it with no argument (e.g. run `./HCP_CBPP_step1_parcellate.sh` on command line).
+
+For more detailed description of the CBPP implementation using HCP surface data, see `bin/procedure_descriptions/README.md`.
 
 
 # Example 1: SVR-minimal-Pearson-300-parcel
@@ -40,9 +50,3 @@ Step 4:
 - whole-brain CBPP: `./HCP_CBPP_step4_wbCBPP.sh -d $(pwd)/results/FC_combined -y /path/to/psychometric/file -v /path/to/confounds/file -p gsr`
 
 - parcel-wise CBPP: `./HCP_CBPP_step4_pwCBPP.sh -d $(pwd)/results/FC_combined -y /path/to/psychometric/file -v /path/to/confounds/file -p gsr`
-
-# Additional Information
-
-The detailed procedure of the CBPP implementation using HCP data is as shown below:
-
-<img src="../bin/images/HCPsurf_readme_img1.png" />
