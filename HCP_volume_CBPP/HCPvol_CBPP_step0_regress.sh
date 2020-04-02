@@ -6,7 +6,6 @@
 # Define paths
 ###########################################
 
-UTILITIES_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/HCP_surface_CBPP/utilities
 BIN_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/bin
 
 ###########################################
@@ -23,14 +22,14 @@ for sub_id_curr in $sub_names; do
   # loop through each run
   for run in REST1_LR REST1_RL REST2_LR REST2_RL
   do
-    output=$out_dir/HCP_${reg_type}_sub${sub_id_curr}_${run}.nii.gz
+    output=$out_dir/HCP_fix_${reg_type}_sub${sub_id_curr}_${run}.nii.gz
     if [ ! -e $output ]; then
       echo "Running sub$sub_id_curr $run"
       
       # Generate global signal regressors
       input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_hp2000_clean.nii
       regressors=$conf_dir/Confounds_${sub_id_curr}_${run}.mat
-      matlab -nodesktop -nosplash -r "addpath(genpath('$BIN_DIR/external_packages'), '$UTILITIES_DIR'); \
+      matlab -nodesktop -nosplash -r "addpath('$BIN_DIR/external_packages'); \
                                       input = MRIread('$input'); \
                                       dim = size(input.vol); \
                                       vol = reshape(input.vol, prod(dim(1:3)), dim(4)); \
@@ -82,7 +81,7 @@ OPTIONAL ARGUMENTS:
 
 OUTPUTS:
   $0 will create 4 output files in the output directory for the 4 runs of each subject
-  For example: HCP_gsr_sub100206_REST1_LR.nii.gz for the first run of subject 100206
+  For example: HCP_fix_gsr_sub100206_REST1_LR.nii.gz for the first run of subject 100206
 
 EXAMPLE:
   $0 -d ~/data -r 'gsr' -i 100206
