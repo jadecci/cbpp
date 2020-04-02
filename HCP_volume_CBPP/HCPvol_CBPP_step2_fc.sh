@@ -1,12 +1,12 @@
 #! /usr/bin/env bash
-# This script is a wrapper to run parcelation for HCP fMRI data in fsLR space.
+# This script is a wrapper to run FC computation for HCP fMRI data in fsLR space.
 # Jianxiao Wu, last edited on 12-Sept-2019
 
 ###########################################
 # Define paths
 ###########################################
 
-UTILITIES_DIR=$(dirname "$(readlink -f "$0")")/utilities
+UTILITIES_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/HCP_surface_CBPP/utilities
 BIN_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/bin
 
 ###########################################
@@ -14,40 +14,39 @@ BIN_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/bin
 ###########################################
 main(){
 
-# get all subject names
+# get total number of subjects to run
 if [ -z $sub_id ]; then sub_names=`cat $sub_list`; else sub_names=$sub_id; fi
-# get parcellation file
-parc_file=$BIN_DIR/parcellations/AICHA.nii
 
 # loop through each subject
 for sub_id_curr in $sub_names; do
 
-  # loop througgh each run
-  for run in REST1_LR REST1_RL REST2_LR REST2_RL
-  do
+  # loop through each run
+  for run in REST1_LR REST1_RL REST2_LR REST2_RL; do
+    out_prefix=HCP_${preproc}_AICHA_sub${sub_id_curr}_${run}
+    input=$input_dir/$out_prefix.mat
+    output=$out_dir/${out_prefix}_${corr}.mat
 
-    # get input
-    case "$preproc" in
-      fix)
-        input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_hp2000_clean.nii ;;
-      fix_gsr|fix_wmcsf)
-        input=$input_dir/HCP_${preproc}_sub${sub_id_curr}_${run}.nii.gz ;;
-    esac
-    output=$out_dir/HCP_${preproc}_AICHA_sub${sub_id_curr}_${run}.mat
-
-    # run parcellation if necessary
-    if [ ! -e $output ]; then
+    # run connectivity computation if necessary
+    if [ ! -e $output ]; then 
       echo "Running sub$sub_id_curr $run"
-      matlab -nodesktop -nosplash -r "input = MRIread('$input'); \
-                                      addpath('$UTILITIES_DIR'); \
-                                      vol_parc = parcellate_AICHA_MNI(input.vol, '$parc_file'); \
-                                      save('$output', 'vol_parc'); \
-                                      exit"
+      if [ "$corr" == "Pearson" ]; then
+        matlab -nodesktop -nosplash -r "load('$input', 'vol_parc'); \
+                                        addpath('$UTILITIES_DIR'); \
+                                        FC_Pearson(vol_parc, '$out_dir', '$out_prefix'); \
+                                        exit"
+      elif [ "$corr" == 'partial_l2' ]; then
+        matlab -nodesktop -nosplash -r "load('$input', 'vol_parc'); \
+                                        addpath('$BIN_DIR/external_packages/FSLNets'); \
+                                        fc = nets_netmats(vol_parc', 1, 'ridgep'); \
+                                        save(['$out_dir' '/' '$out_prefix' '_partial_l2.mat'], 'fc'); \
+                                        exit"
+      fi
     else
       echo "sub$sub_id_curr $run output already exists"
     fi
   done
 done
+
 }
 
 ###########################################
@@ -55,16 +54,17 @@ done
 ###########################################
 
 usage() { echo "
-Usage: $0 -d <input_dir> -p <preproc> -s <sub_list> -i <sub_id> -o <output_dir>
+Usage: $0 -d <input_dir> -p <preproc> -c <corr> -s <sub_list> -i <sub_id> -o <output_dir>
 
-This script is a wrapper to run parcelation for HCP fMRI data in MNI space, using the AICHA atlas. 
+This script is a wrapper to compute functional connectivity (FC) for HCP fMRI data in MNI space, which
+were previously parcellated using the AICHA atlas. 
 
-By default, all subjects in the specified sub_list are parcellated. For better parallelisation, use the 
+By default, all subjects in the specified sub_list are processed. For better parallelisation, use the 
 -i option to specify one subject to run at a time.
 
 REQUIRED ARGUMENT:
-  -d <input_dir>  absolute path to input directory. For FIX data, the directory is assumed to be oragnised in the 
-                  same way as the data downloaded from HCP 
+  -d <input_dir>  absolute path to input directory. The directory is assumed to be the output directory 
+                  in step 1
 
 OPTIONAL ARGUMENTS:
   -p <preproc>    preprocessing used for input data. Possible options are:
@@ -72,22 +72,26 @@ OPTIONAL ARGUMENTS:
                   'fix_wmcsf': for data processed with 'ICA-FIX' and WM/CSF nuisance regression
                   'fix_gsr': for data processed with 'ICA-FIX' and global signal regression (GSR)
                   [ default: 'fix_wmcsf' ]
+  -c <corr>       correlation method to use for computing FC. Possible options are:
+                  'Pearson': Pearson (or full) correlation
+                  'partial_l2': partial correlation with L2 regularisation
+                  [ default: 'Pearson' ]
   -s <sub_list>   absolute path to the subject-list file, where each line of the file contains the 
                   subject ID of one HCP subject (e.g. '100206').
                   [ default: $BIN_DIR/sublist/HCP_MNI_\$preproc_allRun_sub.csv ]
   -i <sub_id>     subject ID of the specific subject to run (e.g. '100206')
                   [ default: unset ]
   -o <output_dir> absolute path to output directory
-                  [ default: $(pwd)/results/parcellation ]
+                  [ default: $(pwd)/results/FC ]
   -h              display help message
 
 OUTPUTS:
   $0 will create 4 output files in the output directory for the 4 runs of each subject
-  For example: HCP_fix_wmcsf_AICHA_sub100206_REST1_LR.mat for the first run of subject 100206
+  For example: HCP_fix_wmcsf_AICHA_sub100206_REST1_LR_Pearson.mat for the first run of subject 100206
 
 EXAMPLE:
-  $0 -d ~/data
-  $0 -d ~/data -n 100 -p fix_gsr -i 100206
+  $0 -d \$(pwd)/results/parcellation
+  $0 -d \$(pwd)/results/parcellation -n 100 -p fix_gsr -c partial_l2 -i 100206
 
 " 1>&2; exit 1; }
 
@@ -101,14 +105,16 @@ fi
 ###########################################
 
 # Default parameters
-preproc=fix_wmcsf
-out_dir=$(pwd)/results/parcellation
+preproc=fix
+corr=Pearson
+out_dir=$(pwd)/results/FC
 sub_list=$BIN_DIR/sublist/HCP_MNI_${preproc}_allRun_sub.csv
 
 # Assign arguments
-while getopts "p:d:s:i:o:h" opt; do
+while getopts "p:c:d:s:i:o:h" opt; do
   case $opt in
     p) preproc=${OPTARG} ;;
+    c) corr=${OPTARG} ;;
     d) input_dir=${OPTARG} ;;
     s) sub_list=${OPTARG} ;;
     i) sub_id=${OPTARG} ;;
@@ -141,3 +147,4 @@ fi
 ###########################################
 
 main
+
