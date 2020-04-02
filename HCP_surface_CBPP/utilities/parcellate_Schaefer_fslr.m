@@ -17,7 +17,7 @@ function parc_data = parcellate_Schaefer_fslr(input, n_parc, parc_file)
 %                   PxT matrix containing T time-point data from P parcels
 %
 % Example:
-% parc_data = parcellate_Schaefer_fslr(HCP_input.dtseries, 100);
+% parc_data = parcellate_Schaefer_fslr(HCP_input.dtseries, 100, 'Schaefer100.dlabel.nii');
 % This parcellates the time series from a HCP subject into 100 parcels using the Schaefer atlas
 %
 % Jianxiao Wu, last edited on 06-Sept-2019

@@ -68,8 +68,8 @@ By default, all subjects in the specified sub_list are parcellated. For better p
 Note that the fMRI data should be in cifti format, i.e. the file should ends in .dtseries.nii
 
 REQUIRED ARGUMENT:
-  -d <input_dir>  absolute path to input directory. The directory is assumed to be oragnised in the 
-                  same way as the data downloaded from HCP 
+  -d <input_dir>  absolute path to input directory. For minimal or FIX data, the directory is assumed to be oragnised
+                  in the same way as the data downloaded from HCP 
 
 OPTIONAL ARGUMENTS:
   -n <n_parc>     parcellation granularity to use. Possible values are: 100, 200, 300 and 400
@@ -89,8 +89,8 @@ OPTIONAL ARGUMENTS:
   -h              display help message
 
 OUTPUTS:
-  $0 will create 1 output file in the output directory for each subject
-  For example: HCP_fix_parc300_sub100206_REST1_LR.mat
+  $0 will create r output filse in the output directory for the 4 runs of each subject
+  For example: HCP_fix_parc300_sub100206_REST1_LR.mat for the first run of subject 100206
 
 EXAMPLE:
   $0 -d ~/data
