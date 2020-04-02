@@ -77,25 +77,26 @@ fi
 
 # step 4 whole-brain
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_wbCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -s 1 -p gsr -l $sublist_surf"
+-y $deriv_dir/unit_test_surf_y.mat -v $deriv_dir/unit_test_surf_conf.mat -m $deriv_dir/HCP_famID.mat -s 1 -p gsr \
+-l $sublist_surf"
 echo $cmd
 eval $cmd
 date
 cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step4_wbCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -s 1 -l $sublist_mni"
+-y $deriv_dir/unit_test_vol_y.mat -v $deriv_dir/unit_test_vol_conf.mat -m $deriv_dir/HCP_famID.mat -s 1 -l $sublist_mni"
 echo $cmd
 eval $cmd
 date
 
 # step 4 parcel-wise
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_pwCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -i $parc_ind_surf -s 1 \
--p gsr -l $sublist_surf"
+-y $deriv_dir/unit_test_surf_y.mat -v $deriv_dir/unit_test_surf_conf.mat -m $deriv_dir/HCP_famID.mat -i $parc_ind_surf \
+-s 1 -p gsr -l $sublist_surf"
 echo $cmd
 eval $cmd
 date
 cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step4_pwCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_y.mat -v $deriv_dir/unit_test_conf.mat -m $deriv_dir/HCP_famID.mat -i $parc_ind_mni -s 1 \
+-y $deriv_dir/unit_test_vy.mat -v $deriv_dir/unit_test_vol_conf.mat -m $deriv_dir/HCP_famID.mat -i $parc_ind_mni -s 1 \
 -l $sublist_mni"
 echo $cmd
 eval $cmd
@@ -104,18 +105,18 @@ date
 # compare results and done
 echo "Comparing surface-based results ..."
 wb_output=$output_dir/CBPP_perf/wbCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed.mat
-wb_compare=$ROOT_DIR/unit_test/wbCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed.mat
+wb_compare=$ROOT_DIR/unit_test/ground_truth/wbCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed.mat
 pw_output=$output_dir/CBPP_perf/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel$parc_ind_surf.mat
-pw_compare=$ROOT_DIR/unit_test/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel$parc_ind_surf.mat
+pw_compare=$ROOT_DIR/unit_test/ground_truth/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel$parc_ind_surf.mat
 matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
                                 unit_test_compare('$wb_output', '$wb_compare'); \
                                 unit_test_compare('$pw_output', '$pw_compare'); \
                                 exit"
 echo "Comparing volume-based results ..."
 wb_output=$output_dir/CBPP_perf/wbCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed.mat
-wb_compare=$ROOT_DIR/unit_test/wbCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed.mat
+wb_compare=$ROOT_DIR/unit_test/ground_truth/wbCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed.mat
 pw_output=$output_dir/CBPP_perf/pwCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed_parcel$parc_ind_mni.mat
-pw_compare=$ROOT_DIR/unit_test/pwCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed_parcel$parc_ind_mni.mat
+pw_compare=$ROOT_DIR/unit_test/ground_truth/pwCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed_parcel$parc_ind_mni.mat
 matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
                                 unit_test_compare('$wb_output', '$wb_compare'); \
                                 unit_test_compare('$pw_output', '$pw_compare'); \
