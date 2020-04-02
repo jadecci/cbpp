@@ -1,0 +1,40 @@
+NEOFAC-O, NEOFAC_O
+Audition, Noise_Comp
+Contrast Sen, Mars_Final
+Strength, Strength_AgeAdj
+Dexterity, Dexterity_AgeAdj
+Gait Speed, GaitSpeed_Comp
+Endurance, Endurance_AgeAdj
+Proc Speed, ProcSpeed_AgeAdj
+Fluid Int, PMAT24_A_CR
+Total Comp, CogTotalComp_AgeAdj
+Crystal Comp, CogCrystalComp_AgeAdj
+Fluid Comp, CogFluidComp_AgeAdj
+Delay Disc, DDisc_AUC_40K
+Reading, ReadEng_AgeAdj
+Pic Vocab, PicVocab_AgeAdj
+Pic Seq, PicSeq_AgeAdj
+List Sort, ListSort_AgeAdj
+2-back Acc, WM_Task_2bk_Acc
+2-back Acc Face, WM_Task_2bk_Face_Acc
+Lang task, Language_Task_Acc
+Rel Acc, Relational_Task_Acc
+Card Sort, CardSort_AgeAdj
+Flanker, Flanker_AgeAdj
+Fluid Int RT, PMAT24_A_RTCR
+2-back RT, WM_Task_2bk_Median_RT
+Gambling RT, Gambling_Task_Median_RT_Smaller
+Rel RT, Relational_Task_Median_RT
+Emot Recog RT, ER40_CRT
+Emot Recog, ER40_CR
+Life Satisf, LifeSatisf_Unadj
+Emot Supp, EmotSupp_Unadj
+Self Eff, SelfEff_Unadj
+Stress, PercStress_Unadj
+Anger Aggr, AngAggr_Unadj
+Fear Affect, FearAffect_Unadj
+Sadness, Sadness_Unadj
+NEOFAC-N, NEOFAC_N
+NEOFAC-E, NEOFAC_E
+NEOFAC-A, NEOFAC_A
+NEOFAC-C, NEOFAC_C
