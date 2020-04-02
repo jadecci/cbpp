@@ -23,7 +23,7 @@ if [ -z $parc_ind ]; then n_parcel=$n_parc; else n_parcel=1; fi
 for parcel in {1..$n_parcel}; do
 
   # set up variables for each parcel
-  if [ -z $parc_ind ]; then parc_ind=$parcel; fi 
+  if [ $n_parcl -ne 1 ]; then parc_ind=$parcel; fi 
   prefix=${prefix}_parcel${parc_ind}
   if [ $null_test -eq 1 ]; then 
     n_repeat=1000; 
@@ -101,7 +101,6 @@ OPTIONAL ARGUMENTS:
                   'standard': regress out confounding variables
                   'str_conf': same as 'standard', but used to highlight that only confounds correlated
                               with strength were provided in \$conf_file (i.e. sex, brain size and ICV)
-                  'add_conf': confounds are added as features
                   'no_conf': no confound controlling will be used
                   [ default: 'standard' ]
   -t <null_test>  set this to 1 to generate the null distribution by permutation testing, where 

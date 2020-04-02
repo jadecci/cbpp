@@ -12,19 +12,14 @@ function combine_HCP_data_surf(sub_list, in_dir, n_parc, preproc, corr, out_dir)
 %       - n_parc :
 %                 parcellation granularity used. Possible values are: 100, 200, 300 and 400
 %       - preproc:
-%                 preprocessing used for input data. Possible options are: 'minimal' and 'fix'
+%                 preprocessing used for input data. Possible options are: 'minimal', 'fix' and 'fix_gsr'
 %        -corr   : 
 %                 correlation method used for computing FC. Possible options are: 'Pearson' and 'partial_l2'
 %       - out_dir:
 %                 Absolute path to output directory
 %
 % Output:
-%       - A .mat file is also created in out_dir, containing the the variable 'fc'
-%
-% Example:
-% combine_HCP_data_surf(300, 'fix', 'Pearson', 'results/FC_combined');
-% This command combines the FC results from 300-FIX-Pearson processed data and save them in the
-% 'results/FC_combined' folder
+%       - A .mat file is created in out_dir, containing the the variable 'fc'
 %
 % Jianxiao Wu, last edited on 12-Sept-2019
 
