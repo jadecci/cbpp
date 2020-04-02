@@ -105,7 +105,7 @@ fi
 ###########################################
 
 # Default parameters
-preproc=fix
+preproc=fix_wmcsf
 corr=Pearson
 out_dir=$(pwd)/results/FC
 sub_list=$BIN_DIR/sublist/HCP_MNI_${preproc}_allRun_sub.csv
