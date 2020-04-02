@@ -88,8 +88,8 @@ OPTIONAL ARGUMENTS:
   -h              display help message
 
 OUTPUTS:
-  $0 will create 1 output file in the output directory for each subject
-  For example: HCP_fix_parc300_sub100206_REST1_LR_Pearson.mat
+  $0 will create 4 output files in the output directory for the 4 runs of each subject
+  For example: HCP_fix_parc300_sub100206_REST1_LR_Pearson.mat for the first run of subject 100206
 
 EXAMPLE:
   $0 -d \$(pwd)/results/parcellation
