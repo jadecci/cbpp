@@ -35,19 +35,20 @@ for parcel in {1..$n_parcel}; do
 
   # run regression
   if [ ! -e $output ]; then
-    matlab -nodesktop -nosplash -r "load('$input', 'fc'); \
-                                    fc = squeeze(fc($parc_ind, :, :)); fc($parc_ind, :) = []; \
-                                    load('$psych_file', 'y'); \
-                                    load('$conf_file', 'conf'); \
-                                    addpath('$ROOT_DIR/HCP_surface_CBPP/utilities'); \
-                                    if $fix_seed == 1; seed = 1; else seed = 'shuffle'; end; \
-                                    cv_ind = CVPart_HCP(10, 10, '$sub_list', '$famID_file', seed); \
-                                    options = []; options.conf_opt = '$conf_opt'; \
-                                    options.method = '$method'; options.prefix = '$prefix'; \
-                                    options.isnull = $null_test; \
-                                    addpath('$ROOT_DIR'); \
-                                    CBPP_parcelwise(fc, y, conf, cv_ind, '$out_dir', options); \
-                                    exit"
+    matlab_cmd="matlab -nodesktop -nodisplay -nosplash -singleCompThread -nojvm -r"
+    $matlab_cmd "load('$input', 'fc'); \
+                 fc = squeeze(fc($parc_ind, :, :)); fc($parc_ind, :) = []; \
+                 load('$psych_file', 'y'); \
+                 load('$conf_file', 'conf'); \
+                 addpath('$ROOT_DIR/HCP_surface_CBPP/utilities'); \
+                 if $fix_seed == 1; seed = 1; else seed = 'shuffle'; end; \
+                 cv_ind = CVPart_HCP(10, 10, '$sub_list', '$famID_file', seed); \
+                 options = []; options.conf_opt = '$conf_opt'; \
+                 options.method = '$method'; options.prefix = '$prefix'; \
+                 options.isnull = $null_test; \
+                 addpath('$ROOT_DIR'); \
+                 CBPP_parcelwise(fc, y, conf, cv_ind, '$out_dir', options); \
+                 exit"
   else
     echo "Output $output already exists!"
   fi
