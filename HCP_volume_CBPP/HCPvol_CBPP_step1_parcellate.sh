@@ -7,6 +7,7 @@
 ###########################################
 
 UTILITIES_DIR=$(dirname "$(readlink -f "$0")")/utilities
+BIN_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/bin
 
 ###########################################
 # Main commands
