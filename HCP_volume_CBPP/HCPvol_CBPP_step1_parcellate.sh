@@ -1,13 +1,19 @@
 #! /usr/bin/env bash
 # This script is a wrapper to run parcelation for HCP fMRI data in MNI space.
-# Jianxiao Wu, last edited on 02-Apr-2020
+# Jianxiao Wu, last edited on 03-Apr-2020
 
 ###########################################
 # Define paths
 ###########################################
 
-UTILITIES_DIR=$(dirname "$(readlink -f "$0")")/utilities
-BIN_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/bin
+if [ "$(uname)" == "Linux" ]; then
+  SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+elif [ "$(uname)" == "Darwin" ]; then
+  SCRIPT_DIR=$(dirname "$0")
+  SCRIPT_DIR=$(cd "$SCRIPT_DIR"; pwd)
+fi
+UTILITIES_DIR=$SCRIPT_DIR/utilities
+BIN_DIR=$(dirname "$SCRIPT_DIR")/bin
 
 ###########################################
 # Main commands
@@ -29,7 +35,7 @@ for sub_id_curr in $sub_names; do
     # get input
     case "$preproc" in
       fix)
-        input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_hp2000_clean.nii ;;
+        input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_hp2000_clean.nii.gz ;;
       fix_gsr|fix_wmcsf)
         input=$input_dir/HCP_${preproc}_sub${sub_id_curr}_${run}.nii.gz ;;
     esac

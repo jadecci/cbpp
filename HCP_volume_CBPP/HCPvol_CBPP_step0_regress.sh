@@ -1,12 +1,18 @@
 #! /usr/bin/env bash
 # This script is a wrapper to apply nuisance regression to a HCP subjects. 
-# Jianxiao Wu, last edited on 30-Mar-2020
+# Jianxiao Wu, last edited on 03-Apr-2020
 
 ###########################################
 # Define paths
 ###########################################
 
-BIN_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/bin
+if [ "$(uname)" == "Linux" ]; then
+  SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+elif [ "$(uname)" == "Darwin" ]; then
+  SCRIPT_DIR=$(dirname "$0")
+  SCRIPT_DIR=$(cd "$SCRIPT_DIR"; pwd)
+fi
+BIN_DIR=$(dirname "$SCRIPT_DIR")/bin
 
 ###########################################
 # Main commands
@@ -27,7 +33,7 @@ for sub_id_curr in $sub_names; do
       echo "Running sub$sub_id_curr $run"
       
       # Generate global signal regressors
-      input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_hp2000_clean.nii
+      input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_hp2000_clean.nii.gz
       regressors=$conf_dir/Confounds_${sub_id_curr}_${run}.mat
       matlab -nodesktop -nosplash -r "addpath('$BIN_DIR/external_packages'); \
                                       input = MRIread('$input'); \

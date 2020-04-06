@@ -1,12 +1,18 @@
 #! /usr/bin/env bash
 # This script is a wrapper to run CBPP on HCP data in fsLR space
-# Jianxiao Wu, last edited on 26-Mar-2020
+# Jianxiao Wu, last edited on 03-Apr-2020
 
 ###########################################
 # Define paths
 ###########################################
 
-ROOT_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")
+if [ "$(uname)" == "Linux" ]; then
+  SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+elif [ "$(uname)" == "Darwin" ]; then
+  SCRIPT_DIR=$(dirname "$0")
+  SCRIPT_DIR=$(cd "$SCRIPT_DIR"; pwd)
+fi
+ROOT_DIR=$(dirname "$SCRIPT_DIR")
 
 ###########################################
 # Main commands
@@ -23,7 +29,7 @@ if [ -z $parc_ind ]; then n_parcel=$n_parc; else n_parcel=1; fi
 for parcel in {1..$n_parcel}; do
 
   # set up variables for each parcel
-  if [ $n_parcl -ne 1 ]; then parc_ind=$parcel; fi 
+  if [ $n_parcel -ne 1 ]; then parc_ind=$parcel; fi 
   prefix=${prefix}_parcel${parc_ind}
   if [ $null_test -eq 1 ]; then 
     n_repeat=1000; 

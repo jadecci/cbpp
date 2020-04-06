@@ -1,12 +1,18 @@
 #! /usr/bin/env bash
 # This script is a wrapper to run CBPP on HCP data in MNI space
-# Jianxiao Wu, last edited on 02-Apr-2020
+# Jianxiao Wu, last edited on 03-Apr-2020
 
 ###########################################
 # Define paths
 ###########################################
 
-ROOT_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")
+if [ "$(uname)" == "Linux" ]; then
+  SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+elif [ "$(uname)" == "Darwin" ]; then
+  SCRIPT_DIR=$(dirname "$0")
+  SCRIPT_DIR=$(cd "$SCRIPT_DIR"; pwd)
+fi
+ROOT_DIR=$(dirname "$SCRIPT_DIR")
 
 ###########################################
 # Main commands

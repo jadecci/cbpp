@@ -1,13 +1,19 @@
 #! /usr/bin/env bash
 # This script is a wrapper to combine HCP FC data in fsLR space into a single .mat file.
-# Jianxiao Wu, last edited on 12-Sept-2019
+# Jianxiao Wu, last edited on 03-Apr-2020
 
 ###########################################
 # Define paths
 ###########################################
 
-UTILITIES_DIR=$(dirname "$(readlink -f "$0")")/utilities
-BIN_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")/bin
+if [ "$(uname)" == "Linux" ]; then
+  SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+elif [ "$(uname)" == "Darwin" ]; then
+  SCRIPT_DIR=$(dirname "$0")
+  SCRIPT_DIR=$(cd "$SCRIPT_DIR"; pwd)
+fi
+UTILITIES_DIR=$SCRIPT_DIR/utilities
+BIN_DIR=$(dirname "$SCRIPT_DIR")/bin
 
 ###########################################
 # Main commands
