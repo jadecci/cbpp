@@ -40,7 +40,7 @@ for sub_id_curr in $sub_names; do
                                       dim = size(input.vol); \
                                       vol = reshape(input.vol, prod(dim(1:3)), dim(4)); \
                                       load('$regressors'); \
-                                      if strcmp('$reg_type', 'wmcsf'); signals = gx2[2:3],:); \
+                                      if strcmp('$reg_type', 'wmcsf'); signals = gx2([2:3],:); \
                                       elseif strcmp('$reg_type', 'gsr'); signals = gx2(4,:); end; \
                                       deriv = [zeros(1, size(signals,1)); diff(signals')]; \
                                       regressors = [reg(:, 9:32) signals' deriv]; \
@@ -135,7 +135,7 @@ fi
 
 if [ -z $reg_type ]; then
   echo "Regression type not defined."; 1>&2; exit 1;
-elif [ $reg_type != 'wmcsf' -o $reg_type != 'gsr' ]; then
+elif [ $reg_type != 'wmcsf' -a $reg_type != 'gsr' ]; then
   echo "Regression type not recognised."; 1>&2; exit 1;
 fi
 

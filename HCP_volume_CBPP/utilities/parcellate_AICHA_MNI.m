@@ -29,7 +29,7 @@ if nargin ~= 2
 end
 
 % load parcellation
-parc = MRIread(fullfile(data_dir, parc_file));
+parc = MRIread(parc_file);
 parc = parc.vol(:);
 
 % get parcels indices

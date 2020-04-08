@@ -1,12 +1,18 @@
 #! /usr/bin/env bash
 # This script runs the unit test for this repository
-# Jianxiao Wu, last edited on 18-Mar-2020
+# Jianxiao Wu, last edited on 03-Apr-2020
 
 ###########################################
 # Define paths
 ###########################################
 
-ROOT_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")
+if [ "$(uname)" == "Linux" ]; then
+  SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+elif [ "$(uname)" == "Darwin" ]; then
+  SCRIPT_DIR=$(dirname "$0")
+  SCRIPT_DIR=$(cd "$SCRIPT_DIR"; pwd)
+fi
+ROOT_DIR=$(dirname "$SCRIPT_DIR")
 
 ###########################################
 # Main commands
@@ -34,7 +40,8 @@ if [ $type == "full" ]; then
   echo $cmd
   eval $cmd
   date
-  cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step0_regress.sh -d $input_dir -o $output_dir/HCP_regress -s $sublist_mni"
+  cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step0_regress.sh -d $input_dir -o $output_dir/HCP_regress -s $sublist_mni \
+  -c $deriv_dir/conf_data -r wmcsf"
   echo $cmd
   eval $cmd
   date
@@ -64,12 +71,12 @@ if [ $type == "full" ]; then
 
   # step 3
   cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step3_combine.sh -d $output_dir/FC -o $output_dir/FC_combined \
-  -p gsr -s $sublist_surf -r 1"
+  -p gsr -s $sublist_surf"
   echo $cmd
   eval $cmd
   date
   cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step3_combine.sh -d $output_dir/FC -o $output_dir/FC_combined \
-  -s $sublist_mni -r 1"
+  -s $sublist_mni"
   echo $cmd
   eval $cmd
   date
@@ -83,7 +90,7 @@ echo $cmd
 eval $cmd
 date
 cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step4_wbCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_vol_y.mat -v $deriv_dir/unit_test_vol_conf.mat -m $deriv_dir/HCP_famID.mat -s 1 -l $sublist_mni"
+-y $deriv_dir/unit_test_MNI_y.mat -v $deriv_dir/unit_test_MNI_conf.mat -m $deriv_dir/HCP_famID.mat -s 1 -l $sublist_mni"
 echo $cmd
 eval $cmd
 date
@@ -96,7 +103,7 @@ echo $cmd
 eval $cmd
 date
 cmd="$ROOT_DIR/HCP_volume_CBPP/HCPvol_CBPP_step4_pwCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
--y $deriv_dir/unit_test_vy.mat -v $deriv_dir/unit_test_vol_conf.mat -m $deriv_dir/HCP_famID.mat -i $parc_ind_mni -s 1 \
+-y $deriv_dir/unit_test_MNI_y.mat -v $deriv_dir/unit_test_MNI_conf.mat -m $deriv_dir/HCP_famID.mat -i $parc_ind_mni -s 1 \
 -l $sublist_mni"
 echo $cmd
 eval $cmd
@@ -117,13 +124,13 @@ wb_output=$output_dir/CBPP_perf/wbCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_
 wb_compare=$ROOT_DIR/unit_test/ground_truth/wbCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed.mat
 pw_output=$output_dir/CBPP_perf/pwCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed_parcel$parc_ind_mni.mat
 pw_compare=$ROOT_DIR/unit_test/ground_truth/pwCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed_parcel$parc_ind_mni.mat
-matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
-                                unit_test_compare('$wb_output', '$wb_compare'); \
-                                unit_test_compare('$pw_output', '$pw_compare'); \
-                                exit"
+#matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
+#                                unit_test_compare('$wb_output', '$wb_compare'); \
+#                                unit_test_compare('$pw_output', '$pw_compare'); \
+#                                exit"
 
 # clean up
-rm $sublist
+rm $sublist_surf $sublist_mni
 
 date
 
@@ -143,12 +150,12 @@ The prediction results for surface data are compared to wbCBPP_SVR_standard_gsr_
 REQUIRED ARGUMENTS:
   -i <input_dir>    absolute path to input directory
   -d <deriv_dir>    absolute path to unit test psychometric, confounds and comparison data
-	-o <output_dir> 	absolute path to output directory
+  -o <output_dir> 	absolute path to output directory
 
 OPTIONAL ARGUMENTS:
   -t <type> choose to run 'light' or 'full' unit test
             [ default: 'full' ]
-	-h			  display help message
+  -h			  display help message
 
 OUTPUTS:
 	$0 will create 2 folders.
