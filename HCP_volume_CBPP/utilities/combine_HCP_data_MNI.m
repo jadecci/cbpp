@@ -45,5 +45,5 @@ end
 
     
 % save both data to .mat file
-output_file = ['HCP_MNI_' preproc '_' atlas '_' corr '.mat'];
+output_file = ['HCP_' preproc '_' atlas '_' corr '.mat'];
 save(fullfile(out_dir, output_file), 'fc');

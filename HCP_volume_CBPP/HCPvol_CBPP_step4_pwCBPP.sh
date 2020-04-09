@@ -20,7 +20,7 @@ ROOT_DIR=$(dirname "$SCRIPT_DIR")
 main(){
 
 # set up variables
-prefix=HCP_${preproc}_AICHA
+prefix=HCP_${preproc}_AICHA_${corr}
 input=$input_dir/$prefix.mat
 if [ $fix_seed -eq 1 ]; then prefix=${prefix}_fixSeed; fi
 if [ -z $parc_ind ]; then n_parcel=384; else n_parcel=1; fi
