@@ -62,7 +62,7 @@ conf(:, 6) = conf(1:n, 1) .* conf(1:n, 2);
 % Gender x age^2
 conf(:, 7) = conf(1:n, 6) .* conf(1:n, 1);
 % ICV
-conf(:, 8) = table2array(conf_unres(1:n, 3));
+conf(:, 8) = round(table2array(conf_unres(1:n, 3)) .* 1000) ./ 1000; % keep 9 decimal places to be consistent
 % Acquisition quarter
 acq = table2cell(conf_unres(1:n, 1));
 for i = 1:n; conf(i, 9) = str2double(acq{i}(2:end)); end
