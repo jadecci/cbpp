@@ -12,6 +12,8 @@ For `FIX` data, follow Example 1; for `FIX+WM/CSF` or `FIX+GSR` data, follow Exa
 
 For more detailed description of the CBPP implementation using HCP surface data, see `bin/procedure_descriptions/README.md`. The implementation procedure for volumetric data is similar.
 
+**Note** that the scripts `HCPvol_CBPP_step0_regress.sh` and `HCPvol_CBPP_step1_parcellate.sh` rely on [FreeSurfer](https://surfer.nmr.mgh.harvard.edu/) functions to read and write nifti images. Please make sure FreeSurfer's Matlab function folder is in Matlab's path.
+
 # Example 1: SVR-FIX-Pearson-AICHA
 
 Use the following commands (while in this folder) in sequence for running the SVR-FIX-Pearson combination of strategies using the AICHA atlas. 
