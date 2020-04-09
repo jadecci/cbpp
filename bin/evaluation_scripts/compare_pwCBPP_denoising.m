@@ -1,5 +1,5 @@
-function [levene_p, parcel_p, var_p] = compare_pwCBPP_denoising(in_dir, n_parc, prefix1, prefix2, levene_sel)
-% function [levene_p, parcel_p, var_p] = compare_pwCBPP_denoising(in_dir, n_parc, prefix1, prefix2, levene_sel)
+function [levene_p, parcel_p, var_p] = compare_pwCBPP_denoising(in_dir, n_parc, prefix1, prefix2, eval_type)
+% function [levene_p, parcel_p, var_p] = compare_pwCBPP_denoising(in_dir, n_parc, prefix1, prefix2, eval_type)
 %
 % This function compares parcel-wise CBPP performance using different combinations of approaches (we
 % only compared between minimal processing and FIX for preprocessing in the paper, but other
@@ -16,8 +16,6 @@ function [levene_p, parcel_p, var_p] = compare_pwCBPP_denoising(in_dir, n_parc, 
 % distribution is computed for the two combinations of approaches separately. A paired t-test is 
 % again performed.
 %
-% Note that the performance results should be first combined using combine_CBPP_results.m
-%
 % Inputs:
 %       - in_dir    :
 %                    Absolute path to input directory containing the performance results
@@ -25,13 +23,11 @@ function [levene_p, parcel_p, var_p] = compare_pwCBPP_denoising(in_dir, n_parc, 
 %                    Total number of parcels, i.e. parcellation granularity used
 %       - prefix1   :
 %                    Combined results file prefix for the 1st combination of approaches. For example, the 
-%                    performance results for parcel 1 from should be named: pwCBPP_prefix1_parcel1.csv
+%                    performance results for parcel 1 from should be named: pwCBPP_prefix1_parcel1.mat
 %       - prefix2   :
 %                    Combined results file prefix for the 2nd combination of approaches.
-%       - levene_sel:
-%                    (Optional) a vector containing indices of psychometric variables to perform 
-%                    Levene's test on. By default, all 40 variables are selected.
-%                    default: 1:40
+%       - eval_type :
+%                    Type of evaluation measure to use. Choose from 'r_test' and 'nrmsd_test'
 %
 % Output:
 %        - levene_p:
@@ -43,23 +39,12 @@ function [levene_p, parcel_p, var_p] = compare_pwCBPP_denoising(in_dir, n_parc, 
 %                   The P value from the paired t-test for Euclidean distances between psychometric
 %                   variables' prediction accuracy distributions
 %
-% Example:
-% compare_pwCBPP_denoising('input_dir', 300, 'SVR_standard_HCP_fix_parc300_Pearson', 
-% 'SVR_standard_HCP_minimal_parc300_Pearson')
-% This compares parcel-wise CBPP performance for SVR-Pearson combinations at 300-parcel granularity,
-% using minimally processed data and FIX data respectively.
-%
-% Jianxiao Wu, last edited on 30-Sept-2019
+% Jianxiao Wu, last edited on 09-Apr-2020
 
 % usage
-if nargin < 4
-    disp('[levene_p, parcel_p, var_p] = compare_pwCBPP_denoising(in_dir, n_parc, prefix1, prefix2, [levene_sel])');
+if nargin ~= 5
+    disp('[levene_p, parcel_p, var_p] = compare_pwCBPP_denoising(in_dir, n_parc, prefix1, prefix2, eval_type)');
     return
-end
-
-% default parameter
-if nargin < 5
-    levene_sel = 1:40;
 end
 
 % add path to external package
@@ -67,36 +52,36 @@ dir_bin = fileparts(fileparts(mfilename('fullpath')));
 addpath(fullfile(dir_bin, 'external_packages'));
 
 % set up parameters
-sample = csvread(fullfile(in_dir, ['pwCBPP_' prefix1 '_parcel1.csv']), 0, 2);
+sample = load(fullfile(in_dir, ['pwCBPP_' prefix1 '_parcel1.mat']), eval_type);
+sample = squeeze(mean(mean(sample.(eval_type))));
 yd = length(sample);
 
 %%% load performance results
 % get results for combination of approaches 1
 perf1 = zeros(yd, n_parc);
 for parc_curr = 1:n_parc
-    input_curr = fullfile(in_dir, ['pwCBPP_' prefix1 '_parcel' num2str(parc_curr) '.csv']);
-    perf1(:, parc_curr) = csvread(input_curr, 0, 2);
+    input_curr = load(fullfile(in_dir, ['pwCBPP_' prefix1 '_parcel' num2str(parc_curr) '.mat'], eval_type));
+    perf1(:, parc_curr) = squeeze(mean(mean(input_curr.(eval_type))));
 end
 % get results for combination of approaches 2
 perf2 = zeros(yd, n_parc);
 for parc_curr = 1:n_parc
-    input_curr = fullfile(in_dir, ['pwCBPP_' prefix2 '_parcel' num2str(parc_curr) '.csv']);
-    perf2(:, parc_curr) = csvread(input_curr, 0, 2);
+    input_curr = load(fullfile(in_dir, ['pwCBPP_' prefix2 '_parcel' num2str(parc_curr) '.mat']), eval_type);
+    perf2(:, parc_curr) = squeeze(mean(mean(input_curr.(eval_type))));
 end
 
 %%% 1. Levene's test
 fprintf("1. Levene's test between prediction accuracy distributions: \n");
 % perform Levene's test for selected psychometric variables
-levene_p = zeros(length(levene_sel), 1);
-for y_ind = 1:length(levene_sel)
-    y_curr = levene_sel(y_ind);
+levene_p = zeros(yd, 1);
+for y_curr = 1:yd
     x = [perf1(y_curr, :), perf2(y_curr, :); ones(1, n_parc), 2*ones(1, n_parc)]';
-    levene_p(y_ind) = levenetest(x);
+    levene_p(y_curr) = levenetest(x);
 
     % print results if significant (alpha = 0.05)
-    if levene_p(y_ind) < 0.05
+    if levene_p(y_curr) < 0.05
         fprintf("Levene's test significant for psychometric variable No.%i with p = %.4f.", ...
-                y_curr, levene_p(y_ind));
+                y_curr, levene_p(y_curr));
         if var(perf1(y_curr, :)) > var(perf2(y_curr, :))
             fprintf('Variance of the 1st combination of approaches is larger. \n');
         else
@@ -112,10 +97,12 @@ end
 %%% 2. Distance between psychometric profiles
 fprintf('2. Paired t-test for distributions of Euclidean distances between psychometric profiles \n')
 % compute Euclidean distance between parcel's profiles
+index = 1;
 for i = 1:n_parc
     for j = (i+1):n_parc
-        dist_parcel1(i, j) = sqrt(sum((perf1(:, i)-perf1(:, j)).^2));
-        dist_parcel2(i, j) = sqrt(sum((perf2(:, i)-perf2(:, j)).^2));
+        dist_parcel1(index) = sqrt(sum((perf1(:, i)-perf1(:, j)).^2));
+        dist_parcel2(index) = sqrt(sum((perf2(:, i)-perf2(:, j)).^2));
+        index = index + 1;
     end
 end
 % perform paired t-test
@@ -135,10 +122,12 @@ end
 %%% 3. Distance between prediction accuracies distributions
 fprintf('3. Paired t-test for distributions of Euclidean distances between prediction accuracies distributions \n')
 % compute Euclidean distances across psychometric variables
+index = 1
 for i = 1:yd
     for j = (i+1):yd
-        dist_var1(i, j) = sqrt(sum((perf1(i, :)-perf1(j, :)).^2));
-        dist_var2(i, j) = sqrt(sum((perf2(i, :)-perf2(j, :)).^2));
+        dist_var1(index) = sqrt(sum((perf1(i, :)-perf1(j, :)).^2));
+        dist_var2(index) = sqrt(sum((perf2(i, :)-perf2(j, :)).^2));
+        index = index + 1;
     end
 end
 % perform paired t-test
