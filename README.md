@@ -24,13 +24,13 @@ The CBPP framework is an effort to summarize the general workflow of and systema
 
 ## Replication
 
-Please see the README in the `HCP_surface_CBPP` folder for how to replicate the results in our paper.
+Please see the READMEs in the `HCP_surface_CBPP` and `HCP_volume_CBPP` folders on how to replicate the results in our paper.
 
 ## Code Release
 
 We release two Matlab functions, `CBPP_wholebbrain.m` and `CBIG_parcelwise.m`, for implementing any combination of approaches investigated in our paper. 
 
-**Note** that the connectivity and psychometric data should be prepared before using these functions. For computing preprocessing, connectivity, etc. as done in our paper, see the README in `HCP_surface_CBPP` folder.
+**Note** that the connectivity and psychometric data should be prepared before using these functions. For computing preprocessing, connectivity, etc. as done in our paper, see the README in `HCP_surface_CBPP` folder. For help on extracting the psychometric data, see the README in `bin/extraction_scripts` folder.
 
 To run whole-brain or parcel-wise CBPP, use the following commands in Matlab:
 
@@ -53,9 +53,7 @@ help CBPP_parcelwise
 
 ## Additional Information
 
-1. A flowchart explaining the general workflow in more details is in the `Additional Information` section of the README file in the `HCP_surface_CBPP` folder.
-
-2. Flowcharts explaining the cross-validation procedures for each regression algorithm used is in the README file in the `bin/cv_procedure` folder.
+1. Flowchart explaining the detailed workflow and cross-validation procedures are in the README file in the `bin/procedure_descriptions` folder.
 
 3. Scripts used to compare different whole-brain CBPP approach and compute statistical significance for parcel-wise CBPP results can be found in the `bin/evaluation_scripts` folder. See the README in the folder for their usage.
 
