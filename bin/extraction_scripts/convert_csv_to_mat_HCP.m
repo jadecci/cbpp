@@ -34,32 +34,37 @@ if nargin ~= 5
 end
 
 % psychometric variables
-y = csvread(psych_file, 1);
-n = size(y, 1);
+psych = csvread(psych_file, 1);
+n = size(psych, 1) - 1;
+n_score = size(psych, 2);
+col_ind = psych(end, :);
+[~, sort_ind] = sort(col_ind, 'ascend');
+y = zeros(n, n_score);
+for i = 1:n_score; y(:, i) = psych(1:n, sort_ind==i); end
 
 % confounding variables
 conf_unres = readtable(conf_unres_file);
 conf_res = readtable(conf_res_file);
 conf = zeros(n, 9);
 % Age
-conf(:, 1) = table2array(conf_res(:, 1));
+conf(:, 1) = table2array(conf_res(1:n, 1));
 % Gender
-gender = table2cell(conf_unres(:, 2));
+gender = table2cell(conf_unres(1:n, 2));
 for i = 1:n; if strcmp(gender{i}, 'M'); conf(i, 2) = 1; else; conf(i, 2) = 2; end; end
 % Handedness
-conf(:, 3) = table2array(conf_res(:, 2));
+conf(:, 3) = table2array(conf_res(1:n, 2));
 % Brain size
-conf(:, 4) = table2array(conf_unres(:, 4));
+conf(:, 4) = table2array(conf_unres(1:n, 4));
 % Age^2
-conf(:, 5) = conf(:, 1).^2;
+conf(:, 5) = conf(1:n, 1).^2;
 % Gender x age
-conf(:, 6) = conf(:, 1) .* conf(:, 2);
+conf(:, 6) = conf(1:n, 1) .* conf(1:n, 2);
 % Gender x age^2
-conf(:, 7) = conf(:, 6) .* conf(:, 1);
+conf(:, 7) = conf(1:n, 6) .* conf(1:n, 1);
 % ICV
-conf(:, 8) = table2array(conf_unres(:, 3));
+conf(:, 8) = table2array(conf_unres(1:n, 3));
 % Acquisition quarter
-acq = table2cell(conf_unres(:, 1));
+acq = table2cell(conf_unres(1:n, 1));
 for i = 1:n; conf(i, 9) = str2double(acq{i}(2:end)); end
 
 % save results\

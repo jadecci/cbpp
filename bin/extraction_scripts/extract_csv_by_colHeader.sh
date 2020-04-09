@@ -27,8 +27,14 @@ for i in $(seq 1 $n_header); do
   for j in  $(seq 1 $n_col); do
     curr_header=`head -1 $input_file | cut -d ',' -f $j`
     if [ "$curr_header" == "$header" ]; then
-      if [ $first_col -eq 1 ]; then extract_cmd="$extract_cmd $j"; first_col=0
-      else extract_cmd="${extract_cmd},$j"; fi
+      if [ $first_col -eq 1 ]; then 
+        extract_cmd="$extract_cmd $j"
+        col_ind="$j"
+        first_col=0
+      else 
+        extract_cmd="${extract_cmd},$j"
+        col_ind="${col_ind},$j"
+      fi
       echo "Found header $i: $header in input column $j"
       break
     fi
@@ -38,4 +44,5 @@ done
 
 # extract the selected columns
 echo $extract_cmd
-eval "$extract_cmd > $output_file"
+eval "$extract_cmd" > $output_file
+echo "$col_ind" >> $output_file
