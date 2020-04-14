@@ -26,6 +26,6 @@ bash unit_test.sh -i $fmri_dir -d $deriv_dir -o $output_dir
 
 The mean Pearson correlation and nRMSD measures across test sets will be comapred to the corresponding results in `ground_truth` fodler. The unit test is successful if the screen prints `The two volumes are identical` twice for all 4 results.
 
-This should take about `4h28m` to run.
+This should take about `23h40m` to run on 1 core.
 
-If only prediction steps need to be tested, make sure you have the existing combined FC files named `$out_dir/FC_combined/HCP_gsr_parc300_Pearson.mat` and `$out_dir/FC_combined/HCP_fix_wmcsf_AICHA_Pearson.mat`, then add `-t 'light'` to the command. This light version of unit test should take about `17m` to run.
+If only prediction steps need to be tested, make sure you have the existing combined FC files named `$out_dir/FC_combined/HCP_gsr_parc300_Pearson.mat` and `$out_dir/FC_combined/HCP_fix_wmcsf_AICHA_Pearson.mat`, then add `-t 'light'` to the command. This light version of unit test should take about `12m` to run.
