@@ -1,20 +1,20 @@
 function CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options)
 % CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options)
 %
-% This function runs Connectivity-based Psychometric Prediction (CBPP) using whole-brain 
-% connectivity matrix (fc) to predict psychometric variables (y)
+% This function runs Connectivity-based Psychometric Prediction (CBPP) using whole-brain connectivity matrix (fc) to
+% predict psychometric variables (y)
 %
 % Inputs:
 %       - fc     :
-%                 DxDxN matrix containing the DxD functional connectivity matrix (i.e. between 
-%                 D parcels/voxels) from N subjects
+%                 DxDxN matrix containing the DxD functional connectivity matrix (i.e. between D parcels/voxels) from 
+%                 N subjects
 %       - y      :
 %                 NxP matrix containing P psychometric variables from N subjects
 %       - conf   :
 %                 NxC matrix containing C confounding variables from N subjects
 %       - cv_ind : 
-%                 NxM matrix containing cross-validation fold indices for M repeats on N subjects. 
-%                 The indices should range from 1 to K, for a K-fold cross-validation scheme
+%                 NxM matrix containing cross-validation fold indices for M repeats on N subjects. The indices should 
+%                 range from 1 to K, for a K-fold cross-validation scheme
 %       - out_dir:
 %                 Absolute path to output directory
 %       - options:
@@ -22,28 +22,28 @@ function CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options)
 %
 % Options:
 %       - method  :
-%                  Regression method to use. Available options: 'MLR' (multiple linear regression),
-%                  'SVR' (Support Vector Regression), 'EN' (Elastic Nets)
+%                  Regression method to use. Available options: 'MLR' (multiple linear regression), 'SVR' (Support 
+%                  Vector Regression), 'EN' (Elastic Nets), 'RR' (ridge regression)
 %                  Default: 'SVR'
 %       - prefix  :
-%                  Prefix for output filename. If all setting are default, the output file will be 
-%                  named with the prefix 'wbCBPP_SVR_standard_test'
+%                  Prefix for output filename. If all setting are default, the output file will be named with the 
+%                  prefix 'wbCBPP_SVR_standard_test'
 %                  Default: 'test'
 %       - conf_opt:
 %                  Confound controlling approach. Available options:
-%                  'standard' ('standard' approach): regress out confounding variables from training 
-%                             subjects and apply to test subjects
-%                  'str_conf' ('sex + brain size confounds' approach): similar to 'standard', but 
-%                             noting that the confounding variables passed in are only those 
-%                             correlated with strength (i.e. gender, brain size and ICV).
-%                  'no_conf' ('no confound' approach) don't use confounds
+%                  'standard' ('standard' approach): regress out confounding variables from training subjects and apply
+%                             to test subjects
+%                  'str_conf' ('sex + brain size confounds' approach): similar to 'standard', but noting that the 
+%                             confounding variables passed in are only those correlated with strength (i.e. gender, 
+%                             brain size and ICV).
+%                  'no_conf' ('no confound' approach): don't use confounds
 %                  Default: 'standard'
 %
 % Output:
-%        One .mat file will be saved to out_dir, containing performance in training set (vairable 
-%        'r_train' and 'nrmsd_train') and validation set (variable 'r_test' and 'nrmsd_test').
+%        One .mat file will be saved to out_dir, containing performance in training set (vairable 'r_train' and 
+%        'nrmsd_train') and validation set (variable 'r_test' and 'nrmsd_test').
 %
-% Jianxiao Wu, last edited on 26-Mar-2020
+% Jianxiao Wu, last edited on 21-Oct-2020
 
 % usage
 if nargin < 5
