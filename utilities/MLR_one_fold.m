@@ -1,8 +1,8 @@
 function [perf, weights] = MLR_one_fold(x, y, cv_ind, fold)
 % [perf, weights] = MLR_one_fold(x, y, cv_ind, fold)
 %
-% This function runs multiple linear regression (MLR) for one cross-validation fold. The 
-% relationship between features and targets is assumed to be y = [x 1] * weights.
+% This function runs multiple linear regression (MLR) for one cross-validation fold. The relationship between features 
+% and targets is assumed to be y = [x 1] * weights.
 %
 % Inputs:
 %       - x       :
@@ -10,22 +10,21 @@ function [perf, weights] = MLR_one_fold(x, y, cv_ind, fold)
 %       - y       :
 %                  NxT matrix containing T target values from N subjects
 %       - cv_ind  :
-%                  Nx1 matrix containing cross-validation fold assignment for N subjects. Values 
-%                  should range from 1 to K for a K-fold cross-validation
+%                  Nx1 matrix containing cross-validation fold assignment for N subjects. Values should range from 1 
+%                  to K for a K-fold cross-validation
 %       - fold    :
 %                  Fold to be used as validation set 
 %
 % Output:
 %       - perf   :
-%                 A structure containing the performance metrics: Pearson correlation between 
-%                 predicted and observed values ('r_train' and 'r_test'); normalised root mean
-%                 sqaured deviation between predicted and observed values ('nrmsd_train' and 
-%                 'nrmsd_test')
+%                 A structure containing the performance metrics: Pearson correlation between predicted and observed 
+%                 values ('r_train' and 'r_test'); normalised root mean sqaured deviation between predicted and 
+%                 observed values ('nrmsd_train' and 'nrmsd_test')
 %       - weights:
 %                 (P+1)x1 matrix containing weights of the P features and
 %                 the intercepts
 %
-% Jianxiao Wu, last edited on 26-Mar-2020
+% Jianxiao Wu, last edited on 21-Oct-2020
 
 % usage
 if nargin ~= 4

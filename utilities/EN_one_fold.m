@@ -1,8 +1,8 @@
 function [perf, weights, b, alpha] = EN_one_fold(x, y, cv_ind, fold)
-% [perf, weights, b] = EN_one_fold(x, y, cv_ind, fold)
+% [perf, weights, b, alpha] = EN_one_fold(x, y, cv_ind, fold)
 %
-% This function runs Elastic nets for one cross-validation fold. The relationship between features 
-% and targets is assumed to be y = x * weights + b.
+% This function runs Elastic nets for one cross-validation fold. The relationship between features and targets is 
+% assumed to be y = x * weights + b.
 %
 % Inputs:
 %       - x       :
@@ -10,30 +10,30 @@ function [perf, weights, b, alpha] = EN_one_fold(x, y, cv_ind, fold)
 %       - y       :
 %                  NxT matrix containing T target values from N subjects
 %       - cv_ind  :
-%                  Nx1 matrix containing cross-validation fold assignment for N subjects. Values 
-%                  should range from 1 to K for a K-fold cross-validation
+%                  Nx1 matrix containing cross-validation fold assignment for N subjects. Values should range from 1 
+%                  to K for a K-fold cross-validation
 %       - fold    :
 %                  Fold to be used as validation set 
 %
 % Output:
 %       - perf   :
-%                 A structure containing the performance metrics: Pearson correlation between 
-%                 predicted and observed values ('r_train' and 'r_test'); normalised root mean
-%                 sqaured deviation between predicted and observed values ('nrmsd_train' and 
+%                 A structure containing the performance metrics: Pearson correlation between predicted and observed 
+%                 values ('r_train' and 'r_test'); normalised root mean sqaured deviation between predicted and 
+%                 observed values ('nrmsd_train' and 'nrmsd_test')
 %                 'nrmsd_test')
 %       - weights:
 %                 Px1 matrix containing weights of the P features
 %       - b      :
 %                 Intercept value
 %       - alpha  :
-%                 L1-to-L2-ratios chosen by performance on the validation set. A larger alpha means 
-%                 higher weightage on the L1 penalty term; at alpha=1 the model is purely LASSO
+%                 L1-to-L2-ratios chosen by performance on the validation set. A larger alpha means higher weightage on
+%                 the L1 penalty term; at alpha=1 the model is purely LASSO
 %
-% Jianxiao Wu, last edited on 26-Mar-2020
+% Jianxiao Wu, last edited on 21-Oct-2020
 
 % usage
 if nargin ~= 4
-    disp('Usage: [perf, weights, b] = EN_one_fold(x, y, cv_ind, fold)');
+    disp('Usage: [perf, weights, b, alpha] = EN_one_fold(x, y, cv_ind, fold)');
     return
 end
 

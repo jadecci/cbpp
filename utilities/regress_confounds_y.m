@@ -1,11 +1,11 @@
 function [y, reg_y] = regress_confounds_y(y, confounds, existing_reg)
 % [y, reg_y] = regress_confounds_y(y, confounds, existing_reg)
 %
-% This function regresses out confounds from prediction targets y. Note that regression coefficients 
-% should be estimated using only training data.
+% This function regresses out confounds from prediction targets y. Note that regression coefficients should be 
+% estimated using only training data.
 %
-% For training data, pass in y and the confounds to perform regression, obtaining the new y and 
-% regression coefficients reg_y. 
+% For training data, pass in y and the confounds to perform regression, obtaining the new y and regression coefficients
+% reg_y. 
 %
 % For test data, also pass in the regression coefficients obtained from the training data. 
 %
@@ -15,24 +15,16 @@ function [y, reg_y] = regress_confounds_y(y, confounds, existing_reg)
 %       - confounds   :
 %                      NxD matrix containing D confounds for N subjects.
 %       - existing_reg:
-%                      (Optional) Existing regression coefficients to use for regressing out 
-%                      confounds in the test set.
+%                      (Optional) Existing regression coefficients to use for regressing out confounds in the test set.
 %
 % Output:
 %        - y    :
 %                NxT matrix containing the target values with confounds removed
 %        - reg_y:
-%                (D+1)xT array containing the regression coefficient for each confound. The last 
-%                element correspond to the offset, i.e. a confound of constant 1.
+%                (D+1)xT array containing the regression coefficient for each confound. The last element correspond to
+%                the offset, i.e. a confound of constant 1.
 %
-% Example:
-% 1) [y_train, reg_y] = regress_confounds_y(y_train, confounds)
-%    This regresses out confounds from the training data, also returning the regression coefficients
-% 2) y_val = regress_confounds_y(y_val, confounds, reg_y)
-%    This regresses out confounds from the test data, using the regression coefficients previously 
-%    determined based on training data
-%
-% Jianxiao Wu, last edited on 15-May-2018
+% Jianxiao Wu, last edited on 21-Oct-2020
 
 % usage
 if nargin < 2
