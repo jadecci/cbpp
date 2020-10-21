@@ -1,5 +1,5 @@
-function [perf, weights, b, k] = RR_one_fold_val(x, y, conf, cv_ind, fold, seed, ks)
-% [perf, weights, b, k] = RR_one_fold_val(x, y, conf, cv_ind, fold, ks)
+function [perf, weights, b, k] = RR_one_fold(x, y, conf, cv_ind, fold, seed, ks)
+% [perf, weights, b, k] = RR_one_fold(x, y, conf, cv_ind, fold, ks)
 %
 % This function runs Ridge Regression for one cross-validation fold. The relationship between features and targets is 
 % assumed to be y = x * weights + b.
@@ -32,7 +32,7 @@ function [perf, weights, b, k] = RR_one_fold_val(x, y, conf, cv_ind, fold, seed,
 
 % usage
 if nargin < 6
-    disp('Usage: [perf, weights, b, k] = RR_one_fold_val(x, y, conf, cv_ind, fold, ks)');
+    disp('Usage: [perf, weights, b, k] = RR_one_fold(x, y, conf, cv_ind, fold, ks)');
     return
 end
 

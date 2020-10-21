@@ -43,6 +43,10 @@ function CBPP_parcelwise(fc, y, conf, cv_ind, out_dir, options)
 %                             brain size and ICV).
 %                  'no_conf' ('no confound' approach): don't use confounds
 %                  Default: 'standard'
+%       - in_seed :
+%                  Seed for inner-loop cross-validation indices generation. Can be set to 'shuffle' or any integer. 
+%                  Only required for ridge regression
+%                  Default: 'shuffle'
 %
 % Output:
 %        One .mat file will be saved to out_dir, containing performance in training set (vairable 'r_train' and 
@@ -66,31 +70,28 @@ if ~isfield(options, 'isnull'); options.isnull = 0; end
 if ~isfield(options, 'method'); options.method = 'SVR'; end
 if ~isfield(options, 'prefix'); options.prefix = 'test'; end
 if ~isfield(options, 'conf_opt'); options.conf_opt = 'standard'; end
+if ~isfield(options, 'in_seed'); options.in_seed = 'shuffle'; end
 
 % set-up
 yd = size(y, 2); % dimensionality of targets y == P
 n = size(y, 1); % number of subjects == N
 n_fold = max(cv_ind(:)); % number of folds for CV == K
 n_repeat = size(cv_ind, 2); % number of repeats for CV == M
-x = fc'; % feature matrix x
+x = fc';
 
 % run cross-validation 
 r_train = zeros(n_repeat, n_fold, yd);
 r_test = zeros(n_repeat, n_fold, yd);
 nrmsd_train = zeros(n_repeat, n_fold, yd);
 nrmsd_test = zeros(n_repeat, n_fold, yd);
-% loop through M repeats
+fprintf('Running repeat-fold 0001-01');
 for repeat = 1:n_repeat
-    cv_ind_curr = cv_ind(:, repeat); % CV fold indices for the current repeat
-    fprintf('\n Running repeat %i fold ', repeat);
-
-    % loop through K folds
+    cv_ind_curr = cv_ind(:, repeat);
     for fold = 1:n_fold
-        fprintf('%i ', fold);       
+        fprintf('\b\b\b\b\b\b\b%04d-%02d', repeat, fold);      
             
-        % get indices for training and test sets
-        % SVR/MLR: split into training and test set
-        if strcmp(options.method, 'SVR') || strcmp(options.method, 'MLR')
+        % SVR/MLR/RR: split into training and test set
+        if strcmp(options.method, 'SVR') || strcmp(options.method, 'MLR') || strcmp(options.method, 'RR')
             train_ind = double(cv_ind_curr ~= fold);
             test_ind = double(cv_ind_curr == fold);
         % EN: split into training, validation and test set
@@ -102,18 +103,22 @@ for repeat = 1:n_repeat
         end
         
         % remove confounds for 'standard' and 'str_conf' approaches
+        % except for RR, which does confound regression in inner-loop
         y_curr = y;
-        if strcmp(options.conf_opt, 'standard') || strcmp(options.conf_opt, 'str_conf')
+        if strcmp(options.method, 'RR') && strcmp(options.conf_opt, 'no_conf')
+            conf_pass = [];
+        elseif strcmp(options.method, 'RR')
+            conf_pass = conf;
+        elseif strcmp(options.conf_opt, 'standard') || strcmp(options.conf_opt, 'str_conf')
             [y_curr(train_ind==1, :), reg_y] = regress_confounds_y(y_curr(train_ind==1, :), conf(train_ind==1, :));
             y_curr(test_ind==1, :) = regress_confounds_y(y_curr(test_ind==1, :), conf(test_ind==1, :), reg_y);
-            if strcmp(options.method, 'EN') % also apply confounds removal to validation fold for EN
+            % also apply confounds removal to validation fold for EN
+            if strcmp(options.method, 'EN')
                 y_curr(val_ind==1, :) = regress_confounds_y(y_curr(val_ind==1, :), conf(val_ind==1, :), reg_y);
             end
         end
           
-        % loop through P targets
         for target_ind = 1:yd
-            % get current target
             % shuffle target labels for permutation testing if specified
             if options.isnull ~= 0
                 y_curr_score = y_curr(randperm(n), target_ind);
@@ -123,7 +128,11 @@ for repeat = 1:n_repeat
             
             % run regression
             reg_func = str2func([options.method '_one_fold']);
-            perf = reg_func(x, y_curr_score, cv_ind_curr, fold);
+            if strcmp(options.method, 'RR')
+                perf = reg_func(x, y_curr_score, conf_pass, cv_ind_curr, fold, options.in_seed);
+            else
+                perf = reg_func(x, y_curr_score, cv_ind_curr, fold);
+            end
 
             % collect results
             r_train(repeat, fold, target_ind) = perf.r_train;
@@ -133,6 +142,7 @@ for repeat = 1:n_repeat
         end
     end
 end
+fprintf('\n');
 
 % save performance results
 output_name = ['pwCBPP_' options.method '_' options.conf_opt '_' options.prefix ];
