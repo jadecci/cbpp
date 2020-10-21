@@ -36,6 +36,7 @@ if [ ! -e $output ]; then
                cv_ind = CVPart_HCP(10, 10, '$sub_list', '$famID_file', seed); \
                options = []; options.conf_opt = '$conf_opt'; \
                options.method = '$method'; options.prefix = '$prefix'; \
+               if $fix_seed == 1; options.in_seed = 1; else options.in_seed = 'shuffle'; end;
                addpath('$ROOT_DIR'); \
                CBPP_wholebrain(fc, y, conf, cv_ind, '$out_dir', options); \
                exit"
@@ -69,6 +70,7 @@ OPTIONAL ARGUMENTS:
                   'MLR': multiple linear regression
                   'SVR': Support Vector Regression
                   'EN': Elastic net
+                  'RR': ridge regression
                   [ default: 'SVR' ]
   -n <n_parc>     parcellation granularity used. Possible values are: 100, 200, 300 and 400
                   [ default: 300 ]

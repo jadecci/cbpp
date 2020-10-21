@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 # This script is a wrapper to run CBPP on HCP data in fsLR space
-# Jianxiao Wu, last edited on 03-Apr-2020
+# Jianxiao Wu, last edited on 21-Oct-2020
 
 ###########################################
 # Define paths
@@ -35,7 +35,7 @@ for parcel in {1..$n_parcel}; do
     n_repeat=1000; 
     output=$out_dir/null_pwCBPP_${method}_${conf_opt}_${prefix}.mat
   else
-    n_repeat=10; 
+    n_repeat=100; 
     output=$out_dir/pwCBPP_${method}_${conf_opt}_${prefix}.mat
   fi
 
@@ -52,6 +52,7 @@ for parcel in {1..$n_parcel}; do
                  options = []; options.conf_opt = '$conf_opt'; \
                  options.method = '$method'; options.prefix = '$prefix'; \
                  options.isnull = $null_test; \
+                 if $fix_seed == 1; options.in_seed = 1; else options.in_seed = 'shuffle'; end;
                  addpath('$ROOT_DIR'); \
                  CBPP_parcelwise(fc, y, conf, cv_ind, '$out_dir', options); \
                  exit"
@@ -92,6 +93,7 @@ OPTIONAL ARGUMENTS:
                   'MLR': multiple linear regression
                   'SVR': Support Vector Regression
                   'EN': Elastic net
+                  'RR': ridge regression
                   [ default: 'SVR' ]
   -n <n_parc>     parcellation granularity used. Possible values are: 100, 200, 300 and 400
                   [ default: 300 ]

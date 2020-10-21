@@ -6,7 +6,7 @@ This folder contains codes to replicate all 72 combination of approaches used in
 
 - **functional connectivity**: `Pearson` (Pearson correlation), `partial_l2` (partial correlation with L2 regularisation)
 
-- **regression/prediction**: `SVR` (Support Vector Regression), `EN` (Elastic nets), `KRRcorr` (Kernel Ridge Regression with correlation kernel)
+- **regression/prediction**: `SVR` (Support Vector Regression), `EN` (Elastic nets), `MLR` (multiple linear regression), `RR` (ridge regression)
 
 For `minimally processed` or `FIX`data, follow Example 1; for `FIX+GSR` data, follow Example 2. At each step, if any parameter needs to be switched, you can check the respective script's usage by running it with no argument (e.g. run `./HCP_CBPP_step1_parcellate.sh` on command line).
 

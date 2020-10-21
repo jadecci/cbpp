@@ -52,6 +52,7 @@ for parcel in {1..$n_parcel}; do
                  options = []; options.conf_opt = '$conf_opt'; \
                  options.method = '$method'; options.prefix = '$prefix'; \
                  options.isnull = $null_test; \
+                 if $fix_seed == 1; options.in_seed = 1; else options.in_seed = 'shuffle'; end;
                  addpath('$ROOT_DIR'); \
                  CBPP_parcelwise(fc, y, conf, cv_ind, '$out_dir', options); \
                  exit"
@@ -92,6 +93,7 @@ OPTIONAL ARGUMENTS:
                   'MLR': multiple linear regression
                   'SVR': Support Vector Regression
                   'EN': Elastic net
+                  'RR': ridge regression
                   [ default: 'SVR' ]
   -p <preproc>    preprocessing used for input data. Possible options are:
                   'fix': for data processed with ICA-FIX
