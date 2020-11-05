@@ -12,7 +12,7 @@ Note that the run-time values are averaged across multiple runs on cpus with dif
 | :--: | :--: | :--: | :--: | :--: | :--:
 | 100-parcel | 0.7 | 0.6 | 90 | 0.4
 | 200-parcel | 3 | 1.2 | 30 | 0.6
-| 300-parcel | 7 | 2.2 | 40 | 0.9
+| 300-parcel | 7 | 2.2 | 40 | 1
 | 400-parcel | 13 | 3.6 | 50 | 1.5
 
 This compares to a similar implementation in Python:
@@ -28,10 +28,10 @@ This compares to a similar implementation in Python:
 
 | Granularity | Whole-brain CBPP <br> Run-time (min) | Whole-brain CBPP <br> Memory (GB) | Parcel-wise CBPP <br> Run-time (min) | Parcel-wise CBPP <br> Mem (GB)
 | :--: | :--: | :--: | :--: | :--: | :--:
-| 100-parcel | 0.2 | 0.6 | ? | ?
-| 200-parcel | 0.5 | 1 | ? | ?
-| 300-parcel | 1.2 | 1.9 | ? | ?
-| 400-parcel | 2 | 3 | ? | ?
+| 100-parcel | 0.2 | 0.6 | 13 | 0.4
+| 200-parcel | 0.5 | 1 | 40 | 0.6
+| 300-parcel | 1.2 | 1.9 | 75 | 1
+| 400-parcel | 2 | 3 | 125 | 1.5
 
 3. **EN (Elastic nets)**
 
@@ -46,7 +46,7 @@ This compares to a similar implementation in Python:
 
 | Granularity | Whole-brain CBPP <br> Run-time (min) | Whole-brain CBPP <br> Memory (GB) | Parcel-wise CBPP <br> Run-time (min) | Parcel-wise CBPP <br> Mem (GB)
 | :--: | :--: | :--: | :--: | :--: | :--:
-| 100-parcel | 380 | 0.4 | ? | ?
-| 200-parcel | ? | ? | ? | ?
-| 300-parcel | ? | ? | ? | ?
-| 400-parcel | ? | ? | ? | ?
+| 100-parcel | 30 | 0.8 | 3 | 0.4
+| 200-parcel | 120 | 1.5 | 30 | 0.6
+| 300-parcel | 300 | 2.9 | 31 | 1
+| 400-parcel | 600 | 4.7 | 33 | 1.5
