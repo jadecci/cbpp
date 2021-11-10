@@ -47,18 +47,18 @@ options = [];
 options.nlambda = 10;
 options.standardize = false;
 
-% validation set
+% inner-loop sets
 n_fold = max(cv_ind);
 if fold == n_fold; fold_inner = 1; else; fold_inner = fold + 1; end
-x_val = x(cv_ind == fold_inner, :);
-y_val = y(cv_ind == fold_inner, :);
-
-% training set
+x_val_inner = x(cv_ind == fold_inner, :);
+y_val_inner = y(cv_ind == fold_inner, :);
 train_ind_inner = (cv_ind ~= fold) .* (cv_ind ~= fold_inner);
-x_train = x(train_ind_inner==1, :);
-y_train = y(train_ind_inner==1, :);
+x_train_inner = x(train_ind_inner==1, :);
+y_train_inner = y(train_ind_inner==1, :);
 
-% test set
+% outer-loop sets
+x_train = x(cv_ind ~= fold, :);
+y_train = y(cv_ind ~= fold, :);
 x_test = x(cv_ind == fold, :);
 y_test = y(cv_ind == fold, :);
 
@@ -69,12 +69,12 @@ for alpha = [0.01 0.1 0.5 0.7 0.9 0.95 0.99 1]
     options.alpha = alpha;
     
     % train model and fetch parameters
-    fit = cvglmnet(x_train, y_train, 'gaussian', options, 'mse', n_fold_lambda);
+    fit = cvglmnet(x_train_inner, y_train_inner, 'gaussian', options, 'mse', n_fold_lambda);
     ind = find(fit.lambda==fit.lambda_min, 1); % Kaustubh suggested that lambda_min gives better accuracy
     
     % test prediction on validation set
-    ypred_val = x_val * fit.glmnet_fit.beta(:, ind) + fit.glmnet_fit.a0(ind);
-    r_curr = corr(y_val, ypred_val, 'type', 'Pearson', 'Rows', 'complete');
+    ypred_val_inner = x_val_inner * fit.glmnet_fit.beta(:, ind) + fit.glmnet_fit.a0(ind);
+    r_curr = corr(y_val_inner, ypred_val_inner, 'type', 'Pearson', 'Rows', 'complete');
 
     % initialise best model
     if alpha == 0.01
