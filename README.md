@@ -2,7 +2,9 @@
 
 ## Reference
 
-Wu J, Eickhoff SB, Hoffstaedter F, Patil KR, Schwender H, Genon S. **A connectivity-based psychometric prediction framework for brain-behavior relationship studies**, *In prep*.
+Wu J, Eickhoff SB, Hoffstaedter F, Patil KR, Schwender H, Yeo BTT, Genon S. 2021. **A connectivity-based psychometric prediction framework for brain-behavior relationship studies**. Cerebral Cortex. 31(8): 3732-3751. [https://doi.org/10.1093/cercor/bhab044](https://doi.org/10.1093/cercor/bhab044).
+
+Wu J, Eickhoff SB, Li J, Yeo BTT, Genon S. **Replication (or not) of connectivity-based psychometric prediction patterns in distinct population neuroscience cohorts**. *In prep.*
 
 ## Background
 
@@ -10,7 +12,7 @@ The CBPP framework is an effort to summarize the general workflow of and systema
 
 1. **Whole-brain CBPP**: In the preliminary analysis, we utilised all region-to-region connectivity values for prediction to find the overall best combination of approaches.
 
-2. **Parcel-wise CBPP**: In order to improve the neurobiological validity (or interpretability) of psychometric prediction models, We propose a parcel-wise prediction approach, where models are trained on each parcel's connectivity profiles separately. We further illustrate 2 applications for this aproach:
+2. **Region-wise CBPP**: In order to improve the neurobiological validity (or interpretability) of psychometric prediction models, We propose a parcel-wise prediction approach, where models are trained on each parcel's connectivity profiles separately. We further illustrate 2 applications for this aproach:
 
     - **single parcel's psychometric profile** (below shows the psychometric profile of a pair of parcels in the Broca region)
     
@@ -22,9 +24,13 @@ The CBPP framework is an effort to summarize the general workflow of and systema
     </br>
     <img src="bin/images/root_readme_img2.png" height="170">
 
+Later, focusing on the predictive power variation across parcels of fluid cognition and openness, we investigated the generalisability of such region-wise prediction patterns across distinct cohorts.
+
 ## Replication
 
-Please see the READMEs in the `HCP_surface_CBPP` and `HCP_volume_CBPP` folders on how to replicate the results in our paper.
+Please see the READMEs in the `HCP_surface_CBPP` and `HCP_volume_CBPP` folders on how to replicate the results in our 2021 paper.
+
+Please see the README in the `generalisability_CBPP` folder on how to replicate the results in our 2022 paper.
 
 ## Code Release
 
