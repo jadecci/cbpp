@@ -1,16 +1,27 @@
-## HCP psychometric/confounds data extraction
+## HCP-YA data extraction
 
-This folder contains scripts to extract psychometric and confounding variables based on a subject list and header lists, from the HCP unrestricted and restricted data csv. The extracted data are stored in `.mat` files, ready to use for `CBPP_wholebrain.m`, `CBPP_parcelwise.m` and the unit test. 
+The script `extract_HCP_data.sh` helps to extract psychometric and confounding variables based on a subject list and header lists, from the HCP Yound Adult unrestricted and restricted data csv. The extracted data are stored in `.csv` files, which can also be converted to `.mat` files with the `-m` flag. 
 
 For example, to extract the relevant data for the first 100 subjects with `FIX+GSR` data in `MNI` space:
 
-```
+```bash
 ./extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -p 'gsr' -b 100
+```
+
+For extracting the relevant data for `generalisability_CBPP`:
+
+```bash
+echo 'NEOFAC_O,PMAT24_A_CR,CogFluidComp_AgeAdj' > temp_psylist.csv
+./extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -p 'fix_wmcsf' -l temp_psylist.csv
 ```
 
 For more detailed help message, run `./extract_HCP_data.sh` on command line. 
 
 Note that the extraction could take a very long time if a large number of subjects is to be selected.
+
+## HCP-A data extraction
+
+
 
 ### Data extraction for unit test
 
@@ -18,7 +29,7 @@ Specially, the extraction script can set the preprocessing option and range of s
 
 To obtain all 4 `.mat` files needed for the unit test in `$deriv_dir`, call the extraction script twice:
 
-```
-./extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -u 1 -o $deriv_dir
-./extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -u 1 -o $deriv_dir
+```bash
+./extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -u 1 -o $deriv_dir -m 1
+./extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -u 1 -o $deriv_dir -m 1
 ```

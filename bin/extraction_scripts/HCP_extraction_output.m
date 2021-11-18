@@ -1,5 +1,5 @@
-function convert_csv_to_mat_HCP(psych_file, conf_unres_file, conf_res_file, out_dir, out_prefix)
-% convert_csv_to_mat_HCP(psych_file, conf_unres_file, conf_res_file, out_dir, out_prefix)
+function convert_csv_to_mat_HCP(psych_file, conf_unres_file, conf_res_file, out_dir, out_prefix, mat_out)
+% convert_csv_to_mat_HCP(psych_file, conf_unres_file, conf_res_file, out_dir, out_prefix, mat_out)
 %
 % This function converts extracted psychometric and confounding variables in csv files to .mat files, which can then be
 % used for CBPP_wholebrain.m, CBPP_parcelwise.m or unit test.
@@ -18,18 +18,20 @@ function convert_csv_to_mat_HCP(psych_file, conf_unres_file, conf_res_file, out_
 %                           Absolute path to the output directory
 %       - out_prefix       :
 %                           Prefix for output file
+%       - mat_out          :
+%                           Set to 0 to save output files in .csv format. Set to 1 to save in .mat format instead
 %
 % Output:
 %        2 files will be saved to the output directory, containing the converted psychometric and confounding variables
 %        respectively. The files would be named as:
-%           out_prefix_y.mat
-%           out_prefix_conf.mat
+%           out_prefix_y.csv
+%           out_prefix_conf.csv
 %
-% Jianxiao Wu, last edited on 08-Apr-2020
+% Jianxiao Wu, last edited on 18-Nov-2021
 
 % usage
-if nargin ~= 5
-    disp('Usage: convert_csv_to_mat_HCP(psych_file, conf_unres_file, conf_res_file, out_dir, out_prefix)');
+if nargin ~= 6
+    disp('Usage: convert_csv_to_mat_HCP(psych_file, conf_unres_file, conf_res_file, out_dir, out_prefix, mat_out)');
     return
 end
 
@@ -67,6 +69,11 @@ conf(:, 8) = round(table2array(conf_unres(1:n, 3)) .* 1000) ./ 1000; % keep 9 de
 acq = table2cell(conf_unres(1:n, 1));
 for i = 1:n; conf(i, 9) = str2double(acq{i}(2:end)); end
 
-% save results\
-save(fullfile(out_dir, [out_prefix '_y.mat']), 'y');
-save(fullfile(out_dir, [out_prefix '_conf.mat']), 'conf');
+% save results
+if mat_out == 0
+    dlmwrite(fullfile(out_dir, [out_prefix '_y.csv']), y, 'precision', 6);
+    dlmwrite(fullfile(out_dir, [out_prefix '_conf.csv']), conf, 'precision', 6);
+elseif mat_out == 1
+    save(fullfile(out_dir, [out_prefix '_y.mat']), 'y');
+    save(fullfile(out_dir, [out_prefix '_conf.mat']), 'conf');
+end
