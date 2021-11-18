@@ -40,20 +40,20 @@ We release two Matlab functions, `CBPP_wholebbrain.m` and `CBIG_parcelwise.m`, f
 
 To run whole-brain or parcel-wise CBPP, use the following commands in Matlab:
 
-```
+```matlab
 CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options)
 ```
 
-```
+```matlab
 CBPP_parcelwise(fc, y, conf, cv_ind, out_dir, options)
 ```
 
 For more detailed usage for each function, use the following commands in Matlab:
 
-```
+```matlab
 help CBPP_wholebrain
 ```
-```
+```matlab
 help CBPP_parcelwise
 ```
 
