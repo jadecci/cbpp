@@ -62,7 +62,7 @@ end
 
 % add utility functions to path
 my_path = fileparts(mfilename('fullpath'));
-addpath([my_path '/utilities']);
+addpath(fullfile(my_path, 'utilities'));
 
 % set default settings
 if nargin < 6; options = []; end
@@ -128,11 +128,7 @@ for repeat = 1:n_repeat
             
             % run regression
             reg_func = str2func([options.method '_one_fold']);
-            if strcmp(options.method, 'RR')
-                perf = reg_func(x, y_curr_score, conf_pass, cv_ind_curr, fold, options.in_seed);
-            else
-                perf = reg_func(x, y_curr_score, cv_ind_curr, fold);
-            end
+            perf = reg_func(x, y_curr_score, cv_ind_curr, fold);
 
             % collect results
             r_train(repeat, fold, target_ind) = perf.r_train;
@@ -147,7 +143,7 @@ fprintf('\n');
 % save performance results
 output_name = ['pwCBPP_' options.method '_' options.conf_opt '_' options.prefix ];
 if options.isnull ~= 0; output_name = ['null_' output_name]; end
-save([out_dir '/' output_name '.mat'], 'r_train', 'r_test', 'nrmsd_train', 'nrmsd_test');
+save(fullfile(out_dir, [output_name '.mat']), 'r_train', 'r_test', 'nrmsd_train', 'nrmsd_test');
 
 
 

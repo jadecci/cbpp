@@ -21,33 +21,36 @@ function CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options)
 %                 (Optional) see below for available settings
 %
 % Options:
-%       - method  :
-%                  Regression method to use. Available options: 'MLR' (multiple linear regression), 'SVR' (Support 
-%                  Vector Regression), 'EN' (Elastic Nets), 'RR' (ridge regression)
-%                  Default: 'SVR'
-%       - prefix  :
-%                  Prefix for output filename. If all setting are default, the output file will be named with the 
-%                  prefix 'wbCBPP_SVR_standard_test'
-%                  Default: 'test'
-%       - conf_opt:
-%                  Confound controlling approach. Available options:
-%                  'standard' ('standard' approach): regress out confounding variables from training subjects and apply
-%                             to test subjects
-%                  'str_conf' ('sex + brain size confounds' approach): similar to 'standard', but noting that the 
-%                             confounding variables passed in are only those correlated with strength (i.e. gender, 
-%                             brain size and ICV).
-%                  'no_conf' ('no confound' approach): don't use confounds
-%                  Default: 'standard'
-%       - in_seed :
-%                  Seed for inner-loop cross-validation indices generation. Can be set to 'shuffle' or any integer. 
-%                  Only required for ridge regression
-%                  Default: 'shuffle'
+%       - method      :
+%                      Regression method to use. Available options: 'MLR' (multiple linear regression), 'SVR' (Support 
+%                      Vector Regression), 'EN' (Elastic Nets), 'RR' (ridge regression)
+%                      Default: 'SVR'
+%       - prefix      :
+%                      Prefix for output filename. If all setting are default, the output file will be named with the 
+%                      prefix 'wbCBPP_SVR_standard_test'
+%                      Default: 'test'
+%       - conf_opt    :
+%                      Confound controlling approach. Available options:
+%                      'standard' ('standard' approach): regress out confounding variables from training subjects and apply
+%                                 to test subjects
+%                      'str_conf' ('sex + brain size confounds' approach): similar to 'standard', but noting that the 
+%                                 confounding variables passed in are only those correlated with strength (i.e. gender, 
+%                                 brain size and ICV).
+%                   '   no_conf' ('no confound' approach): don't use confounds
+%                      Default: 'standard'
+%       - in_seed     :
+%                      Seed for inner-loop cross-validation indices generation. Can be set to 'shuffle' or any integer. 
+%                      Only required for ridge regression
+%                      Default: 'shuffle'
+%       - save_weights:
+%                      Set to 1 to also save regression weights across all folds and repeats
+%                      Default: 0
 %
 % Output:
 %        One .mat file will be saved to out_dir, containing performance in training set (vairable 'r_train' and 
 %        'nrmsd_train') and validation set (variable 'r_test' and 'nrmsd_test').
 %
-% Jianxiao Wu, last edited on 21-Oct-2020
+% Jianxiao Wu, last edited on 18-Nov-2020
 
 % usage
 if nargin < 5
@@ -57,7 +60,7 @@ end
 
 % add utility functions to path
 my_path = fileparts(mfilename('fullpath'));
-addpath([my_path '/utilities']);
+addpath(fullfile(my_path, 'utilities'));
 
 % set default settings
 if nargin < 6; options = []; end
@@ -65,6 +68,7 @@ if ~isfield(options, 'method'); options.method = 'SVR'; end
 if ~isfield(options, 'prefix'); options.prefix = 'test'; end
 if ~isfield(options, 'conf_opt'); options.conf_opt = 'standard'; end
 if ~isfield(options, 'in_seed'); options.in_seed = 'shuffle'; end
+if ~isfield(options, 'save_weights'); options.save_weights = 0; end
 
 % set-up
 yd = size(y, 2); % dimensionality of targets y == P
@@ -85,6 +89,7 @@ r_train = zeros(n_repeat, n_fold, yd);
 r_test = zeros(n_repeat, n_fold, yd);
 nrmsd_train = zeros(n_repeat, n_fold, yd);
 nrmsd_test = zeros(n_repeat, n_fold, yd);
+if options.save_weights; weights_all = zeros(n_repeat, n_fold, xd); end
 fprintf('Running repeat-fold 0001-01');
 for repeat = 1:n_repeat 
     cv_ind_curr = cv_ind(:, repeat);
@@ -131,17 +136,14 @@ for repeat = 1:n_repeat
         for target_ind = 1:yd
             x_sel = x(:, feature_sel(:, target_ind) == 1);
             reg_func = str2func([options.method '_one_fold']);
-            if strcmp(options.method, 'RR')
-                perf = reg_func(x_sel, y_curr(:, target_ind), conf_pass, cv_ind_curr, fold, options.in_seed);
-            else
-                perf = reg_func(x_sel, y_curr(:, target_ind), cv_ind_curr, fold);
-            end
+            [perf, weights] = reg_func(x_sel, y_curr(:, target_ind), cv_ind_curr, fold);
             
             % collect results
             r_train(repeat, fold, target_ind) = perf.r_train;
             r_test(repeat, fold, target_ind) = perf.r_test;
             nrmsd_train(repeat, fold, target_ind) = perf.nrmsd_train;
             nrmsd_test(repeat, fold, target_ind) = perf.nrmsd_test;
+            if options.save_weights; weights_all(rrepeat, fold, :) = weights; end
         end
     end
 end
@@ -149,4 +151,5 @@ fprintf('\n');
 
 % save performance results
 output_name = ['wbCBPP_' options.method '_' options.conf_opt '_' options.prefix ];
-save([out_dir '/' output_name '.mat'], 'r_train', 'r_test', 'nrmsd_train', 'nrmsd_test');
+save(fullfile(out_dir, [output_name '.mat'), 'r_train', 'r_test', 'nrmsd_train', 'nrmsd_test');
+if options.save_weights; save(fullfile(out_dir, [output_name '_weights.mat']), 'weights_all');
