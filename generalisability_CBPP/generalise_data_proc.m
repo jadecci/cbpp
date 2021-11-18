@@ -1,4 +1,4 @@
-function generalise_data_proc(dataset, atlas, in_dir, conf_dir, out_dir)
+function generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_file, out_dir)
 % This script processes the resting-state data with nuisance regression, followed by parcellation and functional 
 %connectivity (FC) computation.
 %
@@ -8,6 +8,8 @@ function generalise_data_proc(dataset, atlas, in_dir, conf_dir, out_dir)
 %                'SchMel3' and 'SchMel4'
 % input_dir    absolute path to input directory
 % conf_dir     absolute path to confounds directory
+% psy_file     absolute path to the .mat file containing the psychometric variables to predict
+% conf_file    absolute path to the .mat file containing the confounding variables
 % output_dir   absolute path to output directory
 %
 % OUTPUT:
@@ -16,8 +18,8 @@ function generalise_data_proc(dataset, atlas, in_dir, conf_dir, out_dir)
 %
 % Jianxiao Wu, last edited on 18-Nov-2021
 
-if nargin ~= 5
-    disp('Usage: generalise_data_proc(dataset, atlas, in_dir, conf_dir, out_dir)'); return
+if nargin ~= 7
+    disp('Usage: generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_file, out_dir)'); return
 end
 
 script_dir = fileparts(mfilename('fullpath'));
@@ -113,8 +115,10 @@ otherwise
     disp('Invalid dataset option.'); return
 end
 
+y = csvread(psy_file);
+conf = csvread(conf_file);
 output = fullfile(out_dir, [dataset '_fix_wmcsf_' atlas '_Pearson.mat']);
-save(output, 'fc');
+save(output, 'fc', 'y', 'conf');
 
 end
 
