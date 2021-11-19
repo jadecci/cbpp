@@ -46,7 +46,7 @@ $SCRIPT_DIR/extract_csv_by_colHeader.sh $row_temp $SCRIPT_DIR/HCP_conf_list.csv 
 # output final .csv files or convert extracted data to .mat format
 out_prefix=HCP_${space}_${preproc}_sub${sub_start}to${sub_stop}
 if [ $unit_test -eq 1 ]; then out_prefix=unit_test_${space}; fi
-matlab_cmd="matlab -nodesktop -nosplash -singleCompThread -r"
+matlab_cmd="matlab95 -nodesktop -nosplash -singleCompThread -r"
 $matlab_cmd "addpath('$SCRIPT_DIR'); \
             HCP_extraction_output('$psych_temp', '$conf_unres_temp', '$conf_res_temp', '$out_dir', '$out_prefix', $mat_out); \
             rmpath('$SCRIPT_DIR'); \
