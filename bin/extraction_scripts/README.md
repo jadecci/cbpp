@@ -21,7 +21,7 @@ Note that the extraction could take a very long time if a large number of subjec
 
 ## HCP-A data extraction
 
-The script `extract_HCP-A_data.py` helps to extract psychometric and confounding variables from the HCP Aging (Release 2.0) based on a subject list. The extracted data are stored in `HCP-A_y.csv` and `HCP-A_conf.csv` respectively. The input directory should contain the original phenotype `.txt` files downloaded from NDA.
+The script `extract_HCP-A_data.py` helps to extract psychometric and confounding variables from the HCP Aging (Release 2.0) based on a subject list. The input directory should contain the original phenotype `.txt` files downloaded from NDA. The extracted data are stored in `HCP-A_y.csv` and `HCP-A_conf.csv` respectively.
 
 For example, to extract the data into current directory:
 
@@ -43,6 +43,16 @@ For extracting the openness related data into current directory:
 
 ```bash
 python3 extract_eNKI-RS_data.py $input_dir --psy openness
+```
+
+## GSP data extraction
+
+The script `extract_GSP_data.py` helps to extract psychometric and confounding variables from GSP based on a subject list. The input file should be the extended phenotype file `GSP_extended_140630.csv` downloaded from LONI. The extracted data are stored in `GSP_y.csv` and `GSP_conf.csv` respectively.
+
+For example, to extract the data into current directory:
+
+```bash
+python3 extract_GSP_data.py $input
 ```
 
 ## Data extraction for unit test 1
@@ -76,4 +86,9 @@ To extract the eNKI-RS phenotype data required for unit test 2 in `$deriv_dir`:
 ```bash
 python3 extract_eNKI-RS_data.py $input_dir --unit_test --out_dir $deriv_dir
 python3 extract_eNKI-RS_data.py $input_dir --psy openness --unit_test --out_dir $deriv_dir
+```
+To extract the GSP phenotype data required for unit test 2 in `$deriv_dir`:
+
+```bash
+python3 extract_GSP_data.py $input --unit_test --out_dir $deriv_dir
 ```
