@@ -11,7 +11,7 @@ bash extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -p 'gs
 For extracting the relevant data only for the 3 selected psychometric vairables for `generalisability_CBPP`:
 
 ```bash
-echo 'NEOFAC_O,PMAT24_A_CR,CogFluidComp_AgeAdj' > temp_psylist.csv
+echo 'NEOFAC_O,CogFluidComp_AgeAdj,PMAT24_A_CR' > temp_psylist.csv
 bash extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -p 'fix_wmcsf' -l temp_psylist.csv
 ```
 
@@ -23,10 +23,26 @@ Note that the extraction could take a very long time if a large number of subjec
 
 The script `extract_HCP-A_data.py` helps to extract psychometric and confounding variables from the HCP Aging (Release 2.0) based on a subject list. The extracted data are stored in `HCP-A_y.csv` and `HCP-A_conf.csv` respectively. The input directory should contain the original phenotype `.txt` files downloaded from NDA.
 
-For example,
+For example, to extract the data into current directory:
 
 ```bash
 python3 extract_HCP-A_data.py $input_dir
+```
+
+## eNKI-RS data extraction
+
+The script `extract_HCP-A_data.py` helps to extract psychometric and confounding variables from eNKI-RS based on a subject list. The input directory should contain the original phenotype `.csv` files downloaded from COINS. Note that the WASI-II intelligence and openness data need to be extracted separately, as they involve different numbers of subjects.
+
+For extracting the WASI-II intelligence related data into current directory:
+
+```bash
+python3 extract_eNKI-RS_data.py $input_dir
+```
+
+For extracting the openness related data into current directory:
+
+```bash
+python3 extract_eNKI-RS_data.py $input_dir --psy openness
 ```
 
 ## Data extraction for unit test 1
@@ -52,5 +68,12 @@ bash extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -l tem
 To extract the HCP-A phenotype data required for unit test 2 in `$deriv_dir`:
 
 ```bash
-python3 extract_HCP-A_data.py $input_dir -unit_test -o $deriv_dir
+python3 extract_HCP-A_data.py $input_dir --unit_test --out_dir $deriv_dir
+```
+
+To extract the eNKI-RS phenotype data required for unit test 2 in `$deriv_dir`:
+
+```bash
+python3 extract_eNKI-RS_data.py $input_dir --unit_test --out_dir $deriv_dir
+python3 extract_eNKI-RS_data.py $input_dir --psy openness --unit_test --out_dir $deriv_dir
 ```

@@ -15,22 +15,20 @@ def add_data(in_dir, in_file, col, sub_col, colname, coltype, data):
     
     return data
 
-bin_path = Path(__file__).parent.parent.resolve()
 parser = argparse.ArgumentParser(description="Extract psychometric and confounding variables for HCP-Aging",
                                  formatter_class=lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=100))
 parser.add_argument("in_dir", type=str, help="Absolute path to input directory")
-parser.add_argument("--sub_list", dest="sub_list", type=str, default=(str(bin_path)+'/sublist/HCP-A_allRun_sub.csv'), 
-                    help="Absolute path to the subject list")
 parser.add_argument("--out_dir", dest="out_dir", type=str, default=os.getcwd(), 
                     help="Absolute path to the output directory")
 parser.add_argument("--unit_test", dest="ut", action="store_true", help="Only get the first 50 subjects for unit test")
 args = parser.parse_args()
 
-data = pd.read_csv(args.sub_list, header=None, names=['Sub_Key'], squeeze=False)
+sub_list = str(Path(__file__).parent.parent.resolve()) + '/sublist/HCP-A_allRun_sub.csv'
+data = pd.read_csv(sub_list, header=None, names=['Sub_Key'], squeeze=False)
 # Psychometric variables
-psy_list = ['nih_fluidcogcomp_ageadjusted', 'neo2_score_op']
-data = add_data(args.in_dir, 'cogcomp01.txt', 14, 4, psy_list[0], float, data)
-data = add_data(args.in_dir, 'nffi01.txt', 78, 4, psy_list[1], float, data)
+psy_list = ['neo2_score_op', 'nih_fluidcogcomp_ageadjusted']
+data = add_data(args.in_dir, 'nffi01.txt', 78, 4, psy_list[0], float, data)
+data = add_data(args.in_dir, 'cogcomp01.txt', 14, 4, psy_list[1], float, data)
 
 # Confounding variables
 conf_list = ['grip_standardsc_dom', 'grip_standardsc_nondom', 'interview_age', 'sex', 'hcp_handedness_score',
