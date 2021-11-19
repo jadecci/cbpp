@@ -1,4 +1,4 @@
-This README includes the instruction on how to run the unit test for the Connectivity-based Psychometric Prediction (CBPP) project.
+# Unit Test 1
 
 ## Reference
 

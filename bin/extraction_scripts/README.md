@@ -19,15 +19,11 @@ For more detailed help message, run `./extract_HCP_data.sh` on command line.
 
 Note that the extraction could take a very long time if a large number of subjects is to be selected.
 
-## HCP-A data extraction
-
-
-
 ### Data extraction for unit test
 
-Specially, the extraction script can set the preprocessing option and range of subjects automatically if `-u 1` is passed, although the space still needs to be specified.
+Specially, this extraction script can set the preprocessing option and range of subjects automatically if `-u 1` is passed, although the space still needs to be specified.
 
-To obtain all 4 `.mat` files needed for the unit test in `$deriv_dir`, call the extraction script twice:
+To obtain all 4 `.mat` files needed for the unit test 1 in `$deriv_dir`, call the extraction script twice:
 
 ```bash
 ./extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -u 1 -o $deriv_dir -m 1
