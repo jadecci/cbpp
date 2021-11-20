@@ -36,12 +36,12 @@ for sub_id_curr in $sub_names; do
     if [ ! -e $output ]; then 
       echo "Running sub$sub_id_curr $run"
       if [ "$corr" == "Pearson" ]; then
-        matlab -nodesktop -nosplash -r "load('$input', 'vol_parc'); \
+        matlab95 -nodesktop -nosplash -r "load('$input', 'vol_parc'); \
                                         addpath('$UTILITIES_DIR'); \
                                         FC_Pearson(vol_parc, '$out_dir', '$out_prefix'); \
                                         exit"
       elif [ "$corr" == 'partial_l2' ]; then
-        matlab -nodesktop -nosplash -r "load('$input', 'vol_parc'); \
+        matlab95 -nodesktop -nosplash -r "load('$input', 'vol_parc'); \
                                         addpath('$BIN_DIR/external_packages/FSLNets'); \
                                         fc = nets_netmats(vol_parc', 1, 'ridgep'); \
                                         save(['$out_dir' '/' '$out_prefix' '_partial_l2.mat'], 'fc'); \

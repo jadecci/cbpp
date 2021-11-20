@@ -41,7 +41,7 @@ for parcel in {1..$n_parcel}; do
 
   # run regression
   if [ ! -e $output ]; then
-    matlab_cmd="matlab -nodesktop -nodisplay -nosplash -singleCompThread -nojvm -r"
+    matlab_cmd="matlab95 -nodesktop -nodisplay -nosplash -singleCompThread -nojvm -r"
     $matlab_cmd "load('$input', 'fc'); \
                  fc = squeeze(fc($parc_ind, :, :)); fc($parc_ind, :) = []; \
                  load('$psych_file', 'y'); \

@@ -27,7 +27,7 @@ output=$out_dir/wbCBPP_${method}_${conf_opt}_${prefix}.mat
 
 # run regression
 if [ ! -e $output ]; then
-  matlab_cmd="matlab -nodesktop -nodisplay -nosplash -singleCompThread -nojvm -r"
+  matlab_cmd="matlab95 -nodesktop -nodisplay -nosplash -singleCompThread -nojvm -r"
   $matlab_cmd "load('$input', 'fc'); \
                load('$psych_file', 'y'); \
                load('$conf_file', 'conf'); \

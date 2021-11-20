@@ -47,7 +47,7 @@ for sub_id_curr in $sub_names; do
     # run parcellation if necessary
     if [ ! -e $output ]; then
       echo "Running sub$sub_id_curr $run"
-      matlab -nodesktop -nosplash -r "addpath('$BIN_DIR/external_packages/cifti-matlab', '$UTILITIES_DIR'); \
+      matlab95 -nodesktop -nosplash -r "addpath('$BIN_DIR/external_packages/cifti-matlab', '$UTILITIES_DIR'); \
                                       input = ft_read_cifti('$input'); \
                                       vol_parc = parcellate_Schaefer_fslr(input.dtseries, $n_parc, '$parc_file'); \
                                       save('$output', 'vol_parc'); \

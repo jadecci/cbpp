@@ -36,7 +36,7 @@ done
 # continue if all subjects are present
 if [ $all_present -eq 1 ]; then
   if [ ! -e $out_dir/HCP_${preproc}_parc${n_parc}_${corr}.mat ]; then
-    matlab -nodesktop -nosplash -r "addpath('$UTILITIES_DIR'); \
+    matlab95 -nodesktop -nosplash -r "addpath('$UTILITIES_DIR'); \
                                     combine_HCP_data_surf('$sub_list', '$input_dir', $n_parc, '$preproc', '$corr', '$out_dir'); \
                                     exit"
   else

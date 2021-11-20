@@ -115,7 +115,7 @@ wb_output=$output_dir/CBPP_perf/wbCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixS
 wb_compare=$ROOT_DIR/unit_test/ground_truth/wbCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed.mat
 pw_output=$output_dir/CBPP_perf/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel$parc_ind_surf.mat
 pw_compare=$ROOT_DIR/unit_test/ground_truth/pwCBPP_SVR_standard_HCP_gsr_parc300_Pearson_fixSeed_parcel$parc_ind_surf.mat
-matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
+matlab95 -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
                                 unit_test_compare('$wb_output', '$wb_compare'); \
                                 unit_test_compare('$pw_output', '$pw_compare'); \
                                 exit"
@@ -124,7 +124,7 @@ wb_output=$output_dir/CBPP_perf/wbCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_
 wb_compare=$ROOT_DIR/unit_test/ground_truth/wbCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed.mat
 pw_output=$output_dir/CBPP_perf/pwCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed_parcel$parc_ind_mni.mat
 pw_compare=$ROOT_DIR/unit_test/ground_truth/pwCBPP_SVR_standard_HCP_fix_wmcsf_AICHA_Pearson_fixSeed_parcel$parc_ind_mni.mat
-matlab -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
+matlab95 -nodesktop -nosplash -r "addpath('$ROOT_DIR/unit_test'); \
                                 unit_test_compare('$wb_output', '$wb_compare'); \
                                 unit_test_compare('$pw_output', '$pw_compare'); \
                                 exit"

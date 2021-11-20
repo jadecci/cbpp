@@ -44,7 +44,7 @@ for sub_id_curr in $sub_names; do
     # run parcellation if necessary
     if [ ! -e $output ]; then
       echo "Running sub$sub_id_curr $run"
-      matlab -nodesktop -nosplash -r "input = MRIread('$input'); \
+      matlab95 -nodesktop -nosplash -r "input = MRIread('$input'); \
                                       addpath('$UTILITIES_DIR'); \
                                       vol_parc = parcellate_AICHA_MNI(input.vol, '$parc_file'); \
                                       save('$output', 'vol_parc'); \

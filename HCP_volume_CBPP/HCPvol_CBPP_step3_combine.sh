@@ -36,7 +36,7 @@ done
 # continue if all subjects are present
 if [ $all_present -eq 1 ]; then
   if [ ! -e $out_dir/HCP_${preproc}_AICHA_${corr}.mat ]; then
-    matlab -nodesktop -nosplash -r "addpath('$UTILITIES_DIR'); \
+    matlab95 -nodesktop -nosplash -r "addpath('$UTILITIES_DIR'); \
                                     combine_HCP_data_MNI('$sub_list', '$input_dir', 'AICHA', '$preproc', '$corr', '$out_dir'); \
                                     exit"
   else

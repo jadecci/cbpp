@@ -35,7 +35,7 @@ for sub_id_curr in $sub_names; do
       # Generate global signal regressors
       input=$input_dir/$sub_id_curr/MNINonLinear/Results/rfMRI_$run/rfMRI_${run}_hp2000_clean.nii.gz
       regressors=$conf_dir/Confounds_${sub_id_curr}_${run}.mat
-      matlab -nodesktop -nosplash -r "addpath('$BIN_DIR/external_packages'); \
+      matlab95 -nodesktop -nosplash -r "addpath('$BIN_DIR/external_packages'); \
                                       input = MRIread('$input'); \
                                       dim = size(input.vol); \
                                       vol = reshape(input.vol, prod(dim(1:3)), dim(4)); \
