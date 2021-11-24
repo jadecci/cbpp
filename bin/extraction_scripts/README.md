@@ -85,7 +85,6 @@ To extract the eNKI-RS phenotype data required for unit test 2 in `$deriv_dir`:
 
 ```bash
 python3 extract_eNKI-RS_data.py $input_dir --unit_test --out_dir $deriv_dir
-python3 extract_eNKI-RS_data.py $input_dir --psy openness --unit_test --out_dir $deriv_dir
 ```
 To extract the GSP phenotype data required for unit test 2 in `$deriv_dir`:
 
