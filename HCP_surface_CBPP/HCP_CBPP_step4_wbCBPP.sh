@@ -28,7 +28,7 @@ output=$out_dir/wbCBPP_${method}_${conf_opt}_${prefix}.mat
 # run regression
 if [ ! -e $output ]; then
   matlab_cmd="matlab95 -nodesktop -nodisplay -nosplash -singleCompThread -nojvm -r"
-  $matlab_cmd "load('$input', 'fc'); \
+  $matlab_cmd "load('$input', 'fc');\
                load('$psych_file', 'y'); \
                load('$conf_file', 'conf'); \
                if $fix_seed == 1; seed = 1; else seed = 'shuffle'; end; \
@@ -36,8 +36,8 @@ if [ ! -e $output ]; then
                cv_ind = CVPart_HCP(10, 10, '$sub_list', '$famID_file', seed); \
                options = []; options.conf_opt = '$conf_opt'; \
                options.method = '$method'; options.prefix = '$prefix'; \
-               if $fix_seed == 1; options.in_seed = 1; else options.in_seed = 'shuffle'; end;
-               addpath('$ROOT_DIR'); \
+               if $fix_seed == 1; options.in_seed = 1; else options.in_seed = 'shuffle'; end; \
+               addpath('$ROOT_DIR'); disp('Prepare to run wbCBPP'); \
                CBPP_wholebrain(fc, y, conf, cv_ind, '$out_dir', options); \
                exit"
 else

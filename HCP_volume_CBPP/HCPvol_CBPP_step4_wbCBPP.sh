@@ -36,7 +36,7 @@ if [ ! -e $output ]; then
                cv_ind = CVPart_HCP(10, 10, '$sub_list', '$famID_file', seed); \
                options = []; options.conf_opt = '$conf_opt'; \
                options.method = '$method'; options.prefix = '$prefix'; \
-               if $fix_seed == 1; options.in_seed = 1; else options.in_seed = 'shuffle'; end;
+               if $fix_seed == 1; options.in_seed = 1; else options.in_seed = 'shuffle'; end; \
                addpath('$ROOT_DIR'); \
                CBPP_wholebrain(fc, y, conf, cv_ind, '$out_dir', options); \
                exit"

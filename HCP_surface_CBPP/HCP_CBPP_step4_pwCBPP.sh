@@ -52,7 +52,7 @@ for parcel in {1..$n_parcel}; do
                  options = []; options.conf_opt = '$conf_opt'; \
                  options.method = '$method'; options.prefix = '$prefix'; \
                  options.isnull = $null_test; \
-                 if $fix_seed == 1; options.in_seed = 1; else options.in_seed = 'shuffle'; end;
+                 if $fix_seed == 1; options.in_seed = 1; else options.in_seed = 'shuffle'; end; \
                  addpath('$ROOT_DIR'); \
                  CBPP_parcelwise(fc, y, conf, cv_ind, '$out_dir', options); \
                  exit"
