@@ -143,7 +143,7 @@ for repeat = 1:n_repeat
             r_test(repeat, fold, target_ind) = perf.r_test;
             nrmsd_train(repeat, fold, target_ind) = perf.nrmsd_train;
             nrmsd_test(repeat, fold, target_ind) = perf.nrmsd_test;
-            if options.save_weights; weights_all(rrepeat, fold, :) = weights; end
+            if options.save_weights; weights_all(repeat, fold, :) = weights; end
         end
     end
 end

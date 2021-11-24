@@ -37,7 +37,7 @@ if [ ! -e $output ]; then
                options = []; options.conf_opt = '$conf_opt'; \
                options.method = '$method'; options.prefix = '$prefix'; \
                if $fix_seed == 1; options.in_seed = 1; else options.in_seed = 'shuffle'; end; \
-               addpath('$ROOT_DIR'); disp('Prepare to run wbCBPP'); \
+               addpath('$ROOT_DIR'); \
                CBPP_wholebrain(fc, y, conf, cv_ind, '$out_dir', options); \
                exit"
 else
