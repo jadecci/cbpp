@@ -36,6 +36,7 @@ head -$n_sub $sublist_mni_orig > $sublist_mni
 
 if [ $type == "full" ]; then 
   # step 0
+  echo "0: Nuisance regression"
   cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step0_GSR.sh -d $input_dir -o $output_dir/HCP_GSR -s $sublist_surf"
   echo $cmd
   eval $cmd
@@ -47,6 +48,7 @@ if [ $type == "full" ]; then
   date
 
   # step 1
+  echo "1: Parcellation"
   cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step1_parcellate.sh -d $output_dir/HCP_GSR -p gsr \
   -o $output_dir/parcellation -s $sublist_surf"
   echo $cmd
@@ -59,6 +61,7 @@ if [ $type == "full" ]; then
   date
 
   # step 2
+  echo "2: FC computation"
   cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step2_fc.sh -d $output_dir/parcellation -o $output_dir/FC \
   -p gsr -s $sublist_surf"
   echo $cmd
@@ -70,6 +73,7 @@ if [ $type == "full" ]; then
   date
 
   # step 3
+  echo "3: Combining data"
   cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step3_combine.sh -d $output_dir/FC -o $output_dir/FC_combined \
   -p gsr -s $sublist_surf"
   echo $cmd
@@ -83,6 +87,7 @@ if [ $type == "full" ]; then
 fi
 
 # step 4 whole-brain
+echo "4.1: whole-brain CBPP"
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_wbCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
 -y $deriv_dir/unit_test_surf_y.mat -v $deriv_dir/unit_test_surf_conf.mat -m $deriv_dir/HCP_famID.mat -s 1 -p gsr \
 -l $sublist_surf"
@@ -96,6 +101,7 @@ eval $cmd
 date
 
 # step 4 parcel-wise
+echo "4.2: parcel-wise CBPP"
 cmd="$ROOT_DIR/HCP_surface_CBPP/HCP_CBPP_step4_pwCBPP.sh -d $output_dir/FC_combined -o $output_dir/CBPP_perf \
 -y $deriv_dir/unit_test_surf_y.mat -v $deriv_dir/unit_test_surf_conf.mat -m $deriv_dir/HCP_famID.mat -i $parc_ind_surf \
 -s 1 -p gsr -l $sublist_surf"
