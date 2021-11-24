@@ -151,5 +151,5 @@ fprintf('\n');
 
 % save performance results
 output_name = ['wbCBPP_' options.method '_' options.conf_opt '_' options.prefix ];
-save(fullfile(out_dir, [output_name '.mat'), 'r_train', 'r_test', 'nrmsd_train', 'nrmsd_test');
-if options.save_weights; save(fullfile(out_dir, [output_name '_weights.mat']), 'weights_all');
+save(fullfile(out_dir, [output_name '.mat']), 'r_train', 'r_test', 'nrmsd_train', 'nrmsd_test');
+if options.save_weights; save(fullfile(out_dir, [output_name '_weights.mat']), 'weights_all'); end
