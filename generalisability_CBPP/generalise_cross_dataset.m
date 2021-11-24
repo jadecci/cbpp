@@ -11,12 +11,12 @@ function generalise_cross_dataset(dataset1, dataset2, atlas, in_dir, out_dir)
 %
 % OUTPUT:
 % 1 output file in the output directory containing the prediction performance
-% For example: wbCBPP_SVR_HCP-YA_eNKI-RS_AICHA.mat
+% For example: pwCBPP_SVR_HCP-YA_eNKI-RS_AICHA.mat
 %
-% Jianxiao Wu, last edited on 18-Nov-2021
+% Jianxiao Wu, last edited on 22-Nov-2021
 
 if nargin ~= 5
-    generalise_cross_dataset(dataset1, dataset2, atlas, in_dir, out_dir)
+    disp('generalise_cross_dataset(dataset1, dataset2, atlas, in_dir, out_dir)'); return
 end
 
 script_dir = fileparts(mfilename('fullpath'));
@@ -52,7 +52,7 @@ for parcel = 1:nparc
     nrmsd_test(parcel, 2) = perf.nrmsd_test;
 end
 
-output = fullfile(out_dir, ['wbCBPP_SVR_' dataset1 '_' dataset2 '_' atlas '.mat']);
+output = fullfile(out_dir, ['pwCBPP_SVR_' dataset1 '_' dataset2 '_' atlas '.mat']);
 save(output, 'r_train', 'r_test', 'nrmsd_train', 'nrmsd_test');
 
 end

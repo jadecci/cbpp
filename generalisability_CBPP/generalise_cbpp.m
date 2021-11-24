@@ -1,4 +1,4 @@
-function generalise_cbpp(model, dataset, atlas, in_dir, out_dir, saveWeights)
+function generalise_cbpp(model, dataset, atlas, in_dir, out_dir, saveWeights, sublist)
 % This script runs whole-brain or region-wise CBPP using combined connectivity data
 %
 % ARGUMENTS:
@@ -9,6 +9,7 @@ function generalise_cbpp(model, dataset, atlas, in_dir, out_dir, saveWeights)
 % input_dir    absolute path to input directory
 % output_dir   absolute path to output directory
 % saveWeights  (default: 0) set to 1 to also save the regression weights from whole-brain CBPP models
+% sublist      (optional) absolute path to custom subject list (.csv file where each line is one subject ID)
 %
 % OUTPUT:
 % 1 output file in the output directory containing the prediction performance, and whole-brain model regression
@@ -18,11 +19,15 @@ function generalise_cbpp(model, dataset, atlas, in_dir, out_dir, saveWeights)
 % Jianxiao Wu, last edited on 18-Nov-2021
 
 if nargin < 5
-    generalise_cbpp(model, dataset, atlas, in_dir, out_dir, saveWeights)
+    disp('generalise_cbpp(model, dataset, atlas, in_dir, out_dir, <saveWeights>, <sublist>)'); return
 end
 
 if nargin < 6
     saveWeights = 0;
+end
+
+if nargin < 7
+    sublist='';
 end
 
 script_dir = fileparts(mfilename('fullpath'));
@@ -34,16 +39,24 @@ options = []; options.save_weights = saveWeights;
 
 switch dataset
 case 'HCP-YA'
-    sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP_MNI_fix_wmcsf_allRun_sub.csv'));
+    if sublist == ''
+        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP_MNI_fix_wmcsf_allRun_sub.csv'));
+    end
     cv_ind = CVPart_HCP(n_fold, n_repeat, sublist, fullfile(in_dir, 'HCP-YA_famID.mat'), 1);
 case 'HCP-A'
-    sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP-A_allRun_sub.csv'));
+    if sublist == ''
+        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP-A_allRun_sub.csv'));
+    end
     cv_ind = CVPart_noFam(n_fold, n_repeat, length(sublist), 1);
 case 'eNKI-RS'
-    subdata = readtable(fullfile(fileparts(script_dir), 'bin', 'sublist', 'eNKI-RS_int_allRun_sub.csv'));
+    if sublist == ''
+        subdata = readtable(fullfile(fileparts(script_dir), 'bin', 'sublist', 'eNKI-RS_int_allRun_sub.csv'));
+    end
     cv_ind = CVPart_noFam(n_fold, n_repeat, length(sublist), 1);
 case 'GSP'
-    sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'GSP_allRun_sub.csv'));
+    if sublist == ''
+        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'GSP_allRun_sub.csv'));
+    end
     cv_ind = CVPart_noFam(n_fold, n_repeat, length(sublist), 1);
 otherwise
     error('Invalid dataset option.'); return
