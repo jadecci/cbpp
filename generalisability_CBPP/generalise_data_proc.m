@@ -1,4 +1,4 @@
-function generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_file, out_dir)
+function generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_file, out_dir, sublist)
 % This script processes the resting-state data with nuisance regression, followed by parcellation and functional 
 %connectivity (FC) computation.
 %
@@ -11,6 +11,7 @@ function generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_f
 % psy_file     absolute path to the .mat file containing the psychometric variables to predict
 % conf_file    absolute path to the .mat file containing the confounding variables
 % output_dir   absolute path to output directory
+% sublist      (optional) absolute path to custom subject list (.csv file where each line is one subject ID)
 %
 % OUTPUT:
 % 1 output file in the output directory containing the combined FC matrix across all subjects
@@ -18,8 +19,12 @@ function generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_f
 %
 % Jianxiao Wu, last edited on 18-Nov-2021
 
-if nargin ~= 7
-    disp('Usage: generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_file, out_dir)'); return
+if nargin < 7
+    disp('Usage: generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_file, out_dir, <sublist>)'); return
+end
+
+if nargin < 8
+    sublist='';
 end
 
 script_dir = fileparts(mfilename('fullpath'));
@@ -43,7 +48,9 @@ end
 
 switch dataset
 case 'HCP-YA'
-    sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP_MNI_fix_wmcsf_allRun_sub.csv'));
+    if sublist == ''
+        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP_MNI_fix_wmcsf_allRun_sub.csv'));
+    end
     runs = {'rfMRI_REST1_LR', 'rfMRI_REST1_RL', 'rfMRI_REST2_LR', 'rfMRI_REST2_RL'};
     fc = zeros(nparc, nparc, length(sublist));
     for sub_ind = 1:length(sublist)
@@ -62,7 +69,9 @@ case 'HCP-YA'
         fc(:, :, sub_ind) = fc(:, :, sub_ind) ./ length(runs);
     end
 case 'HCP-A'
-    sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP-A_allRun_sub.csv'));
+    if sublist == ''
+        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP-A_allRun_sub.csv'));
+    end
     runs = {'rfMRI_REST1_AP', 'rfMRI_REST1_PA', 'rfMRI_REST2_AP', 'rfMRI_REST2_PA'};
     fc = zeros(nparc, nparc, length(sublist));
     for sub_ind = 1:length(sublist)
@@ -81,11 +90,13 @@ case 'HCP-A'
         fc(:, :, sub_ind) = fc(:, :, sub_ind) ./ length(runs);
     end
 case 'eNKI-RS'
-    subdata = readtable(fullfile(fileparts(script_dir), 'bin', 'sublist', 'eNKI-RS_int_allRun_sub.csv'));
-    fc = zeros(nparc, nparc, length(subdata.Subject)));
-    for sub_ind = 1:length(subdata.Subject)
-        subject = sub_data.Subject{sub_ind};
-        session = sub_data.SessionRS{sub_ind};
+    if sublist == ''
+        sublist= readtable(fullfile(fileparts(script_dir), 'bin', 'sublist', 'eNKI-RS_int_allRun_sub.csv'));
+    end
+    fc = zeros(nparc, nparc, length(sublist.Subject)));
+    for sub_ind = 1:length(sublist.Subject)
+        subject = sublist.Subject{sub_ind};
+        session = sublist.SessionRS{sub_ind};
         input_dir = fullfile(in_dir, subject, session, 'func');
         input = MRIread(fullfile(input_dir, [subject '_' session ...
                 '_task-rest_acq-645_space-MNI152NLin6Asym_desc-smoothAROMAnonaggr_bold.nii.gz']));
@@ -98,7 +109,9 @@ case 'eNKI-RS'
         fc(:, :, sub_ind) = FC_Pearson(parc_data);
     end 
 case 'GSP'
-    sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'GSP_allRun_sub.csv'));
+    if sublist == ''
+        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'GSP_allRun_sub.csv'));
+    end
     fc = zeros(nparc, nparc, length(sublist));
     for sub_ind = 1:length(sublist)
         subject = num2str(sublist(sub_ind), '%04d');

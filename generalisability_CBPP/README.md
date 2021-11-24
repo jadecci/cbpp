@@ -44,7 +44,7 @@ For more detailed usage of the script: `help generalise_cbpp`
 
 ## Cross-dataset Generalisability
 
-For assessing cross-dataset generalisability, we trained region-wise CBPP models for fluid cognition prediction on one dataset and tested them on another. This was done using the `generalise_cross_dataset.m` script.
+For assessing cross-dataset generalisability, we trained region-wise CBPP models for fluid cognition prediction on one dataset and tested them on another. This was done using the `generalise_cross_dataset.m` script. Again, the input directory could be the output directory from data processing.
 
 For example, to run cross-dataset predictions on HCP-Aging and HCP-YA data for all parcels in the 454-parcel Schaefer-Melbourne atlas, run in Matlab:
 
