@@ -112,20 +112,18 @@ OPTIONAL ARGUMENTS:
   -h			    display help message
 
 OUTPUTS:
-	$0 will create 2 folders.
-
-	1) FC_combined folder: 4 files will be generated containing the combined FC matrix of all subjects
+	$0 will create 4 files containing the combined FC matrix of all subjects
 	The file names will be: 
 		fc_HCP-YA_SchMel1.mat
-        fc_HCP-A_SchMel1.mat
-        fc_eNKI-RS_SchMel3.mat
-        fc_GSP_AICHA.mat
+    fc_HCP-A_SchMel1.mat
+    fc_eNKI-RS_SchMel3.mat
+    fc_GSP_AICHA.mat
 
-	2) CBPP_perf folder: 3 files will be generated, corresponding to the prediction performance of within-dataset whole-brain CBPP, within-dataset region-wise CBPP and cross-dataset region-wise CBPP predictions respectively
+	$0 will then create 3 files corresponding to the prediction performance of within-dataset whole-brain CBPP, within-dataset region-wise CBPP and cross-dataset region-wise CBPP predictions respectively
 	The file names will be: 
 		pwCBPP_SVR_eNKI-RS_SchMel3_fluidcog.mat
 		wbCBPP_SVR_GSP_AICHA_openness.mat
-        pwCBPP_SVR_HCP-YA_HCP-A_SchMel1.mat
+    pwCBPP_SVR_HCP-YA_HCP-A_SchMel1.mat
 
 " 1>&2; exit 1; }
 

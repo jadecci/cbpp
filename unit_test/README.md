@@ -58,7 +58,7 @@ For HCP-YA, all subjects' IDs and corresponding family IDs should be saved in a 
 To run this unit test, call `unit_test2.sh` after preparing all the data:
 
 ```bash
-echo "${fmri_HCP-YA_dir},${fmri_HCP-YA_dir},${fmri_eNKI-RS_dir},${fmri_GSP_dir}" > temp_fmri_dir.csv
-echo "${conf_HCP-YA_dir},${conf_HCP-YA_dir},${conf_eNKI-RS_dir},${conf_GSP_dir}" > temp_conf_dir.csv
-bash unit_test1.sh -i temp_fmri_dir.csv -c temp_conf_dir.csv -d $deriv_dir -o $output_dir
+echo "${fmri_HCP-YA_dir},\n${fmri_HCP-YA_dir},\n${fmri_eNKI-RS_dir},\n${fmri_GSP_dir}" > temp_fmri_dir.csv
+echo "${conf_HCP-YA_dir},\n${conf_HCP-YA_dir},\n${conf_eNKI-RS_dir},\n${conf_GSP_dir}" > temp_conf_dir.csv
+bash unit_test2.sh -i temp_fmri_dir.csv -c temp_conf_dir.csv -d $deriv_dir -o $output_dir
 ```

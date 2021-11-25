@@ -71,7 +71,7 @@ bash extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -u 1 -
 To extract the HCP-YA phenotype data required for unit test 2 in `$deriv_dir`:
 
 ```bash
-echo 'NEOFAC_O,PMAT24_A_CR,CogFluidComp_AgeAdj' > temp_psylist.csv
+echo 'NEOFAC_O,\nPMAT24_A_CR,\nCogFluidComp_AgeAdj' > temp_psylist.csv
 bash extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -l temp_psylist.csv -u 1 -o $deriv_dir
 ```
 
