@@ -23,7 +23,7 @@ function fc = FC_Pearson(parc_data, out_dir, out_prefix)
 % Jianxiao Wu, last edited on 18-Mar-2018
 
 % usage
-if nargin < 3
+if nargin < 1
     disp('Usage: fc = FC_Pearson(parc_data, out_dir, out_prefix)');
     return
 end
@@ -53,7 +53,9 @@ for i = 1:n_parc
 end
 
 % save results
-save([out_dir '/' out_prefix '_Pearson.mat'], 'fc');
+if nargin == 3
+    save([out_dir '/' out_prefix '_Pearson.mat'], 'fc');
+end 
     
 
 
