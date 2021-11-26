@@ -30,7 +30,7 @@ head -$n_sub $ROOT_DIR/bin/sublist/HCP_MNI_fix_wmcsf_allRun_sub.csv > $sublist_H
 sublist_HCPA=$output_dir/HCP-A_allRun_sub.csv
 head -$n_sub $ROOT_DIR/bin/sublist/HCP-A_allRun_sub.csv > $sublist_HCPA
 sublist_eNKIRS=$output_dir/eNKI-RS_fluidcog_allRun_sub.csv
-head -$((n_sub+1)) $ROOT_DIR/bin/sublist/eNKI-RS_fluidcog_allRun_sub.csv | tail $n_sub > $sublist_eNKIRS
+head -$((n_sub+1)) $ROOT_DIR/bin/sublist/eNKI-RS_fluidcog_allRun_sub.csv > $sublist_eNKIRS
 sublist_GSP=$output_dir/GSP_allRun_sub.csv
 head -$n_sub $ROOT_DIR/bin/sublist/GSP_allRun_sub.csv > $sublist_GSP
 
