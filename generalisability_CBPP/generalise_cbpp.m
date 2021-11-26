@@ -31,6 +31,7 @@ if nargin < 7
 end
 
 script_dir = fileparts(mfilename('fullpath'));
+addpath(fullfile(fileparts(script_dir)));
 addpath(fullfile(fileparts(script_dir), 'HCP_surface_CBPP', 'utilities'));
 
 load(fullfile(in_dir, [dataset '_fix_wmcsf_' atlas '_Pearson.mat']), 'fc', 'y', 'conf');
@@ -39,25 +40,25 @@ options = []; options.save_weights = saveWeights;
 
 switch dataset
 case 'HCP-YA'
-    if sublist == ''
-        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP_MNI_fix_wmcsf_allRun_sub.csv'));
+    if nargin < 7
+        sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP_MNI_fix_wmcsf_allRun_sub.csv');
     end
     cv_ind = CVPart_HCP(n_fold, n_repeat, sublist, fullfile(in_dir, 'HCP-YA_famID.mat'), 1);
 case 'HCP-A'
-    if sublist == ''
-        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP-A_allRun_sub.csv'));
+    if nargin < 7
+        sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP-A_allRun_sub.csv');
     end
-    cv_ind = CVPart_noFam(n_fold, n_repeat, length(sublist), 1);
+    cv_ind = CVPart_noFam(n_fold, n_repeat, size(readtable(sublist), 1), 1);
 case 'eNKI-RS'
-    if sublist == ''
-        subdata = readtable(fullfile(fileparts(script_dir), 'bin', 'sublist', 'eNKI-RS_int_allRun_sub.csv'));
+    if nargin < 7
+        subdata = fullfile(fileparts(script_dir), 'bin', 'sublist', 'eNKI-RS_int_allRun_sub.csv');
     end
-    cv_ind = CVPart_noFam(n_fold, n_repeat, length(sublist), 1);
+    cv_ind = CVPart_noFam(n_fold, n_repeat, size(readtable(sublist), 1), 1);
 case 'GSP'
-    if sublist == ''
-        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'GSP_allRun_sub.csv'));
+    if nargin < 7
+        sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', 'GSP_allRun_sub.csv');
     end
-    cv_ind = CVPart_noFam(n_fold, n_repeat, length(sublist), 1);
+    cv_ind = CVPart_noFam(n_fold, n_repeat, length(csvread(sublist)), 1);
 otherwise
     error('Invalid dataset option.'); return
 end
@@ -92,14 +93,14 @@ end
 
 end
 
-function CVPart_noFam(n_fold, n_repeat, n_sub, seed)
+function cv_ind = CVPart_noFam(n_fold, n_repeat, n_sub, seed)
 
 rng(seed);
 cv_ind = zeros(n_sub, n_repeat);
 for repeat = 1:n_repeat
     cv_part = cvpartition(n_sub, 'KFold', n_fold);
     for fold = 1:n_fold
-        test_ind = cvpart.test(fold);
+        test_ind = cv_part.test(fold);
         cv_ind(test_ind==1, repeat) = fold;
     end
 end

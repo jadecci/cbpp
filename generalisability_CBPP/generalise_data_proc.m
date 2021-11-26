@@ -30,6 +30,12 @@ end
 script_dir = fileparts(mfilename('fullpath'));
 addpath(fullfile(fileparts(script_dir), 'bin', 'external_packages'));
 addpath(fullfile(fileparts(script_dir), 'HCP_surface_CBPP', 'utilities'));
+atlas_dir = fullfile(fileparts(script_dir), 'bin', 'parcellations');
+output = fullfile(out_dir, [dataset '_fix_wmcsf_' atlas '_Pearson.mat']);
+
+if isfile(output)
+    fprintf('Output %s already exists\n', output); return
+end
 
 switch atlas
 case 'AICHA'
@@ -48,80 +54,84 @@ end
 
 switch dataset
 case 'HCP-YA'
-    if sublist == ''
-        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP_MNI_fix_wmcsf_allRun_sub.csv'));
+    if nargin < 8
+        sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP_MNI_fix_wmcsf_allRun_sub.csv');
     end
-    runs = {'rfMRI_REST1_LR', 'rfMRI_REST1_RL', 'rfMRI_REST2_LR', 'rfMRI_REST2_RL'};
-    fc = zeros(nparc, nparc, length(sublist));
-    for sub_ind = 1:length(sublist)
-        subject = num2str(sublist(sub_ind));
-        for run_ind = 1:length(runs)
+    subjects = csvread(sublist);
+    run = {'rfMRI_REST1_LR', 'rfMRI_REST1_RL', 'rfMRI_REST2_LR', 'rfMRI_REST2_RL'};
+    fc = zeros(nparc, nparc, length(subjects));
+    for sub_ind = 1:length(subjects)
+        subject = num2str(subjects(sub_ind));
+        for i = 1:length(run)
             input_dir = fullfile(in_dir, subject, 'MNINonLinear', 'Results', run{i});
             input = MRIread(fullfile(input_dir, [run{i} '_hp2000_clean.nii.gz']));
             dims = size(input.vol);
-            input = reshape(input.vol, prod(dims(1:3)), dim(4))';
+            input = reshape(input.vol, prod(dims(1:3)), dims(4))';
             load(fullfile(conf_dir, subject, 'MNINonLinear', 'Results', run{i}, ['Confounds_' subject '.mat']));
             regressors = [reg(:, 9:32) gx2([2:3], :)' [zeros(1, 2); diff(gx2([2:3], :)')]];
             [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input, regressors, 1, []);
-            parc_data = parcellate_MNI(atlas, input);
+            parc_data = parcellate_MNI(atlas, resid', atlas_dir);
             fc(:, :, sub_ind) = fc(:, :, sub_ind) + FC_Pearson(parc_data);
         end
-        fc(:, :, sub_ind) = fc(:, :, sub_ind) ./ length(runs);
+        fc(:, :, sub_ind) = fc(:, :, sub_ind) ./ length(run);
     end
 case 'HCP-A'
-    if sublist == ''
-        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP-A_allRun_sub.csv'));
+    if nargin < 8
+        sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP-A_allRun_sub.csv');
     end
-    runs = {'rfMRI_REST1_AP', 'rfMRI_REST1_PA', 'rfMRI_REST2_AP', 'rfMRI_REST2_PA'};
-    fc = zeros(nparc, nparc, length(sublist));
-    for sub_ind = 1:length(sublist)
-        subject = num2str(sublist(sub_ind));
-        for run_ind = 1:length(runs)
+    subjects = table2array(readtable(sublist, 'ReadVariableNames', false));
+    run = {'rfMRI_REST1_AP', 'rfMRI_REST1_PA', 'rfMRI_REST2_AP', 'rfMRI_REST2_PA'};
+    fc = zeros(nparc, nparc, length(subjects));
+    for sub_ind = 1:length(subjects)
+        subject = num2str(subjects{sub_ind});
+        for i = 1:length(run)
             input_dir = fullfile(in_dir, [subject '_V1_MR'], 'MNINonLinear', 'Results', run{i});
             input = MRIread(fullfile(input_dir, [run{i} '_hp0_clean.nii.gz']));
             dims = size(input.vol);
-            input = reshape(input.vol, prod(dims(1:3)), dim(4))';
-            regressors = csvread(fullfile(conf_dir, [subject '_' run{i}(7:end) '_fix_resid0.csv']));
+            input = reshape(input.vol, prod(dims(1:3)), dims(4))';
+            regressors = csvread(fullfile(conf_dir, [subject '_' run{i}(7:end) '_resid0.csv']));
             regressors = zscore(regressors, [], 1);
             [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input, regressors, 1, []);
-            parc_data = parcellate_MNI(atlas, input);
+            parc_data = parcellate_MNI(atlas, resid', atlas_dir);
             fc(:, :, sub_ind) = fc(:, :, sub_ind) + FC_Pearson(parc_data);
         end
-        fc(:, :, sub_ind) = fc(:, :, sub_ind) ./ length(runs);
+        fc(:, :, sub_ind) = fc(:, :, sub_ind) ./ length(run);
     end
 case 'eNKI-RS'
-    if sublist == ''
-        sublist= readtable(fullfile(fileparts(script_dir), 'bin', 'sublist', 'eNKI-RS_int_allRun_sub.csv'));
+    if nargin < 8
+        sublist= fullfile(fileparts(script_dir), 'bin', 'sublist', 'eNKI-RS_int_allRun_sub.csv');
     end
-    fc = zeros(nparc, nparc, length(sublist.Subject)));
-    for sub_ind = 1:length(sublist.Subject)
-        subject = sublist.Subject{sub_ind};
-        session = sublist.SessionRS{sub_ind};
+    subjects = readtable(sublist);
+    fc = zeros(nparc, nparc, length(subjects.Subject));
+    for sub_ind = 1:length(subjects.Subject)
+        subject = subjects.Subject{sub_ind};
+        session = subjects.SessionRS{sub_ind};
         input_dir = fullfile(in_dir, subject, session, 'func');
         input = MRIread(fullfile(input_dir, [subject '_' session ...
                 '_task-rest_acq-645_space-MNI152NLin6Asym_desc-smoothAROMAnonaggr_bold.nii.gz']));
         dims = size(input.vol);
-        input = reshape(input.vol, prod(dims(1:3)), dim(4))';
+        input = reshape(input.vol, prod(dims(1:3)), dims(4))';
         regressors = extract_confs_eNKI(conf_dir, subject, session);
         regressors = zscore(regressors, [], 1);
         [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input, regressors, 1, []);
-        parc_data = parcellate_MNI(atlas, input);
+        parc_data = parcellate_MNI(atlas, resid', atlas_dir);
         fc(:, :, sub_ind) = FC_Pearson(parc_data);
     end 
 case 'GSP'
-    if sublist == ''
-        sublist = csvread(fullfile(fileparts(script_dir), 'bin', 'sublist', 'GSP_allRun_sub.csv'));
+    if nargin < 8
+        sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', 'GSP_allRun_sub.csv');
     end
-    fc = zeros(nparc, nparc, length(sublist));
-    for sub_ind = 1:length(sublist)
-        subject = num2str(sublist(sub_ind), '%04d');
+    subjects = csvread(sublist);
+    fc = zeros(nparc, nparc, length(subjects));
+    for sub_ind = 1:length(subjects)
+        subject = num2str(subjects(sub_ind), '%04d');
         input = MRIread(fullfile(in_dir, ['sub-' subject], 'ses-01', ['wsub-' subject '_ses-01.nii.gz']));
         dims = size(input.vol);
-        input = reshape(input.vol, prod(dims(1:3)), dim(4))';
-        load(fullfile(conf_dir, ['Confounds_sub-' subject '_ses-01.mat']));
+        input = reshape(input.vol, prod(dims(1:3)), dims(4))';
+        load(fullfile(conf_dir, ['sub-' subject], 'ses-01', ['Confounds_sub-' subject '_ses-01.mat']));
         regressors = [reg(:, 9:32) gx2([2:3], :)' [zeros(1, 2); diff(gx2([2:3], :)')]];
         [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input, regressors, 1, []);
-        parc_data = parcellate_MNI(atlas, input);
+        parc_data = parcellate_MNI(atlas, resid', atlas_dir);
         fc(:, :, sub_ind) = FC_Pearson(parc_data);
     end
 otherwise
@@ -135,9 +145,8 @@ save(output, 'fc', 'y', 'conf');
 
 end
 
-function parc_data = parcellate_MNI(atlas, input)
+function parc_data = parcellate_MNI(atlas, input, atlas_dir)
 
-atlas_dir = fullfile(fileparts(script_dir), 'bin', 'parcellations');
 switch atlas
 case 'AICHA'
     parc = MRIread(fullfile(atlas_dir, 'AICHA.nii'));  
@@ -158,7 +167,7 @@ function parc_data = compute_parcellation(parc, input)
 parcels = unique(parc);
 parc_data = zeros(length(parcels)-1, size(input, 2));
 for parcel_ind = 2:length(parcels)
-    selected = t_series(parc==parcels(parcel_ing), :);
+    selected = input(parc==parcels(parcel_ind), :);
     selected(isnan(selected(:, 1))==1, :) = [];
     selected(abs(mean(selected, 2))<eps, :) = []; % non-brain voxels
     parc_data(parcel_ind-1, :) = mean(selected, 1);

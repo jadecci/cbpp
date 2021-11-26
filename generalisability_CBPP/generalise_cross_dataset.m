@@ -20,6 +20,7 @@ if nargin ~= 5
 end
 
 script_dir = fileparts(mfilename('fullpath'));
+addpath(fullfile(fileparts(script_dir)));
 addpath(fullfile(fileparts(script_dir), 'utilities'));
 
 data1 = load(fullfile(in_dir, [dataset1 '_fix_wmcsf_' atlas '_Pearson.mat']), 'fc', 'y', 'conf');
@@ -37,7 +38,7 @@ nrmsd_test = zeros(nparc, 2);
 for parcel = 1:nparc
     x1 = squeeze(data1.fc(parcel, :, :)); x1(parcel, :) = [];
     x2 = squeeze(data1.fc(parcel, :, :)); x2(parcel, :) = [];
-    traintest_split = [ones(length(y1, 1)), 2*ones(length(y2), 1)];
+    traintest_split = [ones(length(y1), 1), 2*ones(length(y2), 1)];
 
     perf = SVR_one_fold([x1, x2]', [y1; y2], traintest_split, 1);
     r_train(parcel, 1) = perf.r_train;
