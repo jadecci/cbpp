@@ -114,8 +114,8 @@ case 'eNKI-RS'
         regressors = extract_confs_eNKI(conf_dir, subject, session);
         regressors = zscore(regressors, [], 1);
         [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input, regressors, 1, []);
-        resid = reshape(flip(reshape(resid, dims), 2), prod(dims(1:3)), dims(4)); % eNKI images got left-right flipped
-        parc_data = parcellate_MNI(atlas, resid', atlas_dir);
+        resid = reshape(flip(reshape(resid', dims), 2), prod(dims(1:3)), dims(4)); % eNKI images got left-right flipped
+        parc_data = parcellate_MNI(atlas, resid, atlas_dir);
         fc(:, :, sub_ind) = FC_Pearson(parc_data);
     end 
 case 'GSP'
