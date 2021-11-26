@@ -13,7 +13,7 @@ function generalise_cross_dataset(dataset1, dataset2, atlas, in_dir, out_dir)
 % 1 output file in the output directory containing the prediction performance
 % For example: pwCBPP_SVR_HCP-YA_eNKI-RS_AICHA.mat
 %
-% Jianxiao Wu, last edited on 22-Nov-2021
+% Jianxiao Wu, last edited on 26-Nov-2021
 
 if nargin ~= 5
     disp('generalise_cross_dataset(dataset1, dataset2, atlas, in_dir, out_dir)'); return
@@ -26,7 +26,7 @@ addpath(fullfile(fileparts(script_dir), 'utilities'));
 data1 = load(fullfile(in_dir, [dataset1 '_fix_wmcsf_' atlas '_Pearson.mat']), 'fc', 'y', 'conf');
 y1 = regress_confounds_y(data1.y(:, 1), data1.conf); % fluid cognition
 data2 = load(fullfile(in_dir, [dataset2 '_fix_wmcsf_' atlas '_Pearson.mat']), 'fc', 'y', 'conf');
-y2 = regress_confounds_y(data2.y(:, 1), data2.conf); % fluid cognition
+y2 = regress_confounds_y(data2.y(:, 2), data2.conf); % fluid cognition
 
 n_fold = 10; n_repeat = 100;
 nparc = size(data1.fc, 1);
