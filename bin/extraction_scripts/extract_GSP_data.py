@@ -35,7 +35,7 @@ data= add_data(args.input, 4, conf_list[0], str, data)
 data[conf_list[0]] = pd.get_dummies(data[conf_list[0]]).astype(int)
 data = add_data(args.input, 5, conf_list[1], float, data)
 data = add_data(args.input, 6, conf_list[2], str, data)
-data[conf_list[2]] = pd.get_dummies(data[conf_list[2]]).astype(int)
+data[conf_list[2]] = pd.get_dummies(data[conf_list[2]])['LFT'].astype(int)
 data = add_data(args.input, 49, conf_list[3], float, data)
 data = add_data(args.input, 48, conf_list[4], float, data)
 # Secondary confounding variables
