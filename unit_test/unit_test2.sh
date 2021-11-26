@@ -75,8 +75,8 @@ $matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
 # compare results
 func=unit_test_compare
 gt_dir=$ROOT_DIR/unit_test/ground_truth
-pw_file=pwCBPP_SVR_eNKI-RS_SchMel3_parcel1.mat
-wb_file=wbCBPP_SVR_GSP_AICHA.mat
+pw_file=pwCBPP_SVR_standard_eNKI-RS_SchMel3_parcel1.mat
+wb_file=wbCBPP_SVR_standard_GSP_AICHA.mat
 cross_file=pwCBPP_SVR_HCP-YA_HCP-A_SchMel1.mat
 $matlab_cmd "addpath('$ROOT_DIR/unit_test'); \
              fprintf('Comparing within-dataset region-wise CBPP performance:\n'); \
