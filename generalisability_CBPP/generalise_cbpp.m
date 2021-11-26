@@ -1,4 +1,4 @@
-function generalise_cbpp(model, dataset, atlas, in_dir, out_dir, saveWeights, sublist)
+function generalise_cbpp(model, dataset, atlas, in_dir, out_dir, saveWeights, sublist, parcel)
 % This script runs whole-brain or region-wise CBPP using combined connectivity data
 %
 % ARGUMENTS:
@@ -10,16 +10,17 @@ function generalise_cbpp(model, dataset, atlas, in_dir, out_dir, saveWeights, su
 % output_dir   absolute path to output directory
 % saveWeights  (default: 0) set to 1 to also save the regression weights from whole-brain CBPP models
 % sublist      (optional) absolute path to custom subject list (.csv file where each line is one subject ID)
+% parcel       (optional) pick one parcel to run region-wise CBPP
 %
 % OUTPUT:
 % 1 output file in the output directory containing the prediction performance, and whole-brain model regression
 % weights if saveWeights=1
 % For example: wbCBPP_SVR_eNKI-RS_AICHA_fluidcog.mat
 %
-% Jianxiao Wu, last edited on 18-Nov-2021
+% Jianxiao Wu, last edited on 26-Nov-2021
 
 if nargin < 5
-    disp('generalise_cbpp(model, dataset, atlas, in_dir, out_dir, <saveWeights>, <sublist>)'); return
+    disp('generalise_cbpp(model, dataset, atlas, in_dir, out_dir, <saveWeights>, <sublist>, <parcel>)'); return
 end
 
 if nargin < 6
@@ -78,11 +79,17 @@ otherwise
     error('Invalid atlas option'); return
 end
 
+if nargin < 8
+    parcels = 1:nparc;
+else
+    parcels = parcel;
+end
+
 if strcmp(model, 'whole-brain')
     options.prefix = [dataset '_' atlas];
     CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options);
 elseif strcmp(model, 'region-wise')
-    for parcel = 1:nparc
+    for parcel = 1:parcels
         options.prefix = [dataset '_' atlas '_parcel' num2str(parcel)];
         x = squeeze(fc(parcel, :, :)); x(parcel, :) = [];
         CBPP_parcelwise(x, y, conf, cv_ind, out_dir, options);
