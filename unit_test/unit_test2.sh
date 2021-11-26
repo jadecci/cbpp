@@ -29,8 +29,8 @@ sublist_HCPYA=$output_dir/HCP_MNI_fix_wmcsf_allRun_sub.csv
 head -$n_sub $ROOT_DIR/bin/sublist/HCP_MNI_fix_wmcsf_allRun_sub.csv > $sublist_HCPYA
 sublist_HCPA=$output_dir/HCP-A_allRun_sub.csv
 head -$n_sub $ROOT_DIR/bin/sublist/HCP-A_allRun_sub.csv > $sublist_HCPA
-sublist_eNKIRS=$output_dir/eNKI-RS_int_allRun_sub.csv
-head -$n_sub $ROOT_DIR/bin/sublist/eNKI-RS_int_allRun_sub.csv > $sublist_eNKIRS
+sublist_eNKIRS=$output_dir/eNKI-RS_fluidcog_allRun_sub.csv
+head -$n_sub $ROOT_DIR/bin/sublist/eNKI-RS_fluidcog_allRun_sub.csv > $sublist_eNKIRS
 sublist_GSP=$output_dir/GSP_allRun_sub.csv
 head -$n_sub $ROOT_DIR/bin/sublist/GSP_allRun_sub.csv > $sublist_GSP
 
@@ -46,39 +46,44 @@ if [ $type == "full" ]; then
   conf_GSP=`head -4 $conf_list | tail -1`
 
   # step 1
-  func=$ROOT_DIR/generalisability_CBPP/generalise_data_proc
-  $matlab_cmd "$func('HCP-YA', 'SchMel1', '$fmri_HCPYA', '$conf_HCPYA', '$deriv_dir/unit_test_MNI_y.csv', ... \
+  func=generalise_data_proc
+  $matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
+               $func('HCP-YA', 'SchMel1', '$fmri_HCPYA', '$conf_HCPYA', '$deriv_dir/unit_test_MNI_y.csv', \
                '$deriv_dir/unit_test_MNI_conf.csv', '$output_dir', '$sublist_HCPYA'); \
-               $func('HCP-A', 'SchMel1', '$fmri_HCPA', '$conf_HCPA', '$deriv_dir/HCP-A_y.csv', ... \
+               $func('HCP-A', 'SchMel1', '$fmri_HCPA', '$conf_HCPA', '$deriv_dir/HCP-A_y.csv', \
                '$deriv_dir/HCP-A_conf.csv', '$output_dir', '$sublist_HCPA'); \
-               $func('eNKI-RS', 'SchMel3', '$fmri_eNKIRS', '$conf_eNKIRS', '$deriv_dir/eNKI-RS_fluidcog_y.csv', ... \
+               $func('eNKI-RS', 'SchMel3', '$fmri_eNKIRS', '$conf_eNKIRS', '$deriv_dir/eNKI-RS_fluidcog_y.csv', \
                '$deriv_dir/eNKI-RS_fluidcog_conf.csv', '$output_dir', '$sublist_eNKIRS'); \
-               $func('GSP', 'AICHA', '$fmri_GSP', '$conf_GSP', '$deriv_dir/GSP_y.csv', ... \
+               $func('GSP', 'AICHA', '$fmri_GSP', '$conf_GSP', '$deriv_dir/GSP_y.csv', \
                '$deriv_dir/GSP_conf.csv', '$output_dir', '$sublist_GSP'); \
                exit"
 fi
 
 # step 2: pwCBPP with eNKI-RS, wbCBPP with GSP
-func=$ROOT_DIR/generalisability_CBPP/generalise_cbpp
-$matlab_cmd "$func('region-wise', 'eNKI-RS', 'SchMel3', '$output_dir', '$output_dir', 0, '$sublist_eNKIRS'); \
-            $func('whole-brain', 'GSP', 'AICHA', '$output_dir', '$output_dir', 0, '$sublist_GSP'); \
-            exit"
+func=generalise_cbpp
+$matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
+             $func('region-wise', 'eNKI-RS', 'SchMel3', '$output_dir', '$output_dir', 0, '$sublist_eNKIRS'); \
+             $func('whole-brain', 'GSP', 'AICHA', '$output_dir', '$output_dir', 0, '$sublist_GSP'); \
+             exit"
 
 # step 3: cross-dataset predictions with HCP-YA and HCP-A
-func=$ROOT_DIR/generalisability_CBPP/generalise_cross_dataset
-$matlab_cmd "$func('HCP-YA', 'HCP-A', 'SchMel1', '$output_dir', '$output_dir'); exit"
+func=generalise_cross_dataset
+$matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
+             $func('HCP-YA', 'HCP-A', 'SchMel1', '$output_dir', '$output_dir'); \
+             exit"
 
 # compare results
-func=$ROOT_DIR/unit_test/unit_test_compare
+func=unit_test_compare
 gt_dir=$ROOT_DIR/unit_test/ground_truth
-pw_file=pwCBPP_SVR_eNKI-RS_SchMel3_fluidcog.mat
-wb_file=wbCBPP_SVR_GSP_AICHA_openness.mat
+pw_file=pwCBPP_SVR_eNKI-RS_SchMel3_parcel1.mat
+wb_file=wbCBPP_SVR_GSP_AICHA.mat
 cross_file=pwCBPP_SVR_HCP-YA_HCP-A_SchMel1.mat
-$matlab_cmd "printf('Comparing within-dataset region-wise CBPP performance:\n'); \
+$matlab_cmd "addpath('$ROOT_DIR/unit_test'); \
+             fprintf('Comparing within-dataset region-wise CBPP performance:\n'); \
              $func('$output_dir/$pw_file', '$gt_dir/$pw_file'); \
-             printf('Comparing within-dataset whole-brain CBPP performance:\n'); \
+             fprintf('Comparing within-dataset whole-brain CBPP performance:\n'); \
              $func('$output_dir/$wb_file', '$gt_dir/$wb_file'); \
-             printf('Comparing cross-dataset region-wise CBPP performance:\n'); \
+             fprintf('Comparing cross-dataset region-wise CBPP performance:\n'); \
              $func('$output_dir/$cross_file', '$gt_dir/$cross_file'); \
              exit"
 
