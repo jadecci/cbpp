@@ -58,7 +58,11 @@ For HCP-YA, all subjects' IDs and corresponding family IDs should be saved in a 
 To run this unit test, call `unit_test2.sh` after preparing all the data:
 
 ```bash
-echo "${fmri_HCP-YA_dir},\n${fmri_HCP-YA_dir},\n${fmri_eNKI-RS_dir},\n${fmri_GSP_dir}" > temp_fmri_dir.csv
-echo "${conf_HCP-YA_dir},\n${conf_HCP-YA_dir},\n${conf_eNKI-RS_dir},\n${conf_GSP_dir}" > temp_conf_dir.csv
+echo "${fmri_HCP-YA_dir}\n${fmri_HCP-YA_dir}\n${fmri_eNKI-RS_dir}\n${fmri_GSP_dir}" > temp_fmri_dir.csv
+echo "${conf_HCP-YA_dir}\n${conf_HCP-YA_dir}\n${conf_eNKI-RS_dir}\n${conf_GSP_dir}" > temp_conf_dir.csv
 bash unit_test2.sh -i temp_fmri_dir.csv -c temp_conf_dir.csv -d $deriv_dir -o $output_dir
 ```
+
+This should take about `6h` to run on 1 cores.
+
+If only prediction steps need to be tested, make sure you have the existing combined FC files named `$out_dir/HCP-YA_fix_wmcsf_SchMel1_Pearson.mat`, `$out_dir/HCP-A_fix_wmcsf_SchMel1_Pearson.mat`, `$out_dir/eNKI-RS_fix_wmcsf_SchMel3_Pearson.mat` and `$out_dir/GSP_fix_wmcsf_AICHA_Pearson.mat`. Then run the unit test script with the `-t light` flag. This light version of unit test should take about `35m` to run.
