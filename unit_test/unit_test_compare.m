@@ -10,13 +10,17 @@ perf1_r = round(perf1.r_test, 6);
 perf1_n = round(perf1.nrmsd_test, 6);
 perf2_r = round(perf2.r_test, 6);
 perf2_n = round(perf2.nrmsd_test, 6);
-diff = sum(abs(perf1_r(:) - perf2_r(:)) + abs(perf1_n(:) - perf2_n(:)));
 
-disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+diff = sum(abs(perf1_r(:) - perf2_r(:)) + abs(perf1_n(:) - perf2_n(:)));
+diff_r = mean(abs(perf1_r(:) - perf2_r(:)));
+diff_n = mean(abs(perf1_n(:) - perf2_n(:)));
+
+disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
 if diff ~= 0
-  disp('%%  The two results are different!  %%')
-  disp(['%%  Difference: ' num2str(diff) '  %%'])
+  disp('%%  The two results are different!     %%')
+  disp(['%%  Mean Difference r_test: ' num2str(diff_r, '%.4f') '     %%'])
+  disp(['%%  Mean Difference nrmsd_test: ' num2str(diff_n, '%.4f') ' %%'])
 else
-  disp('%%  The two results are identical.  %%')
+  disp('%%  The two results are identical.      %%')
 end
-disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
