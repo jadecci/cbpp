@@ -24,20 +24,20 @@ For more detailed usage of the script: `help generalise_data_proc`
 
 ## Whole-brain & Region-wise CBPP
 
-Connectivity-based psychometric prediction (CBPP) was run using support vector regression (SVR) with 100 repeats of 10-fold cross-validation, using the `generalise_cbpp.sh` script.
+Connectivity-based psychometric prediction (CBPP) was run using support vector regression (SVR) with 100 repeats of 10-fold cross-validation, using the `generalise_cbpp.m` script.
 
 The input directory can be the output directory from data processing. Also, a family ID file (`HCP-YA_famID.mat`) should be put in the input directory for HCP-YA predictions, which is a .mat file containing two string array variables `all_famID` and `all_subID` listng the family IDs and subject IDs of all subjects.
 
 For example, to run region-wise CBPP for openness prediction for all parcels in the AICHA altas for eNKI-RS data, run in Matlab:
 
 ```matlab
-generalise_cbpp('region-wise', 'eBKI-RS', 'AICHA', in_dir, out_dir)
+generalise_cbpp('region-wise', 'eNKI-RS', 'AICHA', in_dir, out_dir)
 ```
 
 To run whole-brain CBPP and save the regression weights on the same data:
 
 ```matlab
-generalise_cbpp('whole-brain', 'eBKI-RS', 'AICHA', in_dir, out_dir, 1)
+generalise_cbpp('whole-brain', 'eNKI-RS', 'AICHA', in_dir, out_dir, 1)
 ```
 
 For more detailed usage of the script: `help generalise_cbpp`

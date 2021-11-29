@@ -89,7 +89,7 @@ if strcmp(model, 'whole-brain')
     options.prefix = [dataset '_' atlas];
     CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options);
 elseif strcmp(model, 'region-wise')
-    for parcel = 1:parcels
+    for parcel = parcels
         options.prefix = [dataset '_' atlas '_parcel' num2str(parcel)];
         x = squeeze(fc(parcel, :, :)); x(parcel, :) = [];
         CBPP_parcelwise(x, y, conf, cv_ind, out_dir, options);
