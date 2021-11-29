@@ -33,7 +33,7 @@ end
 
 script_dir = fileparts(mfilename('fullpath'));
 addpath(fullfile(fileparts(script_dir)));
-addpath(fullfile(fileparts(script_dir), 'HCP_surface_CBPP', 'utilities'));
+addpath(fullfile(fileparts(script_dir), 'HCP_CBPP', 'utilities'));
 
 load(fullfile(in_dir, [dataset '_fix_wmcsf_' atlas '_Pearson.mat']), 'fc', 'y', 'conf');
 n_fold = 10; n_repeat = 100;

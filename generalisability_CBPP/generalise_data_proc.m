@@ -29,7 +29,7 @@ end
 
 script_dir = fileparts(mfilename('fullpath'));
 addpath(fullfile(fileparts(script_dir), 'bin', 'external_packages'));
-addpath(fullfile(fileparts(script_dir), 'HCP_surface_CBPP', 'utilities'));
+addpath(fullfile(fileparts(script_dir), 'HCP_CBPP', 'utilities'));
 atlas_dir = fullfile(fileparts(script_dir), 'bin', 'parcellations');
 output = fullfile(out_dir, [dataset '_fix_wmcsf_' atlas '_Pearson.mat']);
 
