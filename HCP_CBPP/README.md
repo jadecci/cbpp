@@ -48,9 +48,9 @@ The input directory can be the output directory from data processing. Besides th
 
 - `HCP_famID.mat`: contains two string array variables `all_famID` and `all_subID`, listing the family IDs and subject IDs of all subjects
 
-- `HCP_y.csv`: contains NxY values (N = number of subjects, Y = number of psychometric variables) 
+- `HCP_${space}_${preproc}_y.csv`: contains NxY values (N = number of subjects, Y = number of psychometric variables) 
   
-- `HCP_conf.csv`: contains NxC values (C = number of phenotype confounding variables), not to be confused with the imaging confounds
+- `HCP_${space}_${preproc}_conf.csv`: contains NxC values (C = number of phenotype confounding variables), not to be confused with the imaging confounds
 
 The psychometric confounds data can be automatically extracted using scripts from `bin/extraction_scripts`. See `README` in the folder for more details.
 

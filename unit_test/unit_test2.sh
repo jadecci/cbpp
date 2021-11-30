@@ -48,8 +48,8 @@ if [ $type == "full" ]; then
   # step 1
   func=generalise_data_proc
   $matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
-               $func('HCP-YA', 'SchMel1', '$fmri_HCPYA', '$conf_HCPYA', '$deriv_dir/unit_test_MNI_y.csv', \
-               '$deriv_dir/unit_test_MNI_conf.csv', '$output_dir', '$sublist_HCPYA'); \
+               $func('HCP-YA', 'SchMel1', '$fmri_HCPYA', '$conf_HCPYA', '$deriv_dir/HCP_MNI_fix_wmcsf_y.csv', \
+               '$deriv_dir/HCP_MNI_fix_wmcsf_conf.csv', '$output_dir', '$sublist_HCPYA'); \
                $func('HCP-A', 'SchMel1', '$fmri_HCPA', '$conf_HCPA', '$deriv_dir/HCP-A_y.csv', \
                '$deriv_dir/HCP-A_conf.csv', '$output_dir', '$sublist_HCPA'); \
                $func('eNKI-RS', 'SchMel3', '$fmri_eNKIRS', '$conf_eNKIRS', '$deriv_dir/eNKI-RS_fluidcog_y.csv', \

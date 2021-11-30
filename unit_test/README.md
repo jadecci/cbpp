@@ -10,7 +10,7 @@ The unit test script uses the resting-state fMRI and psychometric data from the 
 
 The resting-state data should be stored with HCP's original folder structure, under `$fmri_dir` where each subject folder is named by the subject ID. The imaging confounding data should be stored in `$conf_dir`, with the same folder structure as `$fmri_dir`.
 
-For the psychometric and confounding variables, they should be extracted and saved in .csv files under `$deriv_dir`. For automatic extraction, see `README` in `bin/extraction_scripts`. Name the files as `HCP_y.csv` and `HCP_conf.csv`.
+For the psychometric and confounding variables, they should be extracted and saved in .csv files under `$deriv_dir`. For automatic extraction, see `README` in `bin/extraction_scripts`. They should be named as `HCP_surf_gsr_y.csv`, `HCP_surf_gsr_conf.csv`, `HCP_MNI_fix_wmcsf_y.csv` and `HCP_MNI_fix_wmcsf_conf.csv`.
 
 Lastly, all subjects' IDs and corresponding family IDs should be saved in a .mat file as variables `all_subID` and `all_famID` (both as string arrays). Save the file as `$deriv_dir/HCP_famID.mat`. 
 
@@ -44,7 +44,7 @@ The imaging confounding data should be stored in `$conf_HCPYA_dir`, `$conf_HCPA_
 
 The psychometric and confounding variables should be extracted and saved in .csv files under `$deriv_dir`. For automatic extraction, see `README.md` in `bin/extraction_scripts`. These files should be named:
 
-- HCP-YA: `unit_test_MNI_y.csv` and `unit_test_MNI_conf.csv`. 
+- HCP-YA: `HCP_MNI_fix_wmcsf_y.csv` and `HCP_MNI_fix_wmcsf_conf.csv`. 
 - HCP-A: `HCP-A_y.csv` and `HCP-A_conf.csv`
 - eNKI-RS: `eNKI-RS_fluidcog_y.csv` and `eNKI-RS_fluidcog_conf.csv`
 - GSP: `GSP_y.csv` and `GSP_conf.csv`
