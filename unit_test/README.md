@@ -8,27 +8,25 @@ Wu J, Eickhoff SB, Hoffstaedter F, Patil KR, Schwender H, Yeo BTT, Genon S. 2021
 
 The unit test script uses the resting-state fMRI and psychometric data from the Human Connectome Project (HCP). The first 50 subjects according to the FIX+GSR data subject list (`bin/sublist/HCP_surf_gsr_cortex_allRun_sub.csv`) is used for surface implementation, while the first 50 subjects according to the FIX+WM/CSF data subject list (`bin/sublist/HCP_MNI_fix_wmcsf_allRun_sub.csv`) is used for volumetric implementation.
 
-The resting-state data should be stored with HCP's original folder structure, under `$fmri_dir` where each subject folder is named by the subject ID. 
+The resting-state data should be stored with HCP's original folder structure, under `$fmri_dir` where each subject folder is named by the subject ID. The imaging confounding data should be stored in `$conf_dir`, with the same folder structure as `$fmri_dir`.
 
-For the psychometric and confounding variables, they should be extracted and saved in a `.mat` file each, under `$deriv_dir`. Save the psychometric data (50 subject x 100 features matrix) as variable `y` in `$deriv_dir/unit_test_surf_y.mat` and `$deriv_dir/unit_test_MNI_y.mat` for the surface and volumetric data respectively. Similarly, save the confounding variables (50 subject x 9 variables matrix) as variable `conf` in `$deriv_dir/unit_test_surf_conf.mat` and `$deriv_dir/unit_test_MNI_conf.mat` respectively.
+For the psychometric and confounding variables, they should be extracted and saved in .csv files under `$deriv_dir`. For automatic extraction, see `README` in `bin/extraction_scripts`. Name the files as `HCP_y.csv` and `HCP_conf.csv`.
 
-Alternatively, the pscyhometric and confounding data can be extracted automatically using scripts from `bin/extraction_scripts`. See the `README` in the folder for more details.
-
-Lastly, all subjects' IDs and corresponding family IDs should be saved in a `.mat` file as variables `all_subID` and `all_famID` (both as string arrays). Save the file as `$deriv_dir/HCP_famID.mat`.
+Lastly, all subjects' IDs and corresponding family IDs should be saved in a .mat file as variables `all_subID` and `all_famID` (both as string arrays). Save the file as `$deriv_dir/HCP_famID.mat`. 
 
 ## Code
 
 To run the unit test, call `unit_test1.sh` with the following command:
 
 ```bash
-bash unit_test1.sh -i $fmri_dir -d $deriv_dir -o $output_dir
+bash unit_test1.sh -i $fmri_dir -c $conf_dir -d $deriv_dir -o $output_dir
 ``` 
 
 The mean Pearson correlation and nRMSD measures across test sets will be comapred to the corresponding results in `ground_truth` fodler. The unit test is successful if the screen prints `The two volumes are identical` twice for all 4 results.
 
 This should take about `23h40m` to run on 1 core.
 
-If only prediction steps need to be tested, make sure you have the existing combined FC files named `$out_dir/FC_combined/HCP_gsr_parc300_Pearson.mat` and `$out_dir/FC_combined/HCP_fix_wmcsf_AICHA_Pearson.mat`, then add `-t 'light'` to the command. This light version of unit test should take about `12m` to run.
+If only prediction steps need to be tested, make sure you have the existing combined FC files named `$out_dir/FC_combined/HCP_surf_gsr_300_Pearson.mat` and `$out_dir/FC_combined/HCP_vol_fix_wmcsf_AICHA_Pearson.mat`. Then run the unit test script with the `-t 'light'` flag. This light version of unit test should take about `12m` to run.
 
 # Unit Test 2
 
@@ -44,14 +42,14 @@ The resting-state data for HCP-YA and HCP-A should be stored with HCP's original
 
 The imaging confounding data should be stored in `$conf_HCPYA_dir`, `$conf_HCPA_dir`, `$conf_eNKIRS_dir` and `$conf_GSP_dir`.
 
-The psychometric and confounding variables should be extracted and saved in `.csv` files under `$deriv_dir`. For automatic extraction, see `README.md` in `bin/extraction_scripts`. These files should be named:
+The psychometric and confounding variables should be extracted and saved in .csv files under `$deriv_dir`. For automatic extraction, see `README.md` in `bin/extraction_scripts`. These files should be named:
 
 - HCP-YA: `unit_test_MNI_y.csv` and `unit_test_MNI_conf.csv`. 
 - HCP-A: `HCP-A_y.csv` and `HCP-A_conf.csv`
 - eNKI-RS: `eNKI-RS_fluidcog_y.csv` and `eNKI-RS_fluidcog_conf.csv`
 - GSP: `GSP_y.csv` and `GSP_conf.csv`
 
-For HCP-YA, all subjects' IDs and corresponding family IDs should be saved in a `.mat` file as variables `all_subID` and `all_famID` (both as string arrays). Save the file as `$deriv_dir/HCP_famID.mat`.
+For HCP-YA, all subjects' IDs and corresponding family IDs should be saved in a .mat file as variables `all_subID` and `all_famID` (both as string arrays). Save the file as `$deriv_dir/HCP_famID.mat`.
 
 # Code
 
