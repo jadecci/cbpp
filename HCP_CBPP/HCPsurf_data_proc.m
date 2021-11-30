@@ -33,6 +33,7 @@ end
 script_dir = fileparts(mfilename('fullpath'));
 addpath(fullfile(script_dir, 'utilities'));
 addpath(fullfile(fileparts(script_dir), 'bin', 'external_packages', 'cifti-matlab'));
+addpath(fullfile(fileparts(script_dir), 'bin', 'external_packages'));
 
 if nargin < 3; options = []; end
 if ~isfield(options, 'preproc'); options.preproc = 'fix'; end
@@ -104,14 +105,14 @@ end
 
 function parc_data = parcellate_Schaefer_fslr(input, level)
 
-parc_file = fullfile(fileparts(script_dir), 'bin', 'parcellations', ...
+parc_file = fullfile(fileparts(fileparts(mfilename('fullpath'))), 'bin', 'parcellations', ...
         ['Schaefer2018_' num2str(level) 'Parcels_17Networks_order.dlabel.nii']);
 parc = ft_read_cifti(parc_file);
 
 t_series = input(1:length(parc.parcels), :);
 n_t = size(t_series, 2);
-parc_data = zeros(n_parc, n_t);
-for parcel = 1:n_parc
+parc_data = zeros(level, n_t);
+for parcel = 1:level
     selected = t_series(parc.parcels==parcel, :);
     selected(isnan(selected(:, 1))==1, :) = []; % exclude NaN values from averaging
     parc_data(parcel, :) = mean(selected, 1);

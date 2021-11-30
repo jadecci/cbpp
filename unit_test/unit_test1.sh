@@ -34,20 +34,20 @@ head -$n_sub $ROOT_DIR/bin/sublist/HCP_MNI_fix_wmcsf_allRun_sub.csv > $sublist_m
 if [ $type == "full" ]; then 
   # step 1: data processing
   $matlab_cmd "addpath('$ROOT_DIR/HCP_CBPP'); \
-               options = struct('sublist', '$sublist_surf', 'preproc', 'gsr'); \
+               options = struct('sub_list', '$sublist_surf', 'preproc', 'gsr'); \
                HCPsurf_data_proc('$input_dir', '$output_dir', options); \
-               options = struct('sublist', '$sublist_mni'); \
+               options = struct('sub_list', '$sublist_mni'); \
                HCPvol_data_proc('$input_dir', '$conf_dir', '$output_dir', options); \
                exit"
 fi
 
 # step 2: wbCBPP and pwCBPP
 $matlab_cmd "addpath('$ROOT_DIR/HCP_CBPP'); \
-             options = struct('sublist', '$sublist_surf', 'preproc', 'gsr'); \
+             options = struct('sub_list', '$sublist_surf', 'preproc', 'gsr'); \
              HCP_cbpp('whole-brain', '$output_dir', '$output_dir', options); \
-             options = struct('space', 'MNI', 'sublist', '$sublist_mni', 'preproc', 'fix_wmcsf'); \
+             options = struct('space', 'MNI', 'sub_list', '$sublist_mni', 'preproc', 'fix_wmcsf'); \
              HCP_cbpp('whole-brain', '$output_dir', '$output_dir', options); \
-             options = struct('sublist', '$sublist_surf', 'preproc', 'gsr', 'parcel', 5); \
+             options = struct('sub_list', '$sublist_surf', 'preproc', 'gsr', 'parcel', 5); \
              HCP_cbpp('region-wise', '$output_dir', '$output_dir', options); \
              options = struct('space', 'MNI', 'sub_list', '$sublist_mni', 'preproc', 'fix_wmcsf', 'parcel', 317); \
              HCP_cbpp('region-wise', '$output_dir', '$output_dir', options); \
