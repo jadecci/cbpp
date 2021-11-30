@@ -108,7 +108,7 @@ The prediction results are compared to their corresponding ground truth files.
 REQUIRED ARGUMENTS:
   -i <fmri_list>    (.csv) list of absolute paths of fMRI directory of HCP-YA, HCP-A, eNKI-RS and GSP
   -c <conf_list>    (.csv) list of absolute paths of confounds directory of HCP-YA, HCP-A, eNKI-RS and GSP
-  -d <deriv_dir>    absolute path to unit test psychometric, confounds and comparison data
+  -d <deriv_dir>    absolute path to unit test psychometric and confounds data
   -o <output_dir> 	absolute path to output directory
 
 OPTIONAL ARGUMENTS:

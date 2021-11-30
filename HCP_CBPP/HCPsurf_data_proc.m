@@ -50,7 +50,7 @@ end
 
 subjects = csvread(options.sub_list);
 run = {'rfMRI_REST1_LR', 'rfMRI_REST1_RL', 'rfMRI_REST2_LR', 'rfMRI_REST2_RL'};
-fc = zeros(nparc, nparc, length(subjects));
+fc = zeros(options.atlas, options.atlas, length(subjects));
 for sub_ind = 1:length(subjects)
     subject = num2str(subjects(sub_ind));
     for i = 1:length(run)

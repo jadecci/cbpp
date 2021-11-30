@@ -91,7 +91,7 @@ The prediction results are compared to their corresponding ground truth files.
 REQUIRED ARGUMENTS:
   -i <input_dir>    absolute path to fMRI input directory
   -c <conf_dir>     absolute path to imaging confounds directory
-  -d <deriv_dir>    absolute path to unit test psychometric, confounds and comparison data
+  -d <deriv_dir>    absolute path to unit test psychometric and confounds data
   -o <output_dir> 	absolute path to output directory
 
 OPTIONAL ARGUMENTS:
