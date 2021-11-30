@@ -1,23 +1,20 @@
 ## HCP-YA data extraction
 
-The script `extract_HCP_data.sh` helps to extract psychometric and confounding variables based on a subject list and header lists, from the HCP Yound Adult unrestricted and restricted data csv. The extracted data are stored in `.csv` files, which can also be converted to `.mat` files with the `-m` flag. 
+The script `extract_HCP_data.py` helps to extract psychometric and confounding variables from HCP Young Adults (S1200 release) based on a subject list, using the unrestricted and restricted data csv downloaded from HCP. The extracted data are stored in two .csv files named according to the space and preprocessing of the fMRI data.
 
-For example, to extract the relevant data for all 40 selected psychometric variables for the first 100 subjects with `FIX+GSR` data in `MNI` space:
+For example, to extract the phenotype data correponsing to subjects with surface FIX denoised data:
 
 ```bash
-bash extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -p 'gsr' -b 100
+python3 extract_HCP_data.py $unrestricted_csv $restricted_csv --space 'surf' --preproc 'fix'
 ```
 
 For extracting the relevant data only for the 3 selected psychometric vairables for `generalisability_CBPP`:
 
 ```bash
 echo 'NEOFAC_O,CogFluidComp_AgeAdj,PMAT24_A_CR' > temp_psylist.csv
-bash extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -p 'fix_wmcsf' -l temp_psylist.csv
+python3 extract_HCP_data.py $unrestricted_csv $restricted_csv --space 'MNI' --preproc 'fix_wmcsf' \
+        --psy_list temp_psylist.csv
 ```
-
-For more detailed help message, run `bash extract_HCP_data.sh -h` on command line. 
-
-Note that the extraction could take a very long time if a large number of subjects is to be selected.
 
 ## HCP-A data extraction
 
@@ -57,13 +54,14 @@ python3 extract_GSP_data.py $input
 
 ## Data extraction for unit test 1
 
-The HCP-YA phenotype data required for unit test 1 can be extracted using with `extract_HCP_data.sh`. This `-u 1` flag will set the preprocessing option and range of subjects automatically, but not the space.
+The HCP-YA phenotype data required for unit test 1 can be extracted using with `extract_HCP_data.py`. The `-u 1` flag will set the preprocessing option and range of subjects automatically, but not the space.
 
-To obtain all 4 `.mat` files needed for the unit test 1 in `$deriv_dir`, call the extraction script twice:
+To obtain all 4 files needed for the unit test 1 in `$deriv_dir`, call the extraction script twice:
 
 ```bash
-bash extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -u 1 -o $deriv_dir -m 1
-bash extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -u 1 -o $deriv_dir -m 1
+python3 extract_HCP_data.py $unrestricted_csv $restricted_csv --preproc 'gsr' --unit_test --out_dir $deriv_dir
+python3 extract_HCP_data.py $unrestricted_csv $restricted_csv --space 'MNI' --preproc 'fix_wmcsf' --unit_test \
+        --out_dir $deriv_dir
 ```
 
 ## Data extraction for unit test 2
@@ -72,7 +70,8 @@ To extract the HCP-YA phenotype data required for unit test 2 in `$deriv_dir`:
 
 ```bash
 echo 'NEOFAC_O,\nPMAT24_A_CR,\nCogFluidComp_AgeAdj' > temp_psylist.csv
-bash extract_HCP_data.sh -i $unrestricted_csv -j $restricted_csv -s 'MNI' -l temp_psylist.csv -u 1 -o $deriv_dir
+python3 extract_HCP_data.py $unrestricted_csv $restricted_csv --space 'MNI' --preproc 'fix_wmcsf' \
+        --psy_list temp_psylist.csv --unit_test --out_dir $deriv_dir
 ```
 
 To extract the HCP-A phenotype data required for unit test 2 in `$deriv_dir`:
