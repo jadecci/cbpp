@@ -59,7 +59,6 @@ if [ $type == "full" ]; then
                exit"
 fi
 
-matlab_cmd="matlab -nodesktop -nosplash -nodisplay -nojvm -singleCompThread -r"
 # step 2: pwCBPP with eNKI-RS, wbCBPP with GSP
 func=generalise_cbpp
 $matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
@@ -104,7 +103,7 @@ usage() { echo "
 Usage: $0 -i fmri_list -c conf_list -d deriv_dir -o output_dir
 
 This script parcellates and computes the connectivity of 50 HCP-YA subjects, 50 HCP-A subjects, 50 eNKI-RS subjects, and 50 GSP subjects using their resting-state fMRI data in MNI152 space, and use the corresponding combined FC matrix for within-dataset using whole-brain CBPP and region-wise CBPP, as well as cross-dataset predictions using region-wise CBPP.
-The prediction results for are compared to their corresponding ground truth files. If all results are identical, the unit test is successful.
+The prediction results are compared to their corresponding ground truth files. 
 
 REQUIRED ARGUMENTS:
   -i <fmri_list>    (.csv) list of absolute paths of fMRI directory of HCP-YA, HCP-A, eNKI-RS and GSP
@@ -115,18 +114,16 @@ REQUIRED ARGUMENTS:
 OPTIONAL ARGUMENTS:
   -t <type>         choose to run 'light' or 'full' unit test
                     [ default: 'full' ]
-  -h			    display help message
+  -h			          display help message
 
 OUTPUTS:
-	$0 will create 4 files containing the combined FC matrix of all subjects
-	The file names will be: 
+	$0 will create 4 files containing the combined FC matrix of all subjects:
 		fc_HCP-YA_SchMel1.mat
     fc_HCP-A_SchMel1.mat
     fc_eNKI-RS_SchMel3.mat
     fc_GSP_AICHA.mat
 
-	$0 will then create 3 files corresponding to the prediction performance of within-dataset whole-brain CBPP, within-dataset region-wise CBPP and cross-dataset region-wise CBPP predictions respectively
-	The file names will be: 
+	$0 will then create 3 files corresponding to the prediction performance of within-dataset whole-brain CBPP, within-dataset region-wise CBPP and cross-dataset region-wise CBPP predictions respectively:
 		pwCBPP_SVR_eNKI-RS_SchMel3_fluidcog.mat
 		wbCBPP_SVR_GSP_AICHA_openness.mat
     pwCBPP_SVR_HCP-YA_HCP-A_SchMel1.mat

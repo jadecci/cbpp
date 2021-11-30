@@ -17,7 +17,8 @@ function HCP_cbpp(model, in_dir, out_dir, options)
 %                   'fix' ('surf' and 'MNI', default): HCP minimal processing pipeline and ICA-FIX denoising
 %                   'fix_wmcsf' ('MNI' only): 'FIX' with nuisance regression 
 %                                             (24 motion parameters, WM, CSF and derivatives)
-%                   'fix_gsr' ('surf' and 'MNI'): 'FIX' with global signal regression
+%                   'gsr' ('surf'): 'FIX' with global signal regression
+%                   'fix_gsr' (''MNI'): 'FIX' with global signal regression
 % atlas         ('surf; only) Schaefer atlas granularity to use for parcellating the data: 
 %                   100, 200, 300 (default), or 400
 % fc_method     type of correlation used for computing functional connectivity
