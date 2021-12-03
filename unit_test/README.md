@@ -22,12 +22,11 @@ To run the unit test, call `unit_test1.sh` with the following command:
 bash unit_test1.sh -i $fmri_dir -c $conf_dir -o $output_dir
 ``` 
 
-The mean Pearson correlation and nRMSD measures across test sets will be comapred to the corresponding results in `ground_truth` fodler. The unit test is successful if the screen prints `The two volumes are identical` twice for all 4 results.
+The mean Pearson correlation and nRMSD measures across test sets will be comapred to the corresponding results in `ground_truth` fodler. The unit test is successful if the screen prints `The two volumes are identical` twice for all 4 results. **Note** that the current ground truths are computed in Matlab2018b; a small difference in results should be expected if unit test 1 is run with a different Matlab version.
 
-(surf-gsr data proc: 22m, wbCBPP: 8m, MNI-fix_wmcsf data proc + both wbCBPP: 6h44m, light: 17m)
-This should take about `23h40m` to run on 1 core.
+This should take about `7h` to run on 1 core.
 
-If only prediction steps need to be tested, make sure you have the existing combined FC files named `$out_dir/FC_combined/HCP_surf_gsr_300_Pearson.mat` and `$out_dir/FC_combined/HCP_vol_fix_wmcsf_AICHA_Pearson.mat`. Then run the unit test script with the `-t 'light'` flag. This light version of unit test should take about `12m` to run.
+If only prediction steps need to be tested, make sure you have the existing combined FC files named `$out_dir/FC_combined/HCP_surf_gsr_300_Pearson.mat` and `$out_dir/FC_combined/HCP_vol_fix_wmcsf_AICHA_Pearson.mat`. Then run the unit test script with the `-t 'light'` flag. This light version of unit test should take about `20m` to run.
 
 # Unit Test 2
 
