@@ -57,7 +57,7 @@ $matlab_cmd "addpath('$ROOT_DIR/HCP_CBPP'); \
 gt_dir=$ROOT_DIR/unit_test/ground_truth
 wb_surf=wbCBPP_SVR_standard_HCP_surf_gsr_300_Pearson.mat
 wb_mni=wbCBPP_SVR_standard_HCP_MNI_fix_wmcsf_AICHA_Pearson.mat
-pw_surf=wbCBPP_SVR_standard_HCP_surf_gsr_300_Pearson_parcel5.mat
+pw_surf=pwCBPP_SVR_standard_HCP_surf_gsr_300_Pearson_parcel5.mat
 pw_mni=pwCBPP_SVR_standard_HCP_MNI_fix_wmcsf_AICHA_Pearson_parcel317.mat
 $matlab_cmd "addpath('$ROOT_DIR/unit_test'); \
              disp('Comparing surface-based whole-brain CBPP results:'); \
