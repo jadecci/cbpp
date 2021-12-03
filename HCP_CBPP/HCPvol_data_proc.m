@@ -35,7 +35,7 @@ script_dir = fileparts(mfilename('fullpath'));
 addpath(fullfile(script_dir, 'utilities'));
 
 if nargin < 4; options = []; end
-if ~isfield(options, 'preproc'); options.preproc = 'fix'; end
+if ~isfield(options, 'preproc'); options.preproc = 'fix_wmcsf'; end
 if ~isfield(options, 'sub_list')
     options.sub_list = fullfile(fileparts(script_dir), 'bin', 'sublist', ...
                         ['HCP_MNI_' options.preproc '_allRun_sub.csv']); 
@@ -55,7 +55,7 @@ for sub_ind = 1:length(subjects)
     for i = 1:length(run)
         input_dir = fullfile(in_dir, subject, 'MNINonLinear', 'Results', run{i});
         input = MRIread(fullfile(input_dir, [run{i} '_hp2000_clean.nii.gz']));
-        loat(fullfile(conf_dir, ['Confounds_' subject '.mat']));
+        load(fullfile(conf_dir, subject, 'MNINonLinear', 'Results', run{i}, ['Confounds_' subject '.mat']));
 
         % preprocessing
         dim = size(input.vol);
@@ -65,10 +65,10 @@ for sub_ind = 1:length(subjects)
             resid = input.vol';
         case 'fix_wmcsf'
             regressors = [reg(:, 9:32) gx2([2:3], :)' [zeros(1, 2); diff(gx2([2:3], :)')]];
-            [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input.vol', regressors', 1, []);
+            [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input.vol', regressors, 1, []);
         case 'fix_gsr'
             regressors = [reg(:, 9:32) gx2(4, :)' [zeros(1, 1); diff(gx2(4, :)')]];
-            [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input.vol', regressors', 1, []);
+            [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input.vol', regressors, 1, []);
         otherwise
             error('Invalid preprocessing option'); return
         end
@@ -96,7 +96,7 @@ end
 
 function parc_data = parcellate_AICHA_MNI(input)
 
-parc = MRIread(fullfile(fileparts(script_dir), 'bin', 'parcellations', 'AICHA.nii'));
+parc = MRIread(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'bin', 'parcellations', 'AICHA.nii'));
 parc = parc.vol;
 parcels = unique(parc);
 

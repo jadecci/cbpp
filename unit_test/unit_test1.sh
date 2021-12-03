@@ -56,9 +56,9 @@ $matlab_cmd "addpath('$ROOT_DIR/HCP_CBPP'); \
 # compare results
 gt_dir=$ROOT_DIR/unit_test/ground_truth
 wb_surf=wbCBPP_SVR_standard_HCP_surf_gsr_300_Pearson.mat
-wb_mni=wbCBPP_SVR_standard_HCP_vol_fix_wmcsf_AICHA_Pearson.mat
+wb_mni=wbCBPP_SVR_standard_HCP_MNI_fix_wmcsf_AICHA_Pearson.mat
 pw_surf=wbCBPP_SVR_standard_HCP_surf_gsr_300_Pearson_parcel5.mat
-pw_mni=pwCBPP_SVR_standard_HCP_vol_fix_wmcsf_AICHA_Pearson_parcel317.mat
+pw_mni=pwCBPP_SVR_standard_HCP_MNI_fix_wmcsf_AICHA_Pearson_parcel317.mat
 $matlab_cmd "addpath('$ROOT_DIR/unit_test'); \
              disp('Comparing surface-based whole-brain CBPP results:'); \
              unit_test_compare('$output_dir/$wb_surf', '$gt_dir/$wb_surf'); \
@@ -83,7 +83,7 @@ date
 
 # Usage
 usage() { echo "
-Usage: $0 -i input_dir -c conf_list -d deriv_dir -o output_dir
+Usage: $0 -i input_dir -c conf_list -o output_dir
 
 This script parcellates and computes the connectivity of 50 HCP subjects using their surface (fsLR) and 50 subjects using their MNI data. The corresponding combined FC matrix was then used for whole-brain and parcel-wise CBPP.
 The prediction results are compared to their corresponding ground truth files.
@@ -91,7 +91,6 @@ The prediction results are compared to their corresponding ground truth files.
 REQUIRED ARGUMENTS:
   -i <input_dir>    absolute path to fMRI input directory
   -c <conf_dir>     absolute path to imaging confounds directory
-  -d <deriv_dir>    absolute path to unit test psychometric and confounds data
   -o <output_dir> 	absolute path to output directory
 
 OPTIONAL ARGUMENTS:
@@ -123,11 +122,10 @@ fi
 
 # Assign parameter
 type='full'
-while getopts "i:c:d:o:t:h" opt; do
+while getopts "i:c:o:t:h" opt; do
   case $opt in
     i) input_dir=${OPTARG} ;;
     c) conf_dir=${OPTARG} ;;
-    d) deriv_dir=${OPTARG} ;;
     o) output_dir=${OPTARG} ;;
     t) type=${OPTARG} ;;
     h) usage; exit ;;
@@ -144,9 +142,6 @@ if [ -z $input_dir ]; then
 fi
 if [ -z $conf_dir ]; then
   echo "Confounds directory not defined."; 1>&2; exit 1
-fi
-if [ -z $deriv_dir ]; then
-  echo "Unit test directory not defined."; 1>&2; exit 1
 fi
 if [ -z $output_dir ]; then
   echo "Output directory not defined."; 1>&2; exit 1

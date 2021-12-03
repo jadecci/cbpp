@@ -64,15 +64,15 @@ options.method = options.reg_method;
 load(fullfile(in_dir, ['HCP_' options.space '_' options.preproc '_' options.atlas '_' options.fc_method '.mat']), 'fc');
 y = csvread(fullfile(in_dir, ['HCP_' options.space '_' options.preproc '_y.csv']));
 conf = csvread(fullfile(in_dir, ['HCP_' options.space '_' options.preproc '_conf.csv']));
-n_fold = 10; n_repeat = 100;
-cv_ind = CVPart_HCP(n_fold, n_repeat, options.sub_list, fullfile(in_dir, 'HCP_famID.mat'), 1); 
 
 switch model
 case 'whole-brain'
+    cv_ind = CVPart_HCP(10, 10, options.sub_list, fullfile(in_dir, 'HCP_famID.mat'), 1);
     options.prefix = ['HCP_' options.space '_' options.preproc '_' options.atlas '_' options.fc_method];
     CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options);
 case 'region-wise'
-    for parcel = parcels
+    cv_ind = CVPart_HCP(10, 100, options.sub_list, fullfile(in_dir, 'HCP_famID.mat'), 1);
+    for parcel = options.parcel
         options.prefix = ['HCP_' options.space '_' options.preproc '_' options.atlas '_' options.fc_method ...
                           '_parcel' num2str(parcel)];
         x = squeeze(fc(parcel, :, :)); x(parcel, :) = [];

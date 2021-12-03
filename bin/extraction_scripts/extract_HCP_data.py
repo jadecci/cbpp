@@ -53,6 +53,7 @@ data = data.assign(sexAge2=data[conf_var_unres[1]]*np.power(data[conf_var_res[1]
 # save outputs separately
 if args.ut:
     data = data.iloc[range(50)]
+psy_var = [psy_list.iloc[i][0] for i in range(len(psy_list))]
 data[psy_var].to_csv((args.out_dir + '/HCP_' + args.space + '_' + args.preproc + '_y.csv'), index=None, header=None)
 conf_var = [conf_list.iloc[i][0] for i in range(len(conf_list))]
 data[conf_var].to_csv((args.out_dir + '/HCP_' + args.space + '_' + args.preproc + '_conf.csv'), index=None, header=None)
