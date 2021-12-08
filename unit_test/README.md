@@ -65,4 +65,4 @@ This should take about `6h` to run on 1 cores.
 
 If only prediction steps need to be tested, make sure you have the existing combined FC files named `$out_dir/HCP-YA_fix_wmcsf_SchMel1_Pearson.mat`, `$out_dir/HCP-A_fix_wmcsf_SchMel1_Pearson.mat`, `$out_dir/eNKI-RS_fix_wmcsf_SchMel3_Pearson.mat` and `$out_dir/GSP_fix_wmcsf_AICHA_Pearson.mat`. Then run the unit test script with the `-t light` flag. This light version of unit test should take about `35m` to run.
 
-When testing with Matlab 2018b and 2021a, it seems that identical performance cannot be achieved with identical data anymore, at least with these existing subjects. Therefore, the unit test can be considered successful if the mean `r` and `nrmsd` differences are lower or around `0.1`.
+**Note** that the current ground truths are computed in Matlab2018b; a small difference in results should be expected if unit test 1 is run with a different Matlab version.
