@@ -61,7 +61,7 @@ options = struct('space', 'surf', 'preproc', 'fix', 'atlas', 400, 'fc_method', '
 HCP_cbpp('whole-brain', in_dir, out_dir, options);
 ```
 
-For an alternative example, to run region-wise CBPP using volumetric FIX denoised data with nuisance regression, using their Pearson connectivity matrices and support vector regression:
+For an alternative example, to run region-wise CBPP using volumetric FIX denoised data with nuisance regression, parcellated with the 300-parcel Schaefer atlas, using their Pearson connectivity matrices and support vector regression:
 
 ```matlab
 options = struct('space', 'MNI', 'preproc', 'fix', 'fc_method', 'Pearson', 'reg_method', 'SVR');

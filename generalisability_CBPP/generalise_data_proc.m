@@ -8,7 +8,7 @@ function generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_f
 %                'SchMel3' and 'SchMel4'
 % input_dir    absolute path to input directory
 % conf_dir     absolute path to confounds directory
-% psy_file     absolute path to the .mat file containing the psychometric variables to predict
+% psy_file     absolute path to the .csv file containing the psychometric variables to predict
 % conf_file    absolute path to the .mat file containing the confounding variables
 % output_dir   absolute path to output directory
 % sublist      (optional) absolute path to custom subject list (.csv file where each line is one subject ID)
@@ -151,19 +151,19 @@ function parc_data = parcellate_MNI(atlas, input, atlas_dir)
 switch atlas
 case 'AICHA'
     parc = MRIread(fullfile(atlas_dir, 'AICHA.nii'));  
-    parc_data = compute_parcellation(parc.vol, input);
+    parc_data = extract_timeseries(parc.vol, input);
 case {'SchMel1', 'SchMel2', 'SchMel3', 'SchMel4'}
     level = num2str(atlas(end));
     parc_sch = MRIread(fullfile(atlas_dir, ['Schaefer2018_' level '00Parcels_17Networks_MNI2mm.nii.gz']));
     parc_mel = MRIread(fullfile(atlas_dir, ['Tian_Subcortex_S' level '_3T.nii.gz']));
-    parc_data_sch = compute_parcellation(parc_sch.vol, input);
-    parc_data_mel = compute_parcellation(parc_mel.vol, input);
+    parc_data_sch = extract_timeseries(parc_sch.vol, input);
+    parc_data_mel = extract_timeseries(parc_mel.vol, input);
     parc_data = cat(1, parc_data_sch, parc_data_mel);
 end
 
 end
 
-function parc_data = compute_parcellation(parc, input)
+function parc_data = extract_timeseries(parc, input)
 
 parcels = unique(parc);
 parc_data = zeros(length(parcels)-1, size(input, 2));
