@@ -2,7 +2,7 @@
 
 The script `extract_HCP_data.py` helps to extract psychometric and confounding variables from HCP Young Adults (S1200 release) based on a subject list, using the unrestricted and restricted data csv downloaded from HCP. The extracted data are stored in two .csv files named according to the space and preprocessing of the fMRI data.
 
-For example, to extract the phenotype data correponsing to subjects with surface FIX denoised data:
+For example, to extract the phenotype data corresponding to subjects with surface FIX denoised data:
 
 ```bash
 python3 extract_HCP_data.py $unrestricted_csv $restricted_csv --space 'surf' --preproc 'fix'

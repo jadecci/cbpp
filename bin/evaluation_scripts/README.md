@@ -1,6 +1,6 @@
 # Evaluation
 
-This folder contains scripts used for quantitative evaluation of whole-brain CBPP results, parcel-wise CBPP results and the effect of denoising on the interpretabbility of parcel-wise CBPP.
+This folder contains scripts used for quantitative evaluation of whole-brain CBPP results, parcel-wise CBPP results and the effect of denoising on the interpretability of parcel-wise CBPP.
 
 ## Whole-brain CBPP evaluation
 
