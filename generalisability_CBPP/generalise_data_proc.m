@@ -17,7 +17,7 @@ function generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_f
 % 1 output file in the output directory containing the combined FC matrix across all subjects
 % For example: fc_HCP-YA_AICHA.mat
 %
-% Jianxiao Wu, last edited on 18-Nov-2021
+% Jianxiao Wu, last edited on 03-Feb-2022
 
 if nargin < 7
     disp('Usage: generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_file, out_dir, <sublist>)'); return
@@ -67,6 +67,9 @@ case 'HCP-YA'
             input = MRIread(fullfile(input_dir, [run{i} '_hp2000_clean.nii.gz']));
             dims = size(input.vol);
             input = reshape(input.vol, prod(dims(1:3)), dims(4))';
+            % imaging counfounds (gx2 & reg): 
+            %   WM & CSF (gx2) extracted from CAT segmented images
+            %   motion parameters (reg) extracted from HCP published Movement_Regressors.txt
             load(fullfile(conf_dir, subject, 'MNINonLinear', 'Results', run{i}, ['Confounds_' subject '.mat']));
             regressors = [reg(:, 9:32) gx2([2:3], :)' [zeros(1, 2); diff(gx2([2:3], :)')]];
             [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input, regressors, 1, []);
@@ -89,6 +92,9 @@ case 'HCP-A'
             input = MRIread(fullfile(input_dir, [run{i} '_hp0_clean.nii.gz']));
             dims = size(input.vol);
             input = reshape(input.vol, prod(dims(1:3)), dims(4))';
+            % imaging counfounds (regressors): 
+            %   WM & CSF extracted from HCP published Atlas_wmparc.2.nii.gz
+            %   motion parameters extracted from HCP published Movement_Regressors_hp0_clean.txt
             regressors = csvread(fullfile(conf_dir, [subject '_' run{i}(7:end) '_resid0.csv']));
             regressors = zscore(regressors, [], 1);
             [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input, regressors, 1, []);
@@ -129,6 +135,9 @@ case 'GSP'
         input = MRIread(fullfile(in_dir, ['sub-' subject], 'ses-01', ['wsub-' subject '_ses-01.nii.gz']));
         dims = size(input.vol);
         input = reshape(input.vol, prod(dims(1:3)), dims(4))';
+        % imaging counfounds (gx2 & reg): 
+            %   WM & CSF (gx2) extracted from CAT segmented images
+            %   motion parameters (reg) extracted from SPM realignment parameter
         load(fullfile(conf_dir, ['sub-' subject], 'ses-01', ['Confounds_sub-' subject '_ses-01.mat']));
         regressors = [reg(:, 9:32) gx2([2:3], :)' [zeros(1, 2); diff(gx2([2:3], :)')]];
         [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input, regressors, 1, []);
