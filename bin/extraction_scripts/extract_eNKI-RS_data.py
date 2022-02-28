@@ -30,6 +30,7 @@ def add_data(in_dir, in_file, i_col, score_name, sub, ses, base_data):
 parser = argparse.ArgumentParser(description="Extract psychometric and confounding variables for eNKI-RS",
                                  formatter_class=lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=100))
 parser.add_argument("in_dir", type=str, help="Absolute path to input directory")
+parser.add_argument("aseg_stats_file", type=str, help="Absolute path to aseg_stats.txt")
 parser.add_argument("--psy", dest="psy", type=str, default="fluidcog", 
                     help="Psychometric variable to include. Choose from 'fluidcog' and 'openness'")
 parser.add_argument("--out_dir", dest="out_dir", type=str, default=os.getcwd(), 
@@ -47,17 +48,20 @@ for i, row in data.iterrows():
         data = add_data(args.in_dir, '8100_WASI-II_20180806.csv', 19, args.psy, row['Subject'], row['Session'], data)
 
 # Confounding variables
-conf_list = ['Age', 'Sex', 'Handedness', 'BMI', 'Age2', 'SexAge', 'SexAge2']
+conf_list = ['Age', 'Sex', 'Handedness', 'Age2', 'SexAge', 'SexAge2', 'BrainSize', 'ICV']
 for i, row in data.iterrows():
     data = add_data(args.in_dir, '8100_Age_20180806.csv', 6, conf_list[0], row['Subject'], row['Session'], data)
     data = add_data(args.in_dir, '8100_Demos_20180806.csv', 7, conf_list[1], row['Subject'], row['Session'], data)
-    data = add_data(args.in_dir, '8100_EHQ_20180806.csv', 36, conf_list[2], row['Subject'], row['Session'], data)
-    data = add_data(args.in_dir, '8100_HT-WT,_Vitals_20180806.csv', 10, conf_list[3], row['Subject'], row['Session'], data)
+    data = add_data(args.in_dir, '8100_HT-WT,_Vitals_20180806.csv', 10, conf_list[2], row['Subject'], row['Session'], data)
 data = data.astype({conf_list[1]: 'float64'})
 # Secondary confounding variables
 data = data.assign(Age2=np.power(data[conf_list[0]], 2))
 data = data.assign(SexAge=data[conf_list[1]]*data[conf_list[0]])
 data = data.assign(SexAge2=data[conf_list[1]] * np.power(data[conf_list[0]], 2))
+# aseg.stats measures
+aseg_stats = pd.read_csv(args.aseg_stats_file, sep='\t', index_col=0)
+data = data.assign(BrainSize=aseg_stats['BrainSegVol'])
+data = data.assign(ICV=aseg_stats['EstimatedTotalIntraCranialVol'])
 
 # save outputs separately
 if args.ut:
