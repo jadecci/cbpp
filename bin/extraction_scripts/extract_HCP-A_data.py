@@ -29,11 +29,10 @@ args = parser.parse_args()
 sub_list = str(Path(__file__).parent.parent.resolve()) + '/sublist/HCP-A_' + args.psy + '_allRun_sub.csv'
 data = pd.read_csv(sub_list, header=None, names=['Sub_Key'], squeeze=False)
 # Psychometric variables
-psy_list = ['neo2_score_op', 'nih_fluidcogcomp_ageadjusted']
 if args.psy == 'openness':
-    data = add_data(args.in_dir, 'nffi01.txt', 78, 4, psy_list[0], float, data)
+    data = add_data(args.in_dir, 'nffi01.txt', 78, 4, 'neo2_score_op', float, data)
 elif args.psy == 'fluidcog':
-    data = add_data(args.in_dir, 'cogcomp01.txt', 14, 4, psy_list[1], float, data)
+    data = add_data(args.in_dir, 'cogcomp01.txt', 14, 4, 'nih_fluidcogcomp_ageadjusted', float, data)
 
 # Confounding variables
 conf_list = ['interview_age', 'sex', 'hcp_handedness_score', 'age2', 'sexAge', 'sexAge2', 'BrainSize', 'ICV']
@@ -53,5 +52,5 @@ data = data.assign(ICV=aseg_stats['EstimatedTotalIntraCranialVol'])
 # save outputs separately
 if args.ut:
     data = data.iloc[range(50)]
-data[psy_list].to_csv((args.out_dir + '/HCP-A_' + args.psy + '_y.csv'), index=None, header=None)
+data[args.psy].to_csv((args.out_dir + '/HCP-A_' + args.psy + '_y.csv'), index=None, header=None)
 data[conf_list].to_csv((args.out_dir + '/HCP-A_' + args.psy + '_conf.csv'), index=None, header=None)
