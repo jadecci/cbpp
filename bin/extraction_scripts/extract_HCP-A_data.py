@@ -18,17 +18,21 @@ def add_data(in_dir, in_file, col, sub_col, colname, coltype, data):
 parser = argparse.ArgumentParser(description="Extract psychometric and confounding variables for HCP-Aging",
                                  formatter_class=lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=100))
 parser.add_argument("in_dir", type=str, help="Absolute path to input directory")
+parser.add_argument("--psy", dest="psy", type=str, default="fluidcog", 
+                    help="Psychometric variable to include. Choose from 'fluidcog' and 'openness'")
 parser.add_argument("--out_dir", dest="out_dir", type=str, default=os.getcwd(), 
                     help="Absolute path to the output directory")
 parser.add_argument("--unit_test", dest="ut", action="store_true", help="Only get the first 50 subjects for unit test")
 args = parser.parse_args()
 
-sub_list = str(Path(__file__).parent.parent.resolve()) + '/sublist/HCP-A_allRun_sub.csv'
+sub_list = str(Path(__file__).parent.parent.resolve()) + '/sublist/HCP-A_' + args.psy + '_allRun_sub.csv'
 data = pd.read_csv(sub_list, header=None, names=['Sub_Key'], squeeze=False)
 # Psychometric variables
 psy_list = ['neo2_score_op', 'nih_fluidcogcomp_ageadjusted']
-data = add_data(args.in_dir, 'nffi01.txt', 78, 4, psy_list[0], float, data)
-data = add_data(args.in_dir, 'cogcomp01.txt', 14, 4, psy_list[1], float, data)
+if args.psy == 'openness':
+    data = add_data(args.in_dir, 'nffi01.txt', 78, 4, psy_list[0], float, data)
+elif args.psy == 'fluidcog':
+    data = add_data(args.in_dir, 'cogcomp01.txt', 14, 4, psy_list[1], float, data)
 
 # Confounding variables
 conf_list = ['grip_standardsc_dom', 'grip_standardsc_nondom', 'interview_age', 'sex', 'hcp_handedness_score',
@@ -47,5 +51,5 @@ data = data.assign(sexAge2=data[conf_list[3]] * np.power(data[conf_list[2]], 2))
 # save outputs separately
 if args.ut:
     data = data.iloc[range(50)]
-data[psy_list].to_csv((args.out_dir + '/HCP-A_y.csv'), index=None, header=None)
-data[conf_list].to_csv((args.out_dir + '/HCP-A_conf.csv'), index=None, header=None)
+data[psy_list].to_csv((args.out_dir + '/HCP-A_' + args.psy + '_y.csv'), index=None, header=None)
+data[conf_list].to_csv((args.out_dir + '/HCP-A_' + args.psy + '_conf.csv'), index=None, header=None)
