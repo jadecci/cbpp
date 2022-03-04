@@ -3,8 +3,8 @@ function generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_f
 %connectivity (FC) computation.
 %
 % ARGUMENTS:
-% dataset      short-form name of the dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS fluidcog', 'eNKI-RS openness',
-%                'GSP', 'HCP-A fluidcog' and 'HCP-A openness'
+% dataset      short-form name of the dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS_fluidcog', 'eNKI-RS_openness',
+%                'GSP', 'HCP-A_fluidcog' and 'HCP-A_openness'
 % atlas        short-form name of the atlas to use for parcellation. Choose from 'AICHA', 'SchMel1', 'SchMel2', 
 %                'SchMel3' and 'SchMel4'
 % input_dir    absolute path to input directory
@@ -79,7 +79,7 @@ case 'HCP-YA'
         end
         fc(:, :, sub_ind) = fc(:, :, sub_ind) ./ length(run);
     end
-case {'HCP-A fluidcog', 'HCP-A openness'}
+case {'HCP-A_fluidcog', 'HCP-A_openness'}
     if nargin < 8
         sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', [dataset '_allRun_sub.csv']);
     end
@@ -104,7 +104,7 @@ case {'HCP-A fluidcog', 'HCP-A openness'}
         end
         fc(:, :, sub_ind) = fc(:, :, sub_ind) ./ length(run);
     end
-case {'eNKI-RS fluidcog', 'eNKI-RS openness'}
+case {'eNKI-RS_fluidcog', 'eNKI-RS_openness'}
     if nargin < 8
         sublist= fullfile(fileparts(script_dir), 'bin', 'sublist', [dataset '_allRun_sub.csv']);
     end

@@ -50,9 +50,9 @@ if [ $type == "full" ]; then
   $matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
                $func('HCP-YA', 'SchMel1', '$fmri_HCPYA', '$conf_HCPYA', '$deriv_dir/HCP_MNI_fix_wmcsf_y.csv', \
                '$deriv_dir/HCP_MNI_fix_wmcsf_conf.csv', '$output_dir', '$sublist_HCPYA'); \
-               $func('HCP-A fluidcog', 'SchMel1', '$fmri_HCPA', '$conf_HCPA', '$deriv_dir/HCP-A_fluidcog_y.csv', \
+               $func('HCP-A_fluidcog', 'SchMel1', '$fmri_HCPA', '$conf_HCPA', '$deriv_dir/HCP-A_fluidcog_y.csv', \
                '$deriv_dir/HCP-A_fluidcog_conf.csv', '$output_dir', '$sublist_HCPA'); \
-               $func('eNKI-RS fluidcog', 'SchMel3', '$fmri_eNKIRS', '$conf_eNKIRS', '$deriv_dir/eNKI-RS_fluidcog_y.csv', \
+               $func('eNKI-RS_fluidcog', 'SchMel3', '$fmri_eNKIRS', '$conf_eNKIRS', '$deriv_dir/eNKI-RS_fluidcog_y.csv', \
                '$deriv_dir/eNKI-RS_fluidcog_conf.csv', '$output_dir', '$sublist_eNKIRS'); \
                $func('GSP', 'AICHA', '$fmri_GSP', '$conf_GSP', '$deriv_dir/GSP_y.csv', \
                '$deriv_dir/GSP_conf.csv', '$output_dir', '$sublist_GSP'); \
@@ -62,14 +62,14 @@ fi
 # step 2: pwCBPP with eNKI-RS, wbCBPP with GSP
 func=generalise_cbpp
 $matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
-             $func('region-wise', 'eNKI-RS fluidcog', 'SchMel3', '$output_dir', '$output_dir', 0, '$sublist_eNKIRS', 1); \
+             $func('region-wise', 'eNKI-RS_fluidcog', 'SchMel3', '$output_dir', '$output_dir', 0, '$sublist_eNKIRS', 1); \
              $func('whole-brain', 'GSP', 'AICHA', '$output_dir', '$output_dir', 0, '$sublist_GSP'); \
              exit"
 
 # step 3: cross-dataset predictions with HCP-YA and HCP-A
 func=generalise_cross_dataset
 $matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
-             $func('HCP-YA', 'HCP-A fluidcog', 'SchMel1', '$output_dir', '$output_dir'); \
+             $func('HCP-YA', 'HCP-A_fluidcog', 'SchMel1', '$output_dir', '$output_dir'); \
              exit"
 
 # compare results

@@ -2,10 +2,10 @@ function generalise_cross_dataset(dataset1, dataset2, atlas, in_dir, out_dir)
 % This script runs cross-dataset region-wise CBPP across all parcels for a pair of datasets
 %
 % ARGUMENTS:
-% dataset1     short-form name of the first dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS fluidcog', 
-%                'eNKI-RS openness', 'GSP', 'HCP-A fluidcog' and 'HCP-A openness'
-% dataset2     short-form name of the first dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS fluidcog', 
-%                'eNKI-RS openness', 'GSP', 'HCP-A fluidcog' and 'HCP-A openness'
+% dataset1     short-form name of the first dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS_fluidcog', 
+%                'GSP', and 'HCP-A_fluidcog'uvwxyz1
+% dataset2     short-form name of the first dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS_fluidcog', 
+%                'GSP', and 'HCP-A_fluidcog'
 % atlas        short-form name of the atlas used for parcellation. Choose from 'AICHA', 'SchMel1', 'SchMel2', 
 %                'SchMel3' and 'SchMel4'
 % input_dir    absolute path to input directory
@@ -26,10 +26,10 @@ addpath(fullfile(fileparts(script_dir)));
 addpath(fullfile(fileparts(script_dir), 'utilities'));
 
 data1 = load(fullfile(in_dir, [dataset1 '_fix_wmcsf_' atlas '_Pearson.mat']), 'fc', 'y', 'conf');
-if ndims(data1.y) == 2; y1 = data1.y(:, 1); %fluid cognition 
+if ndims(data1.y) == 2; y1 = data1.y(:, 1); end % fluid cognition 
 y1 = regress_confounds_y(y1, data1.conf);
 data2 = load(fullfile(in_dir, [dataset2 '_fix_wmcsf_' atlas '_Pearson.mat']), 'fc', 'y', 'conf');
-if ndims(data2.y) == 2; y2 = data2.y(:, 1); %fluid cognition 
+if ndims(data2.y) == 2; y2 = data2.y(:, 1); end % fluid cognition 
 y2 = regress_confounds_y(y2, data2.conf);
 
 n_fold = 10; n_repeat = 100;
