@@ -24,7 +24,7 @@ Granularity | Whole-brain CBPP <br> (10 repeats) <br> Run-time (min) | Whole-bra
 300-parcel | 125 | 1.9 | 120 | 1.3
 400-parcel | 155 | 3.2 | 170 | 2.2
 
-2. **MLR (multiple liner regression): 100 psychometric scores**
+2. **MLR (multiple linear regression): 100 psychometric scores**
 
 Granularity | Whole-brain CBPP <br> (10 repeats) <br> Run-time (min) | Whole-brain CBPP <br> (10 repeats) <br> Memory (GB) | Parcel-wise CBPP <br> (100 repeats) <br> Run-time (min) | Parcel-wise CBPP <br> (100 repeats) <br> Mem (GB)
 :---: | :---: | :---: | :---: | :---:

@@ -25,7 +25,7 @@ The `aseg_stats.txt` file should be created before extraction using the FreeSurf
 For example, to extract the data into current directory:
 
 ```bash
-python3 extract_HCP-A_data.py $input_dir $aseg_stats_file
+python3 extract_HCP-A_data.py $input_dir aseg_stats.txt
 ```
 
 ## eNKI-RS data extraction
@@ -37,13 +37,13 @@ The `aseg_stats.txt` file should be created before extraction using the FreeSurf
 For extracting the WASI-II intelligence related data into current directory:
 
 ```bash
-python3 extract_eNKI-RS_data.py $input_dir $aseg_stats_file
+python3 extract_eNKI-RS_data.py $input_dir aseg_stats.txt
 ```
 
 For extracting the openness related data into current directory:
 
 ```bash
-python3 extract_eNKI-RS_data.py $input_dir --psy openness
+python3 extract_eNKI-RS_data.py $input_dir aseg_stats.txt --psy openness
 ```
 
 ## GSP data extraction
@@ -81,13 +81,13 @@ python3 extract_HCP_data.py $unrestricted_csv $restricted_csv --space 'MNI' --pr
 To extract the HCP-A phenotype data required for unit test 2 in `$deriv_dir`:
 
 ```bash
-python3 extract_HCP-A_data.py $input_dir $aseg_stats_file --unit_test --out_dir $deriv_dir
+python3 extract_HCP-A_data.py $input_dir aseg_stats.txt --unit_test --out_dir $deriv_dir
 ```
 
 To extract the eNKI-RS phenotype data required for unit test 2 in `$deriv_dir`:
 
 ```bash
-python3 extract_eNKI-RS_data.py $input_dir $aseg_stats_file --unit_test --out_dir $deriv_dir
+python3 extract_eNKI-RS_data.py $input_dir aseg_stats.txt --unit_test --out_dir $deriv_dir
 ```
 To extract the GSP phenotype data required for unit test 2 in `$deriv_dir`:
 

@@ -3,7 +3,7 @@ function generalise_cross_dataset(dataset1, dataset2, atlas, in_dir, out_dir)
 %
 % ARGUMENTS:
 % dataset1     short-form name of the first dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS_fluidcog', 
-%                'GSP', and 'HCP-A_fluidcog'uvwxyz1
+%                'GSP', and 'HCP-A_fluidcog'
 % dataset2     short-form name of the first dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS_fluidcog', 
 %                'GSP', and 'HCP-A_fluidcog'
 % atlas        short-form name of the atlas used for parcellation. Choose from 'AICHA', 'SchMel1', 'SchMel2', 
