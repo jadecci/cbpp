@@ -3,7 +3,8 @@ function generalise_cbpp(model, dataset, atlas, in_dir, out_dir, saveWeights, su
 %
 % ARGUMENTS:
 % model        'whole-brain' or 'region-wise'
-% dataset      short-form name of the dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS', 'GSP', and 'HCP-A'
+% dataset      short-form name of the dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS_fluidcog', 'eNKI-RS_openness',
+%                'GSP', 'HCP-A_fluidcog' and 'HCP-A_openness'
 % atlas        short-form name of the atlas used for parcellation. Choose from 'AICHA', 'SchMel1', 'SchMel2', 
 %                'SchMel3' and 'SchMel4'
 % input_dir    absolute path to input directory
@@ -45,14 +46,14 @@ case 'HCP-YA'
         sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP_MNI_fix_wmcsf_allRun_sub.csv');
     end
     cv_ind = CVPart_HCP(n_fold, n_repeat, sublist, fullfile(in_dir, 'HCP-YA_famID.mat'), 1);
-case 'HCP-A'
+case {'HCP-A_fluidcog', 'HCP-A_openness'}
     if nargin < 7
-        sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP-A_allRun_sub.csv');
+        sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', [dataset '_allRun_sub.csv']);
     end
     cv_ind = CVPart_noFam(n_fold, n_repeat, size(readtable(sublist), 1), 1);
-case 'eNKI-RS'
+case {'eNKI-RS_fluidcog', 'eNKI-RS_openness'}
     if nargin < 7
-        subdata = fullfile(fileparts(script_dir), 'bin', 'sublist', 'eNKI-RS_int_allRun_sub.csv');
+        subdata = fullfile(fileparts(script_dir), 'bin', 'sublist', [dataset '_allRun_sub.csv']);
     end
     cv_ind = CVPart_noFam(n_fold, n_repeat, size(readtable(sublist), 1), 1);
 case 'GSP'

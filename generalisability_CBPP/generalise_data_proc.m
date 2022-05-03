@@ -3,12 +3,13 @@ function generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_f
 %connectivity (FC) computation.
 %
 % ARGUMENTS:
-% dataset      short-form name of the dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS', 'GSP', and 'HCP-A'
+% dataset      short-form name of the dataset/cohort. Choose from 'HCP-YA', 'eNKI-RS_fluidcog', 'eNKI-RS_openness',
+%                'GSP', 'HCP-A_fluidcog' and 'HCP-A_openness'
 % atlas        short-form name of the atlas to use for parcellation. Choose from 'AICHA', 'SchMel1', 'SchMel2', 
 %                'SchMel3' and 'SchMel4'
 % input_dir    absolute path to input directory
 % conf_dir     absolute path to confounds directory
-% psy_file     absolute path to the .mat file containing the psychometric variables to predict
+% psy_file     absolute path to the .csv file containing the psychometric variables to predict
 % conf_file    absolute path to the .mat file containing the confounding variables
 % output_dir   absolute path to output directory
 % sublist      (optional) absolute path to custom subject list (.csv file where each line is one subject ID)
@@ -17,7 +18,7 @@ function generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_f
 % 1 output file in the output directory containing the combined FC matrix across all subjects
 % For example: fc_HCP-YA_AICHA.mat
 %
-% Jianxiao Wu, last edited on 18-Nov-2021
+% Jianxiao Wu, last edited on 03-Feb-2022
 
 if nargin < 7
     disp('Usage: generalise_data_proc(dataset, atlas, in_dir, conf_dir, psy_file, conf_file, out_dir, <sublist>)'); return
@@ -67,6 +68,9 @@ case 'HCP-YA'
             input = MRIread(fullfile(input_dir, [run{i} '_hp2000_clean.nii.gz']));
             dims = size(input.vol);
             input = reshape(input.vol, prod(dims(1:3)), dims(4))';
+            % imaging counfounds (gx2 & reg): 
+            %   WM & CSF (gx2) extracted from CAT segmented images
+            %   motion parameters (reg) extracted from HCP published Movement_Regressors.txt
             load(fullfile(conf_dir, subject, 'MNINonLinear', 'Results', run{i}, ['Confounds_' subject '.mat']));
             regressors = [reg(:, 9:32) gx2([2:3], :)' [zeros(1, 2); diff(gx2([2:3], :)')]];
             [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input, regressors, 1, []);
@@ -75,9 +79,9 @@ case 'HCP-YA'
         end
         fc(:, :, sub_ind) = fc(:, :, sub_ind) ./ length(run);
     end
-case 'HCP-A'
+case {'HCP-A_fluidcog', 'HCP-A_openness'}
     if nargin < 8
-        sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', 'HCP-A_allRun_sub.csv');
+        sublist = fullfile(fileparts(script_dir), 'bin', 'sublist', [dataset '_allRun_sub.csv']);
     end
     subjects = table2array(readtable(sublist, 'ReadVariableNames', false));
     run = {'rfMRI_REST1_AP', 'rfMRI_REST1_PA', 'rfMRI_REST2_AP', 'rfMRI_REST2_PA'};
@@ -89,6 +93,9 @@ case 'HCP-A'
             input = MRIread(fullfile(input_dir, [run{i} '_hp0_clean.nii.gz']));
             dims = size(input.vol);
             input = reshape(input.vol, prod(dims(1:3)), dims(4))';
+            % imaging counfounds (regressors): 
+            %   WM & CSF extracted from HCP published Atlas_wmparc.2.nii.gz
+            %   motion parameters extracted from HCP published Movement_Regressors_hp0_clean.txt
             regressors = csvread(fullfile(conf_dir, [subject '_' run{i}(7:end) '_resid0.csv']));
             regressors = zscore(regressors, [], 1);
             [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input, regressors, 1, []);
@@ -97,9 +104,9 @@ case 'HCP-A'
         end
         fc(:, :, sub_ind) = fc(:, :, sub_ind) ./ length(run);
     end
-case 'eNKI-RS'
+case {'eNKI-RS_fluidcog', 'eNKI-RS_openness'}
     if nargin < 8
-        sublist= fullfile(fileparts(script_dir), 'bin', 'sublist', 'eNKI-RS_int_allRun_sub.csv');
+        sublist= fullfile(fileparts(script_dir), 'bin', 'sublist', [dataset '_allRun_sub.csv']);
     end
     subjects = readtable(sublist);
     fc = zeros(nparc, nparc, length(subjects.Subject));
@@ -129,6 +136,9 @@ case 'GSP'
         input = MRIread(fullfile(in_dir, ['sub-' subject], 'ses-01', ['wsub-' subject '_ses-01.nii.gz']));
         dims = size(input.vol);
         input = reshape(input.vol, prod(dims(1:3)), dims(4))';
+        % imaging counfounds (gx2 & reg): 
+            %   WM & CSF (gx2) extracted from CAT segmented images
+            %   motion parameters (reg) extracted from SPM realignment parameter
         load(fullfile(conf_dir, ['sub-' subject], 'ses-01', ['Confounds_sub-' subject '_ses-01.mat']));
         regressors = [reg(:, 9:32) gx2([2:3], :)' [zeros(1, 2); diff(gx2([2:3], :)')]];
         [resid, ~, ~, ~] = CBIG_glm_regress_matrix(input, regressors, 1, []);
@@ -151,19 +161,19 @@ function parc_data = parcellate_MNI(atlas, input, atlas_dir)
 switch atlas
 case 'AICHA'
     parc = MRIread(fullfile(atlas_dir, 'AICHA.nii'));  
-    parc_data = compute_parcellation(parc.vol, input);
+    parc_data = extract_timeseries(parc.vol, input);
 case {'SchMel1', 'SchMel2', 'SchMel3', 'SchMel4'}
     level = num2str(atlas(end));
     parc_sch = MRIread(fullfile(atlas_dir, ['Schaefer2018_' level '00Parcels_17Networks_MNI2mm.nii.gz']));
     parc_mel = MRIread(fullfile(atlas_dir, ['Tian_Subcortex_S' level '_3T.nii.gz']));
-    parc_data_sch = compute_parcellation(parc_sch.vol, input);
-    parc_data_mel = compute_parcellation(parc_mel.vol, input);
+    parc_data_sch = extract_timeseries(parc_sch.vol, input);
+    parc_data_mel = extract_timeseries(parc_mel.vol, input);
     parc_data = cat(1, parc_data_sch, parc_data_mel);
 end
 
 end
 
-function parc_data = compute_parcellation(parc, input)
+function parc_data = extract_timeseries(parc, input)
 
 parcels = unique(parc);
 parc_data = zeros(length(parcels)-1, size(input, 2));

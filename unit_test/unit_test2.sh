@@ -27,8 +27,8 @@ matlab_cmd="matlab95 -nodesktop -nosplash -nodisplay -nojvm -singleCompThread -r
 # create temporary subject lists
 sublist_HCPYA=$output_dir/HCP_MNI_fix_wmcsf_allRun_sub.csv
 head -$n_sub $ROOT_DIR/bin/sublist/HCP_MNI_fix_wmcsf_allRun_sub.csv > $sublist_HCPYA
-sublist_HCPA=$output_dir/HCP-A_allRun_sub.csv
-head -$n_sub $ROOT_DIR/bin/sublist/HCP-A_allRun_sub.csv > $sublist_HCPA
+sublist_HCPA=$output_dir/HCP-A_fluidcog_allRun_sub.csv
+head -$n_sub $ROOT_DIR/bin/sublist/HCP-A_fluidcog_allRun_sub.csv > $sublist_HCPA
 sublist_eNKIRS=$output_dir/eNKI-RS_fluidcog_allRun_sub.csv
 head -$((n_sub+1)) $ROOT_DIR/bin/sublist/eNKI-RS_fluidcog_allRun_sub.csv > $sublist_eNKIRS
 sublist_GSP=$output_dir/GSP_allRun_sub.csv
@@ -50,9 +50,9 @@ if [ $type == "full" ]; then
   $matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
                $func('HCP-YA', 'SchMel1', '$fmri_HCPYA', '$conf_HCPYA', '$deriv_dir/HCP_MNI_fix_wmcsf_y.csv', \
                '$deriv_dir/HCP_MNI_fix_wmcsf_conf.csv', '$output_dir', '$sublist_HCPYA'); \
-               $func('HCP-A', 'SchMel1', '$fmri_HCPA', '$conf_HCPA', '$deriv_dir/HCP-A_y.csv', \
-               '$deriv_dir/HCP-A_conf.csv', '$output_dir', '$sublist_HCPA'); \
-               $func('eNKI-RS', 'SchMel3', '$fmri_eNKIRS', '$conf_eNKIRS', '$deriv_dir/eNKI-RS_fluidcog_y.csv', \
+               $func('HCP-A_fluidcog', 'SchMel1', '$fmri_HCPA', '$conf_HCPA', '$deriv_dir/HCP-A_fluidcog_y.csv', \
+               '$deriv_dir/HCP-A_fluidcog_conf.csv', '$output_dir', '$sublist_HCPA'); \
+               $func('eNKI-RS_fluidcog', 'SchMel3', '$fmri_eNKIRS', '$conf_eNKIRS', '$deriv_dir/eNKI-RS_fluidcog_y.csv', \
                '$deriv_dir/eNKI-RS_fluidcog_conf.csv', '$output_dir', '$sublist_eNKIRS'); \
                $func('GSP', 'AICHA', '$fmri_GSP', '$conf_GSP', '$deriv_dir/GSP_y.csv', \
                '$deriv_dir/GSP_conf.csv', '$output_dir', '$sublist_GSP'); \
@@ -62,22 +62,22 @@ fi
 # step 2: pwCBPP with eNKI-RS, wbCBPP with GSP
 func=generalise_cbpp
 $matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
-             $func('region-wise', 'eNKI-RS', 'SchMel3', '$output_dir', '$output_dir', 0, '$sublist_eNKIRS', 1); \
+             $func('region-wise', 'eNKI-RS_fluidcog', 'SchMel3', '$output_dir', '$output_dir', 0, '$sublist_eNKIRS', 1); \
              $func('whole-brain', 'GSP', 'AICHA', '$output_dir', '$output_dir', 0, '$sublist_GSP'); \
              exit"
 
 # step 3: cross-dataset predictions with HCP-YA and HCP-A
 func=generalise_cross_dataset
 $matlab_cmd "addpath('$ROOT_DIR/generalisability_CBPP'); \
-             $func('HCP-YA', 'HCP-A', 'SchMel1', '$output_dir', '$output_dir'); \
+             $func('HCP-YA', 'HCP-A_fluidcog', 'SchMel1', '$output_dir', '$output_dir'); \
              exit"
 
 # compare results
 func=unit_test_compare
 gt_dir=$ROOT_DIR/unit_test/ground_truth
-pw_file=pwCBPP_SVR_standard_eNKI-RS_SchMel3_parcel1.mat
+pw_file=pwCBPP_SVR_standard_eNKI-RS_fluidcog_SchMel3_parcel1.mat
 wb_file=wbCBPP_SVR_standard_GSP_AICHA.mat
-cross_file=pwCBPP_SVR_HCP-YA_HCP-A_SchMel1.mat
+cross_file=pwCBPP_SVR_HCP-YA_HCP-A_fluidcog_SchMel1.mat
 $matlab_cmd "addpath('$ROOT_DIR/unit_test'); \
              fprintf('Comparing within-dataset region-wise CBPP performance:\n'); \
              $func('$output_dir/$pw_file', '$gt_dir/$pw_file'); \

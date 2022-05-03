@@ -45,7 +45,7 @@ The imaging confounding data should be stored in `$conf_HCPYA_dir`, `$conf_HCPA_
 The psychometric and confounding variables should be extracted and saved in .csv files under `$deriv_dir`. For automatic extraction, see `README.md` in `bin/extraction_scripts`. These files should be named:
 
 - HCP-YA: `HCP_MNI_fix_wmcsf_y.csv` and `HCP_MNI_fix_wmcsf_conf.csv`. 
-- HCP-A: `HCP-A_y.csv` and `HCP-A_conf.csv`
+- HCP-A: `HCP-A_fluidcog_y.csv` and `HCP-A_fluidcog_conf.csv`
 - eNKI-RS: `eNKI-RS_fluidcog_y.csv` and `eNKI-RS_fluidcog_conf.csv`
 - GSP: `GSP_y.csv` and `GSP_conf.csv`
 
@@ -63,6 +63,6 @@ bash unit_test2.sh -i temp_fmri_dir.csv -c temp_conf_dir.csv -d $deriv_dir -o $o
 
 This should take about `6h` to run on 1 cores.
 
-If only prediction steps need to be tested, make sure you have the existing combined FC files named `$out_dir/HCP-YA_fix_wmcsf_SchMel1_Pearson.mat`, `$out_dir/HCP-A_fix_wmcsf_SchMel1_Pearson.mat`, `$out_dir/eNKI-RS_fix_wmcsf_SchMel3_Pearson.mat` and `$out_dir/GSP_fix_wmcsf_AICHA_Pearson.mat`. Then run the unit test script with the `-t light` flag. This light version of unit test should take about `35m` to run.
+If only prediction steps need to be tested, make sure you have the existing combined FC files named `$out_dir/HCP-YA_fix_wmcsf_SchMel1_Pearson.mat`, `$out_dir/HCP-A_fluidcog_fix_wmcsf_SchMel1_Pearson.mat`, `$out_dir/eNKI-RS_fluidcog_fix_wmcsf_SchMel3_Pearson.mat` and `$out_dir/GSP_fix_wmcsf_AICHA_Pearson.mat`. Then run the unit test script with the `-t light` flag. This light version of unit test should take about `35m` to run.
 
 **Note** that the current ground truths are computed in Matlab2018b; a small difference in results should be expected if unit test 1 is run with a different Matlab version.

@@ -81,6 +81,7 @@ sub-A00031881,ses-V2,ses-DS2
 sub-A00031893,ses-V2,ses-DS2
 sub-A00031894,ses-V2,ses-DS2
 sub-A00032007,ses-V2,ses-DS2
+sub-A00032010,ses-V2,ses-DS2
 sub-A00032862,ses-V2,ses-DS2
 sub-A00032876,ses-V2,ses-DS2
 sub-A00033011,ses-V2,ses-DS2
@@ -231,6 +232,7 @@ sub-A00039490,ses-V2,ses-DS2
 sub-A00039559,ses-V2,ses-DS2
 sub-A00039560,ses-V2,ses-DS2
 sub-A00039593,ses-V2,ses-DS2
+sub-A00039607,ses-V2,ses-DS2
 sub-A00039635,ses-V2,ses-DS2
 sub-A00039636,ses-V2,ses-DS2
 sub-A00039639,ses-V2,ses-DS2
@@ -308,6 +310,7 @@ sub-A00043462,ses-V2,ses-DS2
 sub-A00043466,ses-V2,ses-DS2
 sub-A00043509,ses-V2,ses-DS2
 sub-A00043520,ses-V2,ses-DS2
+sub-A00043521,ses-V2,ses-DS2
 sub-A00043617,ses-V2,ses-DS2
 sub-A00043634,ses-V2,ses-DS2
 sub-A00043635,ses-V2,ses-DS2
@@ -475,6 +478,7 @@ sub-A00059990,ses-VA,ses-DSA
 sub-A00060005,ses-VA,ses-DSA
 sub-A00060170,ses-V2,ses-DS2
 sub-A00060184,ses-V2,ses-DS2
+sub-A00060185,ses-V2,ses-DS2
 sub-A00060252,ses-V2,ses-DS2
 sub-A00060264,ses-VA_ALG,ses-ALGA
 sub-A00060280,ses-V2,ses-CLG2
@@ -698,6 +702,7 @@ sub-A00077311,ses-VA_ALG,ses-ALGA
 sub-A00077391,ses-VA_ALG,ses-ALGA
 sub-A00077395,ses-VA,ses-CLGA
 sub-A00077413,ses-VA_ALG,ses-ALGA
+sub-A00077453,ses-VA,ses-CLGA
 sub-A00077528,ses-VA_ALG,ses-ALGA
 sub-A00077556,ses-VA_ALG,ses-ALGA
 sub-A00077574,ses-VA,ses-CLGA
@@ -765,6 +770,7 @@ sub-A00081963,ses-VA_ALG,ses-ALGA
 sub-A00082215,ses-VA_ALG,ses-ALGA
 sub-A00082216,ses-VA_ALG,ses-ALGA
 sub-A00082442,ses-VA_ALG,ses-ALGA
+sub-A00082524,ses-VA_ALG,ses-ALGA
 sub-A00082528,ses-VA_ALG,ses-ALGA
 sub-A00082529,ses-VA_ALG,ses-ALGA
 sub-A00082532,ses-VA_ALG,ses-ALGA

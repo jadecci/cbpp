@@ -2,7 +2,7 @@
 
 The script `extract_HCP_data.py` helps to extract psychometric and confounding variables from HCP Young Adults (S1200 release) based on a subject list, using the unrestricted and restricted data csv downloaded from HCP. The extracted data are stored in two .csv files named according to the space and preprocessing of the fMRI data.
 
-For example, to extract the phenotype data correponsing to subjects with surface FIX denoised data:
+For example, to extract the phenotype data corresponding to subjects with surface FIX denoised data:
 
 ```bash
 python3 extract_HCP_data.py $unrestricted_csv $restricted_csv --space 'surf' --preproc 'fix'
@@ -20,26 +20,30 @@ python3 extract_HCP_data.py $unrestricted_csv $restricted_csv --space 'MNI' --pr
 
 The script `extract_HCP-A_data.py` helps to extract psychometric and confounding variables from the HCP Aging (Release 2.0) based on a subject list. The input directory should contain the original phenotype `.txt` files downloaded from NDA. The extracted data are stored in `HCP-A_y.csv` and `HCP-A_conf.csv` respectively.
 
+The `aseg_stats.txt` file should be created before extraction using the FreeSurfer command `asegstats2table`.
+
 For example, to extract the data into current directory:
 
 ```bash
-python3 extract_HCP-A_data.py $input_dir
+python3 extract_HCP-A_data.py $input_dir aseg_stats.txt
 ```
 
 ## eNKI-RS data extraction
 
 The script `extract_HCP-A_data.py` helps to extract psychometric and confounding variables from eNKI-RS based on a subject list. The input directory should contain the original phenotype `.csv` files downloaded from COINS. Note that the WASI-II intelligence and openness data need to be extracted separately, as they involve different numbers of subjects.
 
+The `aseg_stats.txt` file should be created before extraction using the FreeSurfer command `asegstats2table`.
+
 For extracting the WASI-II intelligence related data into current directory:
 
 ```bash
-python3 extract_eNKI-RS_data.py $input_dir
+python3 extract_eNKI-RS_data.py $input_dir aseg_stats.txt
 ```
 
 For extracting the openness related data into current directory:
 
 ```bash
-python3 extract_eNKI-RS_data.py $input_dir --psy openness
+python3 extract_eNKI-RS_data.py $input_dir aseg_stats.txt --psy openness
 ```
 
 ## GSP data extraction
@@ -77,13 +81,13 @@ python3 extract_HCP_data.py $unrestricted_csv $restricted_csv --space 'MNI' --pr
 To extract the HCP-A phenotype data required for unit test 2 in `$deriv_dir`:
 
 ```bash
-python3 extract_HCP-A_data.py $input_dir --unit_test --out_dir $deriv_dir
+python3 extract_HCP-A_data.py $input_dir aseg_stats.txt --unit_test --out_dir $deriv_dir
 ```
 
 To extract the eNKI-RS phenotype data required for unit test 2 in `$deriv_dir`:
 
 ```bash
-python3 extract_eNKI-RS_data.py $input_dir --unit_test --out_dir $deriv_dir
+python3 extract_eNKI-RS_data.py $input_dir aseg_stats.txt --unit_test --out_dir $deriv_dir
 ```
 To extract the GSP phenotype data required for unit test 2 in `$deriv_dir`:
 

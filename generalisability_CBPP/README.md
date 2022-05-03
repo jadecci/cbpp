@@ -31,13 +31,13 @@ The input directory can be the output directory from data processing. Also, a fa
 For example, to run region-wise CBPP for openness prediction for all parcels in the AICHA altas for eNKI-RS data, run in Matlab:
 
 ```matlab
-generalise_cbpp('region-wise', 'eNKI-RS', 'AICHA', in_dir, out_dir)
+generalise_cbpp('region-wise', 'eNKI-RS_openness', 'AICHA', in_dir, out_dir)
 ```
 
-To run whole-brain CBPP and save the regression weights on the same data:
+To run whole-brain CBPP and save the regression weights on the HCP-YA data using the 116-parcel Schaefer-Melbourne atlas:
 
 ```matlab
-generalise_cbpp('whole-brain', 'eNKI-RS', 'AICHA', in_dir, out_dir, 1)
+generalise_cbpp('whole-brain', 'HCP-YA', 'SchMel1', in_dir, out_dir, 1)
 ```
 
 For more detailed usage of the script: `help generalise_cbpp`
@@ -49,5 +49,5 @@ For assessing cross-dataset generalisability, we trained region-wise CBPP models
 For example, to run cross-dataset predictions on HCP-Aging and HCP-YA data for all parcels in the 454-parcel Schaefer-Melbourne atlas, run in Matlab:
 
 ```matlab
-generalise_cross_dataset('HCP-YA', 'HCP-A', 'SchMel4', in_dir, out_dir)
+generalise_cross_dataset('HCP-YA', 'HCP-A_fluidcog', 'SchMel4', in_dir, out_dir)
 ```
